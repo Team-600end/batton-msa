@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableJpaAuditing
 @SpringBootApplication
 public class MemberServiceApplication {
-
+// hi?
     public static void main(String[] args) {
         SpringApplication.run(MemberServiceApplication.class, args);
     }
