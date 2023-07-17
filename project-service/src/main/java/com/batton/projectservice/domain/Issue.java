@@ -28,6 +28,8 @@ public class Issue extends BaseEntity{
 
     private String issueTag;
 
+    private int issueSeq;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
@@ -40,11 +42,12 @@ public class Issue extends BaseEntity{
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Issue(Long id, String issueTitle, IssueState issueState, String issueTag, Project project, Belong belong) {
+    public Issue(Long id, String issueTitle, IssueState issueState, String issueTag, int issueSeq, Project project, Belong belong) {
         this.id = id;
         this.issueTitle = issueTitle;
         this.issueState = issueState;
         this.issueTag = issueTag;
+        this.issueSeq = issueSeq;
         this.project = project;
         this.belong = belong;
     }
