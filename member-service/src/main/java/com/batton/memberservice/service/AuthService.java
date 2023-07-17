@@ -1,13 +1,17 @@
 package com.batton.memberservice.service;
 
+import com.batton.memberservice.common.BaseException;
+import com.batton.memberservice.common.BaseResponseStatus;
 import com.batton.memberservice.domain.Member;
-import com.batton.memberservice.dto.MemberSignupReqDTO;
+import com.batton.memberservice.dto.SignupMemberReqDTO;
 import com.batton.memberservice.enums.Authority;
 import com.batton.memberservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.batton.memberservice.common.BaseResponseStatus.EXIST_EMAIL_ERROR;
 
 @RequiredArgsConstructor
 @Service
@@ -16,10 +20,9 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void createMember(MemberSignupReqDTO reqDTO) {
-
+    public String signupMember(SignupMemberReqDTO reqDTO) {
         if (memberRepository.existsByEmail(reqDTO.getEmail())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
+            throw new BaseException(EXIST_EMAIL_ERROR);
         }
 
         Member newMember = Member.builder()
@@ -29,6 +32,8 @@ public class AuthService {
                 .authority(Authority.ROLE_USER)
                 .build();
 
-        Long nowMemberId = memberRepository.save(newMember).getId();
+        memberRepository.save(newMember).getId();
+
+        return "회원가입 성공";
     }
 }
