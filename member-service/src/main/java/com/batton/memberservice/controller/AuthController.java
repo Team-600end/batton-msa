@@ -25,12 +25,10 @@ public class AuthController {
     /**
      * 회원가입 API
      *
-     * @param reqDTO 회원가입 시 필요한 정보들의 Object
      * @return
      */
     @PostMapping("/signup")
     @Operation(summary = "회원가입 요청")
-    @Parameter(name = "reqDTO",  description = "회원가입 시 필요한 정보 Object", required = true)
     @ApiResponses({
             @ApiResponse(responseCode = "401", description = "...")
     })
