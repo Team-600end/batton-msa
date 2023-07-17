@@ -8,7 +8,8 @@ package com.batton.noticeservice.enums;
  * REJECT - 이슈 반려 알림
  * BATTON - 이슈 바톤 터치 알림
  * NEW - 새 릴리즈 노트 출시 알림
+ * COMMENT - 댓글 알림
  */
 public enum NoticeType {
-    INVITE, EXCLUDE, REVIEW, APPROVE, REJECT, BATTON, NEW
+    INVITE, EXCLUDE, REVIEW, APPROVE, REJECT, BATTON, NEW, COMMENT
 }

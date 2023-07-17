@@ -1,5 +1,6 @@
 package com.batton.projectservice.controller;
 
+import com.batton.projectservice.common.BaseResponse;
 import com.batton.projectservice.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;

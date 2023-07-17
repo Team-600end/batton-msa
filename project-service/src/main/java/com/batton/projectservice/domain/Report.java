@@ -15,20 +15,14 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "report")
-public class Report {
+public class Report extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "report_id")
     private Long id;
 
     //mongoDB로 변경
-//    private String reportContent;
-
-    private Long writerId;
-
-    private LocalDateTime createDate;
-
-    private LocalDateTime updateDate;
+    private String reportContent;
 
     @OneToOne
     @JoinColumn(name = "issue_id")
@@ -36,11 +30,9 @@ public class Report {
 
 
     @Builder
-    public Report(Long id, String reportTitle, Long writerId, LocalDateTime createDate, LocalDateTime updateDate, Issue issue) {
+    public Report(Long id, String reportContent, Issue issue) {
         this.id = id;
-        this.writerId = writerId;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
+        this.reportContent = reportContent;
         this.issue = issue;
     }
 

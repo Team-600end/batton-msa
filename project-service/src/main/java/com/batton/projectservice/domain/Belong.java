@@ -1,6 +1,7 @@
 package com.batton.projectservice.domain;
 
 
+import com.batton.projectservice.enums.GradeType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,28 +15,35 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "belong")
-public class Belong {
+public class Belong extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "belong_id")
     private Long id;
 
-    private String grade;
+    @Enumerated(EnumType.STRING)
+    private GradeType grade;
 
     private Long memberId;
 
-    @ManyToOne
+    private String nickname;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
 
     @OneToMany(mappedBy = "belong", cascade = CascadeType.REMOVE)
     private List<Issue> issues = new ArrayList<>();
 
+    @OneToMany(mappedBy = "belong", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
+
     @Builder
-    public Belong(Long id, String grade, Long memberId, Project project) {
+    public Belong(Long id, GradeType grade, Long memberId, String nickname, Project project) {
         this.id = id;
         this.grade = grade;
         this.memberId = memberId;
+        this.nickname = nickname;
         this.project = project;
     }
 }

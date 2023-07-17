@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "project")
-public class Project {
+public class Project extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id")
@@ -24,7 +24,7 @@ public class Project {
     private String projectContent;
 
     @Column(unique = true)
-    private String uniqueAttribute;
+    private String projectKey;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
     private List<Belong> belongs = new ArrayList<>();
@@ -36,11 +36,11 @@ public class Project {
     private List<Releases> releases = new ArrayList<>();
 
     @Builder
-    public Project(Long id, String projectTitle, String projectContent, String uniqueAttribute) {
+    public Project(Long id, String projectTitle, String projectContent, String projectKey) {
         this.id = id;
         this.projectTitle = projectTitle;
         this.projectContent = projectContent;
-        this.uniqueAttribute = uniqueAttribute;
+        this.projectKey = projectKey;
     }
 
 }

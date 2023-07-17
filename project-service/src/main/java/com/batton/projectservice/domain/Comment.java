@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "comment")
-public class Comment {
+public class Comment extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
@@ -22,18 +22,20 @@ public class Comment {
 
     private LocalDateTime sendDate;
 
-    private String commentState;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "issue_id")
     private Issue issue;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "belong_id")
+    private Belong belong;
+
     @Builder
-    public Comment(Long id, String commentContent, LocalDateTime sendDate, String commentState, Issue issue) {
+    public Comment(Long id, String commentContent, LocalDateTime sendDate, Issue issue, Belong belong) {
         this.id = id;
         this.commentContent = commentContent;
         this.sendDate = sendDate;
-        this.commentState = commentState;
         this.issue = issue;
+        this.belong = belong;
     }
 }

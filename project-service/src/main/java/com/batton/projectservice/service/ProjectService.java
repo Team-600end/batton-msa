@@ -1,6 +1,6 @@
 package com.batton.projectservice.service;
 
-
+import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.repository.BelongRepository;
 import com.batton.projectservice.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
