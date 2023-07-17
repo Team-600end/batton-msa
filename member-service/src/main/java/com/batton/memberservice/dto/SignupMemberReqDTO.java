@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberSignupReqDTO {
+public class SignupMemberReqDTO {
     private String email;
     private String nickname;
     private String password;
     // 비밀번호 암호화
-    private String encryptedPwd;
+//    private String encryptedPwd;
 }

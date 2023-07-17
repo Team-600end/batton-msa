@@ -14,7 +14,8 @@ public enum BaseResponseStatus {
     /**
      * member-service - 600 ~ 699
      */
-    MEMBER_INVALID_USER_ID(false, 1300, "유저 아이디 값을 확인해주세요.");
+    MEMBER_INVALID_USER_ID(false, 1300, "유저 아이디 값을 확인해주세요."),
+    EXIST_EMAIL_ERROR(false, 1300, "유저 아이디 값을 확인해주세요.");
 
     private final boolean isSuccess;
     private final int code;

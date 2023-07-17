@@ -36,14 +36,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 new AuthenticationFilter(authenticationManagerBean(), tokenProvider, refreshTokenService);
         authenticationFilter.setFilterProcessesUrl("/auth/login");
 
-        http.csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/", "/api/auth/**", "/swagger-ui/**", "/swagger-resources/**", "/swagger/**", "/v3/api-docs/**", "/api/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilter(authenticationFilter);
+        http.csrf().disable();
+
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.authorizeRequests().anyRequest().permitAll();
+
+        http.addFilter(authenticationFilter);
+
     }
 
     @Override

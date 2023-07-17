@@ -1,5 +1,6 @@
 package com.batton.memberservice.security;
 
+import com.batton.memberservice.common.BaseResponse;
 import com.batton.memberservice.dto.MemberLoginReqDTO;
 import com.batton.memberservice.security.service.RefreshTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -84,10 +85,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType(APPLICATION_JSON_VALUE);
 
         //TODO: Result 패턴 정해지면 다시 작성필요
-//        new ObjectMapper().writeValue(response.getOutputStream(), Result.builder()
-//                .isSuccess(true)
-//                .message("인증 성공")
-//                .result(tokenDTO)
-//                .build());
+        new ObjectMapper().writeValue(response.getOutputStream(), tokenDTO);
     }
 }
