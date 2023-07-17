@@ -2,6 +2,7 @@ package com.batton.projectservice.domain;
 
 
 import com.batton.projectservice.enums.GradeType;
+import com.batton.projectservice.enums.Status;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,6 +29,9 @@ public class Belong extends BaseEntity{
 
     private String nickname;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
@@ -39,11 +43,12 @@ public class Belong extends BaseEntity{
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Belong(Long id, GradeType grade, Long memberId, String nickname, Project project) {
+    public Belong(Long id, GradeType grade, Long memberId, String nickname, Status status, Project project) {
         this.id = id;
         this.grade = grade;
         this.memberId = memberId;
         this.nickname = nickname;
+        this.status = status;
         this.project = project;
     }
 }

@@ -1,7 +1,8 @@
 package com.batton.projectservice.domain;
 
 import com.batton.projectservice.enums.GradeType;
-import com.batton.projectservice.enums.IssueState;
+import com.batton.projectservice.enums.IssueStatus;
+import com.batton.projectservice.enums.IssueTag;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,9 +25,10 @@ public class Issue extends BaseEntity{
     private String issueTitle;
 
     @Enumerated(EnumType.STRING)
-    private IssueState issueState;
+    private IssueStatus issueStatus;
 
-    private String issueTag;
+    @Enumerated(EnumType.STRING)
+    private IssueTag issueTag;
 
     private int issueSeq;
 
@@ -42,10 +44,10 @@ public class Issue extends BaseEntity{
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Issue(Long id, String issueTitle, IssueState issueState, String issueTag, int issueSeq, Project project, Belong belong) {
+    public Issue(Long id, String issueTitle, IssueStatus issueState, IssueTag issueTag, int issueSeq, Project project, Belong belong) {
         this.id = id;
         this.issueTitle = issueTitle;
-        this.issueState = issueState;
+        this.issueStatus = issueState;
         this.issueTag = issueTag;
         this.issueSeq = issueSeq;
         this.project = project;
