@@ -11,11 +11,11 @@ public class GetNoticeResDTO {
     private Long contentId; // 프로젝트 id, 이슈 id, 릴리즈 노트 id 등
     private NoticeType noticeType;
     private String noticeContent;
-    private LocalDateTime noticeDate;
+    private String noticeDate;
     private String senderProfileImage;
 
     @Builder
-    public GetNoticeResDTO(Long contentId, NoticeType noticeType, String noticeContent, LocalDateTime noticeDate, String senderProfileImage) {
+    public GetNoticeResDTO(Long contentId, NoticeType noticeType, String noticeContent, String noticeDate, String senderProfileImage) {
         this.contentId = contentId;
         this.noticeType = noticeType;
         this.noticeContent = noticeContent;

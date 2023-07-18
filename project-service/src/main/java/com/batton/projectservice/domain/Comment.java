@@ -20,7 +20,7 @@ public class Comment extends BaseEntity{
 
     private String commentContent;
 
-    private String sendDate;
+    private LocalDateTime sendDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "issue_id")
@@ -31,7 +31,7 @@ public class Comment extends BaseEntity{
     private Belong belong;
 
     @Builder
-    public Comment(Long id, String commentContent, String sendDate, Issue issue, Belong belong) {
+    public Comment(Long id, String commentContent, LocalDateTime sendDate, Issue issue, Belong belong) {
         this.id = id;
         this.commentContent = commentContent;
         this.sendDate = sendDate;

@@ -27,10 +27,10 @@ public class Notice extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private NoticeType noticeType;
     private String noticeContent;
-    private String noticeDate;
+    private LocalDateTime noticeDate;
 
     @Builder
-    public Notice(Long id, Long senderId, Long receiverId, Long contentId, NoticeType noticeType, String noticeContent, String noticeDate) {
+    public Notice(Long id, Long senderId, Long receiverId, Long contentId, NoticeType noticeType, String noticeContent, LocalDateTime noticeDate) {
         this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
