@@ -23,6 +23,8 @@ public class Project extends BaseEntity{
 
     private String projectContent;
 
+    private String projectImage;
+
     @Column(unique = true)
     private String projectKey;
 
@@ -36,10 +38,11 @@ public class Project extends BaseEntity{
     private List<Releases> releases = new ArrayList<>();
 
     @Builder
-    public Project(Long id, String projectTitle, String projectContent, String projectKey) {
+    public Project(Long id, String projectTitle, String projectContent, String projectImage, String projectKey) {
         this.id = id;
         this.projectTitle = projectTitle;
         this.projectContent = projectContent;
+        this.projectImage = projectImage;
         this.projectKey = projectKey;
     }
 

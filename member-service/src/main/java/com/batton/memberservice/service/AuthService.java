@@ -32,7 +32,7 @@ public class AuthService {
                 .authority(Authority.ROLE_USER)
                 .build();
 
-        memberRepository.save(newMember).getId();
+        memberRepository.save(newMember);
 
         return "회원가입 성공";
     }

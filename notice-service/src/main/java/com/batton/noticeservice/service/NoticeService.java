@@ -36,7 +36,7 @@ public class NoticeService {
                     .contentId(notice.getContentId())
                     .noticeType(notice.getNoticeType())
                     .noticeContent(notice.getNoticeContent())
-                    .noticeDate(notice.getNoticeDate())
+                    .noticeDate("이승희바보")
                     .senderProfileImage(getMemberResDTO.getProfileImage())
                     .build();
             responseDTO.add(getNoticeResDTO);
