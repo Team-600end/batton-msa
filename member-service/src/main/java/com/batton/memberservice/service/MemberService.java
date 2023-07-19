@@ -59,7 +59,7 @@ public class MemberService {
             if (passwordEncoder.matches(patchMemberPasswordReqDTO.getCurrentPassword(), member.get().getPassword())) {
                 throw new BaseException(MEMBER_PASSWORD_DISCORD);
             }
-            if (passwordEncoder.matches(patchMemberPasswordReqDTO.getChangedPassword(), patchMemberPasswordReqDTO.getCheckChangedPassword())) {
+            if (!patchMemberPasswordReqDTO.getChangedPassword().equals(patchMemberPasswordReqDTO.getCheckChangedPassword())) {
                 throw new BaseException(MEMBER_PASSWORD_CONFLICT);
             }
             member.get().updatePassword(passwordEncoder.encode(patchMemberPasswordReqDTO.getChangedPassword()));
