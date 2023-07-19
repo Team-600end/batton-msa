@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "releases")
-public class Releases extends BaseEntity{
+public class Releases extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "releases_id")
@@ -20,17 +20,14 @@ public class Releases extends BaseEntity{
 
     private String version;
 
-    private LocalDateTime releasesDate;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
 
     @Builder
-    public Releases(Long id, String version, LocalDateTime releasesDate, Project project) {
+    public Releases(Long id, String version, Project project) {
         this.id = id;
         this.version = version;
-        this.releasesDate = releasesDate;
         this.project = project;
     }
 }

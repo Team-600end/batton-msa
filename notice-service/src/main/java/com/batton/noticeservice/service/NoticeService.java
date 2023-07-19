@@ -27,7 +27,7 @@ public class NoticeService {
         List<GetNoticeResDTO> responseDTO = new ArrayList<>();
 
         for (Notice notice : noticeList) {
-            GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(notice.getReceiverId()).getResult();
+            GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(notice.getSenderId()).getResult();
 
             if (getMemberResDTO == null) {
                 throw new BaseException(NOTICE_INVALID_USER_ID);
@@ -36,7 +36,6 @@ public class NoticeService {
                     .contentId(notice.getContentId())
                     .noticeType(notice.getNoticeType())
                     .noticeContent(notice.getNoticeContent())
-                    .noticeDate(notice.getNoticeDate())
                     .senderProfileImage(getMemberResDTO.getProfileImage())
                     .build();
             responseDTO.add(getNoticeResDTO);
