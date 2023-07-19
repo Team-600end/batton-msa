@@ -1,6 +1,8 @@
 package com.batton.memberservice.controller;
 
 import com.batton.memberservice.common.BaseResponse;
+import com.batton.memberservice.dto.PatchMemberPasswordReqDTO;
+import com.batton.memberservice.dto.PatchMemberReqDTO;
 import com.batton.memberservice.dto.client.GetMemberResDTO;
 import com.batton.memberservice.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,10 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,13 +19,13 @@ public class MemberController {
     private final MemberService memberService;
 
     /**
-     * 사용자 정보 조회 API(Feign Client)
+     * 유저 정보 조회 API(Feign Client)
      *
      * @param memberId 정보를 조회할 유저 아이디
      * @return GetMemberResDTO
      * */
     @GetMapping("/{memberId}")
-    @Operation(summary = "사용자 정보 조회")
+    @Operation(summary = "유저 정보 조회")
     @Parameter(name = "memberId",  description = "정보를 조회할 유저 아이디", required = true)
     @ApiResponses({
             @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
@@ -35,5 +34,45 @@ public class MemberController {
         GetMemberResDTO getMemberResDTO = memberService.getMember(memberId);
 
         return new BaseResponse<>(getMemberResDTO);
+    }
+
+
+    /**
+     * 유저 정보 수정 API
+     *
+     * @param memberId 정보를 수정할 유저 아이디
+     * @return String
+     * */
+    @PatchMapping("/{memberId}")
+    @Operation(summary = "유저 정보 수정")
+    @Parameter(name = "memberId",  description = "정보를 수정할 유저 아이디", required = true)
+    @ApiResponses({
+            @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
+    })
+    private BaseResponse<String> patchMember(@PathVariable("memberId") Long memberId, @RequestBody PatchMemberReqDTO patchMemberReqDTO) {
+        String patchMemberRes = memberService.patchMember(memberId, patchMemberReqDTO);
+
+        return new BaseResponse<>(patchMemberRes);
+    }
+
+    /**
+     * 유저 비밀번호 수정 API
+     *
+     * @param memberId 비밀번호를 수정할 유저 아이디
+     * @return String
+     * */
+    @PatchMapping("/{memberId}/password")
+    @Operation(summary = "유저 비밀번호 수정")
+    @Parameter(name = "memberId",  description = "비밀번호를 수정할 유저 아이디", required = true)
+    @ApiResponses({
+            @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요."),
+            @ApiResponse(responseCode = "602", description = "두 비밀번호를 같게 입력해주세요."),
+            @ApiResponse(responseCode = "603", description = "비밀번호가 일치하지 않습니다.")
+
+    })
+    private BaseResponse<String> patchMemberPassword(@PathVariable("memberId") Long memberId, @RequestBody PatchMemberPasswordReqDTO patchMemberPasswordReqDTO) {
+        String patchMemberPasswordRes = memberService.patchMemberPassword(memberId, patchMemberPasswordReqDTO);
+
+        return new BaseResponse<>(patchMemberPasswordRes);
     }
 }

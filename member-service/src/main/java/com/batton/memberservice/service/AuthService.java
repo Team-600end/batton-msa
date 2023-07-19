@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.batton.memberservice.common.BaseResponseStatus.EXIST_EMAIL_ERROR;
+import static com.batton.memberservice.common.BaseResponseStatus.MEMBER_PASSWORD_CONFLICT;
 
 @RequiredArgsConstructor
 @Service
@@ -23,6 +24,9 @@ public class AuthService {
     public String signupMember(SignupMemberReqDTO reqDTO) {
         if (memberRepository.existsByEmail(reqDTO.getEmail())) {
             throw new BaseException(EXIST_EMAIL_ERROR);
+        }
+        if (!reqDTO.getPassword().equals(reqDTO.getCheckPassword())) {
+            throw new BaseException(MEMBER_PASSWORD_CONFLICT);
         }
 
         Member newMember = Member.builder()
