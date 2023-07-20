@@ -1,6 +1,5 @@
 package com.batton.memberservice.dto;
 
-
 import lombok.Getter;
 
 @Getter

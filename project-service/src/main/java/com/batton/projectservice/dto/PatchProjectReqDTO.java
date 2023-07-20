@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class PatchProjectReqDTO {
-
     private String projectTitle;
     private String projectContent;
     private String projectImage;

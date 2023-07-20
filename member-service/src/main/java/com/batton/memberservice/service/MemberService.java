@@ -7,7 +7,6 @@ import com.batton.memberservice.dto.client.GetMemberResDTO;
 import com.batton.memberservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 import static com.batton.memberservice.common.BaseResponseStatus.*;
@@ -16,8 +15,10 @@ import static com.batton.memberservice.common.BaseResponseStatus.*;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+
     public GetMemberResDTO getMember(Long memberId) {
         Optional<Member> member = memberRepository.findById(memberId);
+
         if (member.isPresent()) {
             return GetMemberResDTO.builder()
                     .nickname(member.get().getNickname())
@@ -29,24 +30,14 @@ public class MemberService {
     }
 
     public GetMemberInfoResDTO checkMember(String email) {
-
         Optional<Member> member;
 
         if(memberRepository.findByEmail(email) == null) {
-
             throw new BaseException(MEMBER_INVALID_USER_ID);
-
         } else {
             member = memberRepository.findByEmail(email);
         }
-
-        GetMemberInfoResDTO getMemberInfoResDTO = GetMemberInfoResDTO.builder()
-                .memberId(member.get().getId())
-                .nickname(member.get().getNickname())
-                .status(member.get().getStatus())
-                .profileImage(member.get().getProfileImage())
-                .email(member.get().getEmail())
-                .build();
+        GetMemberInfoResDTO getMemberInfoResDTO = GetMemberInfoResDTO.toDTO(member.get());
 
         return getMemberInfoResDTO;
     }

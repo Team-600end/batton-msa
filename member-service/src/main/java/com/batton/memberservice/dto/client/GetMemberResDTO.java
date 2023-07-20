@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 public class GetMemberResDTO {
     private String nickname;
-
     private String profileImage;
 
     @Builder

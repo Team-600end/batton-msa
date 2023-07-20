@@ -1,5 +1,6 @@
 package com.batton.memberservice.dto;
 
+import com.batton.memberservice.domain.Member;
 import com.batton.memberservice.enums.Status;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,4 +22,13 @@ public class GetMemberInfoResDTO {
         this.email = email;
     }
 
+    public static GetMemberInfoResDTO toDTO(Member member) {
+        return GetMemberInfoResDTO.builder()
+                .memberId(member.getId())
+                .nickname(member.getNickname())
+                .status(member.getStatus())
+                .profileImage(member.getProfileImage())
+                .email(member.getEmail())
+                .build();
+    }
 }

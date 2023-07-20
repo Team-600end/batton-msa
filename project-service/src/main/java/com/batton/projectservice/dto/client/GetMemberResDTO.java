@@ -3,9 +3,7 @@ package com.batton.projectservice.dto.client;
 import lombok.Builder;
 
 public class GetMemberResDTO {
-
     private String nickname;
-
     private String profileImage;
 
     @Builder

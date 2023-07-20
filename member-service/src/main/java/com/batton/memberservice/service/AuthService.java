@@ -1,7 +1,6 @@
 package com.batton.memberservice.service;
 
 import com.batton.memberservice.common.BaseException;
-import com.batton.memberservice.common.BaseResponseStatus;
 import com.batton.memberservice.domain.Member;
 import com.batton.memberservice.dto.SignupMemberReqDTO;
 import com.batton.memberservice.enums.Authority;
@@ -25,7 +24,6 @@ public class AuthService {
         if (memberRepository.existsByEmail(reqDTO.getEmail())) {
             throw new BaseException(EXIST_EMAIL_ERROR);
         }
-
         Member newMember = Member.builder()
                 .email(reqDTO.getEmail())
                 .nickname(reqDTO.getNickname())

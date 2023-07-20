@@ -5,14 +5,10 @@ import com.batton.projectservice.dto.PatchProjectReqDTO;
 import com.batton.projectservice.dto.PostProjectReqDTO;
 import com.batton.projectservice.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.lang.reflect.Member;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -35,19 +31,6 @@ public class ProjectController {
     }
 
     /**
-     * 알고있는 멤버 조회 API
-     * @param
-     * @return List of Member
-     */
-//    @GetMapping("/known-members")
-//    @Operation(summary = "알고있는 멤버 조회")
-//    private BaseResponse<List<Member>> getKnownMembers(@RequestHeader Long memberId) {
-//        List<Member> knownMembers = projectService.getKnownMembers(memberId);
-//
-//        return new BaseResponse<>(knownMembers);
-//    }
-
-    /**
      * 프로젝트 수정 API
      * @param projectId 프로젝트 아이디 값
      * @return message
@@ -63,7 +46,4 @@ public class ProjectController {
 
         return new BaseResponse<>(modifyProjectRes);
     }
-
-
-
 }

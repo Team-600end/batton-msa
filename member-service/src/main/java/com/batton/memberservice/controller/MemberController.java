@@ -1,6 +1,7 @@
 package com.batton.memberservice.controller;
 
-import com.batton.memberservice.common.BaseResponse;
+import
+        com.batton.memberservice.common.BaseResponse;
 import com.batton.memberservice.dto.GetMemberInfoResDTO;
 import com.batton.memberservice.dto.client.GetMemberResDTO;
 import com.batton.memberservice.service.MemberService;
@@ -54,6 +55,4 @@ public class MemberController {
 
         return new BaseResponse<>(getMemberInfoResDTO);
     }
-
-
 }
