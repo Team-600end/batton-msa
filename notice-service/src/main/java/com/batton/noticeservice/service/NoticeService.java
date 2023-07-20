@@ -36,10 +36,6 @@ public class NoticeService {
                     .contentId(notice.getContentId())
                     .noticeType(notice.getNoticeType())
                     .noticeContent(notice.getNoticeContent())
-<<<<<<< HEAD
-                    .noticeDate("이승희바보")
-=======
->>>>>>> 47fc9d90049d8cb486c81841142195cb6983232d
                     .senderProfileImage(getMemberResDTO.getProfileImage())
                     .build();
             responseDTO.add(getNoticeResDTO);
