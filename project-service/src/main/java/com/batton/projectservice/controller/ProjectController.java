@@ -27,7 +27,7 @@ public class ProjectController {
      * */
     @PostMapping
     @ResponseBody
-    @Operation(summary = "프로젝트 생성")
+    @Operation(summary = "프로젝트 생성", description = "프로젝트를 생성할 때 ProjectManager 권한 부여를 위해 생성자 멤버 정보도 포함해서 보내주세요.")
     private BaseResponse<Long> postProject(@RequestHeader Long memberId, @RequestBody PostProjectReqDTO postProjectReqDTO) {
         Long projectId = projectService.addProject(memberId, postProjectReqDTO);
 
