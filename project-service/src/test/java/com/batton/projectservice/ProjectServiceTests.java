@@ -67,6 +67,7 @@ public class ProjectServiceTests {
         teamMemberList.add(teamMember2);
 
         PostProjectReqDTO postProjectReqDTO = PostProjectReqDTO.builder()
+
                 .projectTitle("프로젝트 제목")
                 .projectContent("프로젝트 내용")
                 .projectImage("프로젝트 이미지")
