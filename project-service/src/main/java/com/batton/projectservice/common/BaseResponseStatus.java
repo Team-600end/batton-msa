@@ -19,6 +19,7 @@ public enum BaseResponseStatus {
 
     USER_NO_AUTHORITY(false, 700, "유저에게 해당 권한이 없습니다."),
     PROJECT_NOT_FOUND(false, 701, "프로젝트를 찾을 수 없습니다."),
+    USER_NOT_FOUND(false, 702, "유저를 찾을 수 없습니다."),
     MEMBER_INVALID_USER_ID(false, 1300, "유저 아이디 값을 확인해주세요.");
 
     private final boolean isSuccess;

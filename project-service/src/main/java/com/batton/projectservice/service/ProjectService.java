@@ -49,26 +49,32 @@ public class ProjectService {
     //팀원 추가하는 함수
     @Transactional
     public String addTeamMember(Long memberId, Long projectId, List<ProjectTeamReqDTO> teamMemberList) {
-        Project newProject = projectRepository.findById(projectId).get();
+        Optional<Project> newProject = projectRepository.findById(projectId);
 
-        for (ProjectTeamReqDTO projectTeamReqDTO : teamMemberList) {
-            //프로젝트 생성한 사람일 경우 MANAGER 권한 부여
-            if (projectTeamReqDTO.getMemberId() == memberId) {
-                Belong belong = Belong.builder()
-                        .project(newProject)
-                        .memberId(projectTeamReqDTO.getMemberId())
-                        .nickname(projectTeamReqDTO.getNickname())
-                        .status(projectTeamReqDTO.getStatus())
-                        .grade(GradeType.MANAGER)
-                        .build();
+        if (newProject.isPresent()) {
+            Project project = newProject.get();
 
-                belongRepository.save(belong);
-            } else {
-                //프로젝트 생성한 사람이 아닐 경우 다른 권한 부여
-                Belong belong = ProjectTeamReqDTO.toEntity(newProject, projectTeamReqDTO);
+            for (ProjectTeamReqDTO projectTeamReqDTO : teamMemberList) {
+                //프로젝트 생성한 사람일 경우 MANAGER 권한 부여
+                if (projectTeamReqDTO.getMemberId() == memberId) {
+                    Belong belong = Belong.builder()
+                            .project(project)
+                            .memberId(projectTeamReqDTO.getMemberId())
+                            .nickname(projectTeamReqDTO.getNickname())
+                            .status(projectTeamReqDTO.getStatus())
+                            .grade(GradeType.MANAGER)
+                            .build();
 
-                belongRepository.save(belong);
+                    belongRepository.save(belong);
+                } else {
+                    //프로젝트 생성한 사람이 아닐 경우 다른 권한 부여
+                    Belong belong = ProjectTeamReqDTO.toEntity(project, projectTeamReqDTO);
+
+                    belongRepository.save(belong);
+                }
             }
+        } else {
+            throw new BaseException(PROJECT_NOT_FOUND);
         }
 
         return "프로젝트 팀원 추가 성공";
@@ -76,17 +82,21 @@ public class ProjectService {
 
     @Transactional
     public String modifyProject(Long projectId, Long memberId, PatchProjectReqDTO patchProjectReqDTO) {
-        Belong belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
 
-        if (belong.getGrade() == GradeType.MEMBER) {
-            throw new BaseException(USER_NO_AUTHORITY);
-        }
-        Optional<Project> project = projectRepository.findById(projectId);
+        if (belong.isPresent()) {
+            if (belong.get().getGrade() == GradeType.MEMBER) {
+                throw new BaseException(USER_NO_AUTHORITY);
+            }
+            Optional<Project> project = projectRepository.findById(projectId);
 
-        if (project.isPresent()) {
-            project.get().update(patchProjectReqDTO.getProjectTitle(), patchProjectReqDTO.getProjectContent(), patchProjectReqDTO.getProjectImage());
+            if (project.isPresent()) {
+                project.get().update(patchProjectReqDTO.getProjectTitle(), patchProjectReqDTO.getProjectContent(), patchProjectReqDTO.getProjectImage());
+            } else {
+                throw new BaseException(PROJECT_NOT_FOUND);
+            }
         } else {
-            throw new BaseException(PROJECT_NOT_FOUND);
+            throw new BaseException(USER_NOT_FOUND);
         }
 
         return "프로젝트 수정 성공";

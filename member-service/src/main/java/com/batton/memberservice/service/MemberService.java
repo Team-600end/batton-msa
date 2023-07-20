@@ -41,15 +41,18 @@ public class MemberService {
         }
     }
 
+    /**
+     * 유저 정보 확인 조회 API
+     * */
     public GetMemberInfoResDTO checkMember(String email) {
-        Optional<Member> member;
+        Optional<Member> member = memberRepository.findByEmail(email);
+        GetMemberInfoResDTO getMemberInfoResDTO;
 
-        if (memberRepository.findByEmail(email) == null) {
-            throw new BaseException(MEMBER_INVALID_USER_ID);
+        if (member.isPresent()) {
+            getMemberInfoResDTO = GetMemberInfoResDTO.toDTO(member.get());
         } else {
-            member = memberRepository.findByEmail(email);
+            throw new BaseException(MEMBER_INVALID_USER_ID);
         }
-        GetMemberInfoResDTO getMemberInfoResDTO = GetMemberInfoResDTO.toDTO(member.get());
 
         return getMemberInfoResDTO;
     }
@@ -62,7 +65,6 @@ public class MemberService {
 
         if (member.isPresent()) {
             member.get().update(patchMemberReqDTO.getNickname(), patchMemberReqDTO.getProfileImage());
-            memberRepository.save(member.get());
         } else {
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
@@ -84,7 +86,6 @@ public class MemberService {
                 throw new BaseException(MEMBER_PASSWORD_CONFLICT);
             }
             member.get().updatePassword(passwordEncoder.encode(patchMemberPasswordReqDTO.getChangedPassword()));
-            memberRepository.save(member.get());
         } else {
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
