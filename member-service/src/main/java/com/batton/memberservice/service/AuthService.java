@@ -1,7 +1,6 @@
 package com.batton.memberservice.service;
 
 import com.batton.memberservice.common.BaseException;
-import com.batton.memberservice.common.BaseResponseStatus;
 import com.batton.memberservice.domain.Member;
 import com.batton.memberservice.dto.SignupMemberReqDTO;
 import com.batton.memberservice.enums.Authority;
@@ -29,7 +28,6 @@ public class AuthService {
         if (!reqDTO.getPassword().equals(reqDTO.getCheckPassword())) {
             throw new BaseException(MEMBER_PASSWORD_CONFLICT);
         }
-
         Member newMember = Member.builder()
                 .email(reqDTO.getEmail())
                 .nickname(reqDTO.getNickname())
@@ -38,7 +36,7 @@ public class AuthService {
                 .status(Status.ENABLED)
                 .build();
 
-        memberRepository.save(newMember).getId();
+        memberRepository.save(newMember);
 
         return "회원가입 성공하였습니다.";
     }

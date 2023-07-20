@@ -2,6 +2,7 @@ package com.batton.memberservice.service;
 
 import com.batton.memberservice.common.BaseException;
 import com.batton.memberservice.domain.Member;
+import com.batton.memberservice.dto.GetMemberInfoResDTO;
 import com.batton.memberservice.dto.client.GetMemberListResDTO;
 import com.batton.memberservice.dto.PatchMemberPasswordReqDTO;
 import com.batton.memberservice.dto.PatchMemberReqDTO;
@@ -10,7 +11,6 @@ import com.batton.memberservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +42,22 @@ public class MemberService {
     }
 
     /**
+     * 유저 정보 확인 조회 API
+     * */
+    public GetMemberInfoResDTO checkMember(String email) {
+        Optional<Member> member = memberRepository.findByEmail(email);
+        GetMemberInfoResDTO getMemberInfoResDTO;
+
+        if (member.isPresent()) {
+            getMemberInfoResDTO = GetMemberInfoResDTO.toDTO(member.get());
+        } else {
+            throw new BaseException(MEMBER_INVALID_USER_ID);
+        }
+
+        return getMemberInfoResDTO;
+    }
+
+    /**
      * 유저 정보 수정 API
      * */
     public String patchMember(Long memberId, PatchMemberReqDTO patchMemberReqDTO) {
@@ -49,7 +65,6 @@ public class MemberService {
 
         if (member.isPresent()) {
             member.get().update(patchMemberReqDTO.getNickname(), patchMemberReqDTO.getProfileImage());
-            memberRepository.save(member.get());
         } else {
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
@@ -71,7 +86,6 @@ public class MemberService {
                 throw new BaseException(MEMBER_PASSWORD_CONFLICT);
             }
             member.get().updatePassword(passwordEncoder.encode(patchMemberPasswordReqDTO.getChangedPassword()));
-            memberRepository.save(member.get());
         } else {
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }

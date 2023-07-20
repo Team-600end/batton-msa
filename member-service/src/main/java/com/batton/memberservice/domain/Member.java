@@ -1,11 +1,13 @@
 package com.batton.memberservice.domain;
 
-
 import com.batton.memberservice.enums.Authority;
 import com.batton.memberservice.enums.Status;
-import lombok.*;
-
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import javax.persistence.*;
+
 @Entity
 @Table(name = "member")
 @Getter
@@ -35,12 +37,12 @@ public class Member extends BaseEntity {
         this.status = status;
     }
 
-    public void update(String nickname, String profileImage){
+    public void update(String nickname, String profileImage) {
         this.nickname = nickname;
         this.profileImage = profileImage;
     }
 
-    public void updatePassword(String password){
+    public void updatePassword(String password) {
         this.password=password;
     }
 }
