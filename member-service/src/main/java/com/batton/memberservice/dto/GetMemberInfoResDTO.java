@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class GetMemberResDTO {
+public class GetMemberInfoResDTO {
     private Long memberId;
     private String nickname;
     private Status status;
@@ -13,7 +13,7 @@ public class GetMemberResDTO {
     private String email;
 
     @Builder
-    public GetMemberResDTO(Long memberId, String nickname, Status status, String profileImage, String email) {
+    public GetMemberInfoResDTO(Long memberId, String nickname, Status status, String profileImage, String email) {
         this.memberId = memberId;
         this.nickname = nickname;
         this.status = status;

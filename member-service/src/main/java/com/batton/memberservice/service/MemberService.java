@@ -2,10 +2,10 @@ package com.batton.memberservice.service;
 
 import com.batton.memberservice.common.BaseException;
 import com.batton.memberservice.domain.Member;
+import com.batton.memberservice.dto.GetMemberInfoResDTO;
 import com.batton.memberservice.dto.client.GetMemberResDTO;
 import com.batton.memberservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -28,11 +28,11 @@ public class MemberService {
         }
     }
 
-    public com.batton.memberservice.dto.GetMemberResDTO checkMember(String email){
+    public GetMemberInfoResDTO checkMember(String email) {
 
         Optional<Member> member;
 
-        if(memberRepository.findByEmail(email) == null){
+        if(memberRepository.findByEmail(email) == null) {
 
             throw new BaseException(MEMBER_INVALID_USER_ID);
 
@@ -40,7 +40,7 @@ public class MemberService {
             member = memberRepository.findByEmail(email);
         }
 
-        com.batton.memberservice.dto.GetMemberResDTO getMemberResDTO = com.batton.memberservice.dto.GetMemberResDTO.builder()
+        GetMemberInfoResDTO getMemberInfoResDTO = GetMemberInfoResDTO.builder()
                 .memberId(member.get().getId())
                 .nickname(member.get().getNickname())
                 .status(member.get().getStatus())
@@ -48,6 +48,6 @@ public class MemberService {
                 .email(member.get().getEmail())
                 .build();
 
-        return getMemberResDTO;
+        return getMemberInfoResDTO;
     }
 }

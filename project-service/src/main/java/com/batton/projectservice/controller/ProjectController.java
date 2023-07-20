@@ -28,7 +28,7 @@ public class ProjectController {
     @PostMapping
     @ResponseBody
     @Operation(summary = "프로젝트 생성")
-    private BaseResponse<Long> getNoticeList(@RequestHeader Long memberId, @RequestBody PostProjectReqDTO postProjectReqDTO) {
+    private BaseResponse<Long> postProject(@RequestHeader Long memberId, @RequestBody PostProjectReqDTO postProjectReqDTO) {
         Long projectId = projectService.addProject(memberId, postProjectReqDTO);
 
         return new BaseResponse<>(projectId);
