@@ -15,8 +15,10 @@ import static com.batton.memberservice.common.BaseResponseStatus.*;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+
     public GetMemberResDTO getMember(Long memberId) {
         Optional<Member> member = memberRepository.findById(memberId);
+
         if (member.isPresent()) {
             return GetMemberResDTO.builder()
                     .nickname(member.get().getNickname())

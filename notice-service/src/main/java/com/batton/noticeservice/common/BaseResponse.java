@@ -8,7 +8,6 @@ import lombok.Getter;
 
 import static com.batton.noticeservice.common.BaseResponseStatus.SUCCESS;
 
-
 @Getter
 @AllArgsConstructor
 @JsonPropertyOrder({"isSuccess", "code", "message", "result"})

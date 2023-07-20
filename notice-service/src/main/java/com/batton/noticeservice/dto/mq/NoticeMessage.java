@@ -1,5 +1,6 @@
 package com.batton.noticeservice.dto.mq;
 
+import com.batton.noticeservice.domain.Notice;
 import com.batton.noticeservice.enums.NoticeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,5 +25,15 @@ public class NoticeMessage {
         this.contentId = contentId;
         this.noticeType = noticeType;
         this.noticeContent = noticeContent;
+    }
+
+    public static Notice toEntity(NoticeMessage dto){
+        return Notice.builder()
+                .noticeType(dto.getNoticeType())
+                .noticeContent(dto.getNoticeContent())
+                .senderId(dto.getSenderId())
+                .receiverId(dto.getReceiverId())
+                .contentId(dto.getContentId())
+                .build();
     }
 }

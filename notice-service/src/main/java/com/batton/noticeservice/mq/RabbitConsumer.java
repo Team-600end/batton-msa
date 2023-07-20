@@ -1,5 +1,6 @@
 package com.batton.noticeservice.mq;
 
+import com.batton.noticeservice.domain.Notice;
 import com.batton.noticeservice.dto.mq.NoticeMessage;
 import com.batton.noticeservice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +13,10 @@ public class RabbitConsumer {
     private final NoticeRepository noticeRepository;
 
     @RabbitListener(queues = "notice")
-    public void receiveNoticeMessage(NoticeMessage noticeMessage) {
-        System.out.println(noticeMessage.getSenderId());
-        System.out.println(noticeMessage.getReceiverId());
-        System.out.println(noticeMessage.getContentId());
-        System.out.println(noticeMessage.getNoticeType());
-        System.out.println(noticeMessage.getNoticeContent());
+    public void saveNoticeMessage(NoticeMessage noticeMessage) {
+        Notice notice = NoticeMessage.toEntity(noticeMessage);
+        Notice savedNotice = noticeRepository.save(notice);
+
+        System.out.println(savedNotice.getId() + "번 알림 저장");
     }
 }

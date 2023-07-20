@@ -24,7 +24,6 @@ public class AuthService {
         if (memberRepository.existsByEmail(reqDTO.getEmail())) {
             throw new BaseException(EXIST_EMAIL_ERROR);
         }
-
         Member newMember = Member.builder()
                 .email(reqDTO.getEmail())
                 .nickname(reqDTO.getNickname())
