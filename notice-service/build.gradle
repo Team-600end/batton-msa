@@ -58,6 +58,11 @@ dependencies {
     // JPA, Hibernate
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.hibernate:hibernate-validator-test-utils:5.4.3.Final'
+
+    // Config Server
+    // Spring Cloud Config Client
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
 }
 
 dependencyManagement {

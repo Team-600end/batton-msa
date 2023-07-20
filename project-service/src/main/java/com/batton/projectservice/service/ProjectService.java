@@ -42,7 +42,7 @@ public class ProjectService {
 
         //소속 테이블에 팀원들 추가하는 함수 불러오기
         addTeamMember(memberId, newProjectId, postProjectReqDTO.getTeamMemberList());
-₩
+
         return newProjectId;
     }
 
