@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.batton.memberservice.common.BaseResponseStatus.EXIST_EMAIL_ERROR;
+import static com.batton.memberservice.common.BaseResponseStatus.MEMBER_PASSWORD_CONFLICT;
 
 @RequiredArgsConstructor
 @Service
@@ -24,6 +25,9 @@ public class AuthService {
         if (memberRepository.existsByEmail(reqDTO.getEmail())) {
             throw new BaseException(EXIST_EMAIL_ERROR);
         }
+        if (!reqDTO.getPassword().equals(reqDTO.getCheckPassword())) {
+            throw new BaseException(MEMBER_PASSWORD_CONFLICT);
+        }
 
         Member newMember = Member.builder()
                 .email(reqDTO.getEmail())
@@ -34,6 +38,6 @@ public class AuthService {
 
         memberRepository.save(newMember).getId();
 
-        return "회원가입 성공";
+        return "회원가입 성공하였습니다.";
     }
 }
