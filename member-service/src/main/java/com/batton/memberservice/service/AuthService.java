@@ -5,6 +5,7 @@ import com.batton.memberservice.common.BaseResponseStatus;
 import com.batton.memberservice.domain.Member;
 import com.batton.memberservice.dto.SignupMemberReqDTO;
 import com.batton.memberservice.enums.Authority;
+import com.batton.memberservice.enums.Status;
 import com.batton.memberservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,6 +35,7 @@ public class AuthService {
                 .nickname(reqDTO.getNickname())
                 .password(passwordEncoder.encode(reqDTO.getPassword()))
                 .authority(Authority.ROLE_USER)
+                .status(Status.ENABLED)
                 .build();
 
         memberRepository.save(newMember).getId();
