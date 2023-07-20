@@ -6,9 +6,7 @@ import lombok.Getter;
 @Getter
 public class PatchMemberPasswordReqDTO {
     private String currentPassword;
-
     private String changedPassword;
-
     private String checkChangedPassword;
 
     @Builder

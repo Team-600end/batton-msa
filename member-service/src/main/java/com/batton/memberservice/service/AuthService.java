@@ -38,6 +38,6 @@ public class AuthService {
 
         memberRepository.save(newMember).getId();
 
-        return "회원가입 성공";
+        return "회원가입 성공하였습니다.";
     }
 }

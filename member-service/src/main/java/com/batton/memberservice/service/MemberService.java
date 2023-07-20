@@ -10,15 +10,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 import static com.batton.memberservice.common.BaseResponseStatus.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     /**
@@ -26,6 +27,7 @@ public class MemberService {
      * */
     public GetMemberResDTO getMember(Long memberId) {
         Optional<Member> member = memberRepository.findById(memberId);
+
         if (member.isPresent()) {
             return GetMemberResDTO.builder()
                     .nickname(member.get().getNickname())
@@ -41,12 +43,14 @@ public class MemberService {
      * */
     public String patchMember(Long memberId, PatchMemberReqDTO patchMemberReqDTO) {
         Optional<Member> member = memberRepository.findById(memberId);
+
         if (member.isPresent()) {
             member.get().update(patchMemberReqDTO.getNickname(), patchMemberReqDTO.getProfileImage());
             memberRepository.save(member.get());
         } else {
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
+
         return "회원 정보 수정되었습니다.";
     }
 
@@ -55,6 +59,7 @@ public class MemberService {
      * */
     public String patchMemberPassword(Long memberId, PatchMemberPasswordReqDTO patchMemberPasswordReqDTO) {
         Optional<Member> member = memberRepository.findById(memberId);
+
         if (member.isPresent()) {
             if (passwordEncoder.matches(patchMemberPasswordReqDTO.getCurrentPassword(), member.get().getPassword())) {
                 throw new BaseException(MEMBER_PASSWORD_DISCORD);
@@ -67,6 +72,7 @@ public class MemberService {
         } else {
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
+
         return "회원 비밀번호 수정되었습니다.";
     }
 }

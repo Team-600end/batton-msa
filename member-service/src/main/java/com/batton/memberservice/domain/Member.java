@@ -15,19 +15,13 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
-
     @Column(nullable = false, unique = true)
     private String email;
-
     private String nickname;
-
     private String password;
-
     @Enumerated(EnumType.STRING)
     private Authority authority;
-
     private String profileImage;
-
     private Status status;
 
     @Builder

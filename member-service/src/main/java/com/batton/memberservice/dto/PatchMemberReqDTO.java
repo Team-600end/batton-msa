@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 public class PatchMemberReqDTO {
     private String nickname;
-
     private String profileImage;
 
     @Builder
