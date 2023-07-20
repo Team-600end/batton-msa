@@ -43,6 +43,12 @@ public class Project extends BaseEntity{
         this.projectKey = projectKey;
     }
 
+    public void update(String projectTitle, String projectContent, String projectImage) {
+        this.projectTitle = projectTitle;
+        this.projectContent = projectContent;
+        this.projectImage = projectImage;
+    }
+
 //    public void setId(Long id) {
 //        this.id = id;
 //    }

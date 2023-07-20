@@ -8,11 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     boolean existsByProjectKey(String projectKey);
+
+    Optional<Project> findById(Long projectId);
 
 //    @Query("SELECT DISTINCT b.project.id FROM Belong b WHERE b.memberId = ?1")
 //    List<Long> findProjectIdsByMemberId(Long memberId);
