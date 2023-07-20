@@ -24,7 +24,9 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final BelongRepository belongRepository;
 
-    //프로젝트 생성하기 함수
+    /**
+     * 프로젝트 생성 API
+     * */
     @Transactional
     public Long addProject(Long memberId, PostProjectReqDTO postProjectReqDTO) {
         boolean isUnique = false;
@@ -46,7 +48,9 @@ public class ProjectService {
         return newProjectId;
     }
 
-    //팀원 추가하는 함수
+    /**
+     * 프로젝트 생성 API - 팀원 추가
+     * */
     @Transactional
     public String addTeamMember(Long memberId, Long projectId, List<ProjectTeamReqDTO> teamMemberList) {
         Optional<Project> newProject = projectRepository.findById(projectId);
@@ -62,7 +66,7 @@ public class ProjectService {
                             .memberId(projectTeamReqDTO.getMemberId())
                             .nickname(projectTeamReqDTO.getNickname())
                             .status(projectTeamReqDTO.getStatus())
-                            .grade(GradeType.MANAGER)
+                            .grade(GradeType.LEADER)
                             .build();
 
                     belongRepository.save(belong);
@@ -80,6 +84,9 @@ public class ProjectService {
         return "프로젝트 팀원 추가 성공";
     }
 
+    /**
+     * 프로젝트 수정 API
+     * */
     @Transactional
     public String modifyProject(Long projectId, Long memberId, PatchProjectReqDTO patchProjectReqDTO) {
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
@@ -100,5 +107,25 @@ public class ProjectService {
         }
 
         return "프로젝트 수정 성공";
+    }
+
+    /**
+     * 프로젝트 삭제 API
+     * */
+    @Transactional
+    public String removeProject(Long memberId, Long projectId) {
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
+
+        if (belong.isPresent()) {
+            if (belong.get().getGrade() == GradeType.MEMBER) {
+                throw new BaseException(USER_NO_AUTHORITY);
+            } else {
+                projectRepository.deleteById(projectId);
+            }
+        } else {
+            throw new BaseException(PROJECT_NOT_FOUND);
+        }
+
+        return "프로젝트 삭제 성공";
     }
 }

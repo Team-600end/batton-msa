@@ -46,4 +46,21 @@ public class ProjectController {
 
         return new BaseResponse<>(modifyProjectRes);
     }
+
+    /**
+     * 프로젝트 삭제 API
+     * @param projectId 프로젝트 아이디 값
+     * @return message
+     */
+    @DeleteMapping("/{projectId}")
+    @Operation(summary = "프로젝트 삭제")
+    @ApiResponses({
+            @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),
+            @ApiResponse(responseCode = "701", description = "프로젝트를 찾을 수 없습니다.")
+    })
+    private BaseResponse<String> deleteProject(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId) {
+        String deleteProjectRes = projectService.removeProject(memberId, projectId);
+
+        return new BaseResponse<>(deleteProjectRes);
+    }
 }
