@@ -1,9 +1,10 @@
 package com.batton.memberservice.controller;
 
 import com.batton.memberservice.common.BaseResponse;
+import com.batton.memberservice.dto.client.GetMemberListResDTO;
+import com.batton.memberservice.dto.client.GetMemberResDTO;
 import com.batton.memberservice.dto.PatchMemberPasswordReqDTO;
 import com.batton.memberservice.dto.PatchMemberReqDTO;
-import com.batton.memberservice.dto.client.GetMemberResDTO;
 import com.batton.memberservice.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -35,7 +38,6 @@ public class MemberController {
 
         return new BaseResponse<>(getMemberResDTO);
     }
-
 
     /**
      * 유저 정보 수정 API
@@ -74,5 +76,20 @@ public class MemberController {
         String patchMemberPasswordRes = memberService.patchMemberPassword(memberId, patchMemberPasswordReqDTO);
 
         return new BaseResponse<>(patchMemberPasswordRes);
+    }
+
+    /**
+     * 유저 목록 조회 API(Feign Client)
+     *
+     * @return List<GetMemberListResDTO>
+     * */
+    @GetMapping("/list")
+    @Operation(summary = "유저 목록 조회")
+    @ApiResponses({
+    })
+    private BaseResponse<List<GetMemberListResDTO>> getMember() {
+        List<GetMemberListResDTO> getMemberListResDTO = memberService.getMemberList();
+
+        return new BaseResponse<>(getMemberListResDTO);
     }
 }
