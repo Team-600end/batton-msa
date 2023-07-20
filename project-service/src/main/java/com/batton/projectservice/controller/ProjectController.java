@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Member;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -32,5 +33,20 @@ public class ProjectController {
 
         return new BaseResponse<>(projectId);
     }
+
+    /**
+     * 알고있는 멤버 조회 API
+     * @param
+     * @return List of Member
+     */
+//    @GetMapping("/known-members")
+//    @Operation(summary = "알고있는 멤버 조회")
+//    private BaseResponse<List<Member>> getKnownMembers(@RequestHeader Long memberId) {
+//        List<Member> knownMembers = projectService.getKnownMembers(memberId);
+//
+//        return new BaseResponse<>(knownMembers);
+//    }
+
+
 
 }

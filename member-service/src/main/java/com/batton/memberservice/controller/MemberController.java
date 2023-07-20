@@ -36,4 +36,13 @@ public class MemberController {
 
         return new BaseResponse<>(getMemberResDTO);
     }
+
+    /**
+     * 사용자 정보 조회 API
+     * @param email 정보를 조회할 유저 이메일
+     * @return GetMemberResDTO
+     */
+//    @GetMapping("/add-members")
+
+
 }

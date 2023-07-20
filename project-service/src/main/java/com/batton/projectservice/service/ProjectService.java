@@ -11,10 +11,11 @@ import com.batton.projectservice.repository.BelongRepository;
 import com.batton.projectservice.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
+
+import static com.batton.projectservice.common.BaseResponseStatus.NOT_FOUND;
 
 @RequiredArgsConstructor
 @Service
@@ -24,12 +25,10 @@ public class ProjectService {
 
     @Transactional
     public Long addProject(Long memberId, PostProjectReqDTO postProjectReqDTO) {
-
         boolean isUnique = false;
-
         String projectKey = UUID.randomUUID().toString();
 
-        while(!isUnique){
+        while(!isUnique) {
             if(projectRepository.existsByProjectKey(projectKey))
                 projectKey = UUID.randomUUID().toString();
             else
@@ -53,6 +52,7 @@ public class ProjectService {
     public String addTeamMember(Long memberId, Long projectId, List<ProjectTeamReqDTO> teamMemberList) {
 
         Project newProject = projectRepository.findById(projectId).get();
+//        Project newProject = projectRepository.findById(projectId).orElseThrow(() -> new BaseException(NOT_FOUND));
 
         for (ProjectTeamReqDTO projectTeamReqDTO : teamMemberList) {
             if(projectTeamReqDTO.getMemberId() == memberId){

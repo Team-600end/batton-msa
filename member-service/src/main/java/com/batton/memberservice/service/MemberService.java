@@ -5,6 +5,7 @@ import com.batton.memberservice.domain.Member;
 import com.batton.memberservice.dto.client.GetMemberResDTO;
 import com.batton.memberservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -25,5 +26,28 @@ public class MemberService {
         } else {
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
+    }
+
+    public com.batton.memberservice.dto.GetMemberResDTO checkMember(String email){
+
+        Optional<Member> member;
+
+        if(memberRepository.findByEmail(email) == null){
+
+            throw new BaseException(MEMBER_INVALID_USER_ID);
+
+        } else {
+            member = memberRepository.findByEmail(email);
+        }
+
+        com.batton.memberservice.dto.GetMemberResDTO getMemberResDTO = com.batton.memberservice.dto.GetMemberResDTO.builder()
+                .memberId(member.get().getId())
+                .nickname(member.get().getNickname())
+                .status(member.get().getStatus())
+                .profileImage(member.get().getProfileImage())
+                .email(member.get().getEmail())
+                .build();
+
+        return getMemberResDTO;
     }
 }

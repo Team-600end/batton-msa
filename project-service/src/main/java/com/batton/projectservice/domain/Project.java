@@ -1,9 +1,6 @@
 package com.batton.projectservice.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -45,5 +42,9 @@ public class Project extends BaseEntity{
         this.projectImage = projectImage;
         this.projectKey = projectKey;
     }
+
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
 
 }
