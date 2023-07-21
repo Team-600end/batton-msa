@@ -1,13 +1,10 @@
-package com.batton.noticeservice.dto.mq;
+package com.batton.noticeservice.mq.dto;
 
 import com.batton.noticeservice.domain.Notice;
 import com.batton.noticeservice.enums.NoticeType;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor

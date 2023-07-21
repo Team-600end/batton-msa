@@ -1,7 +1,7 @@
 package com.batton.noticeservice.mq;
 
 import com.batton.noticeservice.domain.Notice;
-import com.batton.noticeservice.dto.mq.NoticeMessage;
+import com.batton.noticeservice.mq.dto.NoticeMessage;
 import com.batton.noticeservice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

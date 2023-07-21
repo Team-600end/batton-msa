@@ -1,11 +1,9 @@
-package com.batton.projectservice.dto.mq;
+package com.batton.projectservice.mq.dto;
 
 import com.batton.projectservice.enums.NoticeType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
