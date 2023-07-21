@@ -14,5 +14,5 @@ import javax.validation.Valid;
 @FeignClient(name = "member-service", url = "http://localhost:8081")
 public interface MemberServiceFeignClient {
     @RequestMapping(method = RequestMethod.GET, value = "/members/{memberId}", consumes = "application/json")
-    GetMemberResDTO getMember(@PathVariable("memberId") Long memberId);
+    BaseResponse<GetMemberResDTO> getMember(@PathVariable("memberId") Long memberId);
 }

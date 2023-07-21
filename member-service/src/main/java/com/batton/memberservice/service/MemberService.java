@@ -1,6 +1,7 @@
 package com.batton.memberservice.service;
 
 import com.batton.memberservice.common.BaseException;
+import com.batton.memberservice.common.BaseResponse;
 import com.batton.memberservice.domain.Member;
 import com.batton.memberservice.dto.GetMemberInfoResDTO;
 import com.batton.memberservice.dto.client.GetMemberListResDTO;

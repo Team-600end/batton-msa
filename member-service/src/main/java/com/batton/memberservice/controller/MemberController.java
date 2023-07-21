@@ -32,8 +32,10 @@ public class MemberController {
     @ApiResponses({
             @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
     })
-    private GetMemberResDTO getMember(@PathVariable("memberId") Long memberId) {
-        return memberService.getMember(memberId);
+    private BaseResponse<GetMemberResDTO> getMember(@PathVariable("memberId") Long memberId) {
+        GetMemberResDTO getMemberResDTO = memberService.getMember(memberId);
+
+        return new BaseResponse<>(getMemberResDTO);
     }
 
     /**

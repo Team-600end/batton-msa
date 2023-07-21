@@ -76,7 +76,7 @@ public class NoticeService {
         List<GetNoticeResDTO> responseDTO = new ArrayList<>();
 
         for (Notice notice : noticeList) {
-            GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(notice.getSenderId());
+            GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(notice.getSenderId()).getResult();
             String date = Chrono.timesAgo(notice.getCreatedAt());
 
             if (getMemberResDTO == null) {
