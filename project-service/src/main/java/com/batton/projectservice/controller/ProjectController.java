@@ -58,7 +58,7 @@ public class ProjectController {
             @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),
             @ApiResponse(responseCode = "701", description = "프로젝트를 찾을 수 없습니다.")
     })
-    private BaseResponse<String> deleteProject(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId) {
+    private BaseResponse<String> deleteProject (@RequestHeader Long memberId, @PathVariable("projectId") Long projectId) {
         String deleteProjectRes = projectService.removeProject(memberId, projectId);
 
         return new BaseResponse<>(deleteProjectRes);

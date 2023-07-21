@@ -3,6 +3,7 @@ package com.batton.projectservice.service;
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Project;
+import com.batton.projectservice.dto.GetBelongResDTO;
 import com.batton.projectservice.dto.PatchProjectReqDTO;
 import com.batton.projectservice.dto.PostProjectReqDTO;
 import com.batton.projectservice.dto.ProjectTeamReqDTO;
