@@ -25,6 +25,9 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final MemberServiceFeignClient memberServiceFeignClient;
 
+    /**
+     * 사용자 전체 알림 목록 조회
+     * */
     public List<GetNoticeResDTO> getAllNoticeList(Long receiverId, int option) {
         List<Notice> noticeList;
 
@@ -37,6 +40,9 @@ public class NoticeService {
         return getNoticeList(noticeList);
     }
 
+    /**
+     * 사용자 이슈 알림 목록 조회
+     * */
     public List<GetNoticeResDTO> getIssueNoticeList(Long receiverId, int option) {
         List<NoticeType> types = Arrays.asList(REVIEW, APPROVE, REJECT, BATTON, COMMENT);
         List<Notice> noticeList;
@@ -50,6 +56,9 @@ public class NoticeService {
         return getNoticeList(noticeList);
     }
 
+    /**
+     * 사용자 프로젝트 알림 목록 조회
+     * */
     public List<GetNoticeResDTO> getProjectNoticeList(Long receiverId, int option) {
         List<NoticeType> types = Arrays.asList(INVITE, EXCLUDE, NEW);
         List<Notice> noticeList;
