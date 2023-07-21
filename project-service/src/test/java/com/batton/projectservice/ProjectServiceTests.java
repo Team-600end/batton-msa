@@ -1,7 +1,7 @@
 package com.batton.projectservice;
 
-import com.batton.projectservice.dto.PostProjectReqDTO;
-import com.batton.projectservice.dto.ProjectTeamReqDTO;
+import com.batton.projectservice.dto.project.PostProjectReqDTO;
+import com.batton.projectservice.dto.project.ProjectTeamReqDTO;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.repository.BelongRepository;
@@ -16,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.OngoingStubbing;
 
 import java.util.ArrayList;
 import java.util.List;

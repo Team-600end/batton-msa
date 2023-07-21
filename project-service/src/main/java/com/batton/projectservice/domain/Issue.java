@@ -35,10 +35,10 @@ public class Issue extends BaseEntity {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Issue(Long id, String issueTitle, IssueStatus issueState, IssueTag issueTag, int issueSeq, Project project, Belong belong) {
+    public Issue(Long id, String issueTitle, IssueStatus issueStatus, IssueTag issueTag, int issueSeq, Project project, Belong belong) {
         this.id = id;
         this.issueTitle = issueTitle;
-        this.issueStatus = issueState;
+        this.issueStatus = issueStatus;
         this.issueTag = issueTag;
         this.issueSeq = issueSeq;
         this.project = project;
