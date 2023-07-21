@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -17,13 +16,10 @@ public class Comment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
     private Long id;
-
     private String commentContent;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "issue_id")
     private Issue issue;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "belong_id")
     private Belong belong;

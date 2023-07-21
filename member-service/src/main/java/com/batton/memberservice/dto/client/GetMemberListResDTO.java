@@ -2,18 +2,17 @@ package com.batton.memberservice.dto.client;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
-public class GetMemberResDTO {
+public class GetMemberListResDTO {
     private String nickname;
     private String profileImage;
+    private String email;
 
     @Builder
-    public GetMemberResDTO(String nickname, String profileImage) {
+    public GetMemberListResDTO(String nickname, String profileImage, String email) {
         this.nickname = nickname;
         this.profileImage = profileImage;
+        this.email = email;
     }
 }
-
