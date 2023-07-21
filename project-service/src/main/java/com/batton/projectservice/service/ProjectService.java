@@ -3,7 +3,6 @@ package com.batton.projectservice.service;
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Project;
-import com.batton.projectservice.dto.GetBelongResDTO;
 import com.batton.projectservice.dto.PatchProjectReqDTO;
 import com.batton.projectservice.dto.PostProjectReqDTO;
 import com.batton.projectservice.dto.ProjectTeamReqDTO;
@@ -13,6 +12,7 @@ import com.batton.projectservice.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -130,3 +130,38 @@ public class ProjectService {
         return "프로젝트 삭제 성공";
     }
 }
+
+    // 가입한 프로젝트 리스트 조회
+//    @Transactional
+//    public GetProjectListResDTO getProjectList(Long memberId) {
+//        Optional<Belong> projectIdList = belongRepository.findByMemberId(memberId);
+//
+//        if (projectIdList.isPresent()) {
+//            List<Long> projectIds = new ArrayList<>();
+////            for (Belong belong : projectIdList.get()) {
+////                projectIds.add(belong.getProject().getId());
+////            }
+////
+////            List<Project> projectList = projectRepository.findAllById(projectIds);
+////
+////            return GetProjectListResDTO.toDTO(projectList);
+//        } else {
+//            throw new BaseException(PROJECT_NOT_FOUND);
+//        }
+//    }
+
+    // 프로젝트 멤버 삭제
+    @Transactional
+    public String deleteTeamMember(Long memberId, Long belongId) {
+        Optional<Belong> belong = belongRepository.findByBelongId(belongId);
+
+        if (belong.isPresent()) {
+            belongRepository.delete(belong.get());
+        } else {
+            throw new BaseException(USER_NOT_FOUND);
+        }
+
+        return "프로젝트 멤버 삭제 성공";
+    }
+}
+
