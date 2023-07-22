@@ -19,7 +19,7 @@ import static com.batton.projectservice.common.BaseResponseStatus.*;
 @Service
 public class BelongService {
     private final BelongRepository belongRepository;
-    private final MemberServiceFeignClient memberServiceFeignClient;
+//    private final MemberServiceFeignClient memberServiceFeignClient;
 
     /**
      * 프로젝트 팀원 권한 변경 API
@@ -49,13 +49,31 @@ public class BelongService {
         return "프로텍트 팀원 권한 변경 성공";
     }
 
-//    /**
-//     * 프로젝트 팀원 조회 API
-//     * */
+    /**
+     * 프로젝트 팀원 조회 API
+     * */
 //    public GetBelongResDTO findBelong(Long memberId, Long projectId) {
 //        List<Belong> belongList = belongRepository.findBelongsByProjectId(projectId, memberId);
 //
 //        List<GetMemberResDTO> memberList = memberServiceFeignClient.getMember(belongList.get().getMemberId());
 //
 //    }
+
+    // 프로젝트 멤버 삭제
+    @Transactional
+    public String deleteTeamMember(Long memberId, Long belongId) {
+        Optional<Belong> belong = belongRepository.findById(belongId);
+        Optional<Belong> myBelong = belongRepository.findByProjectIdAndMemberId(belong.get().getProject().getId(), memberId);
+
+        if (belong.isPresent()) {
+            if (myBelong.get().getGrade() == GradeType.MEMBER) {
+                throw new BaseException(USER_NO_AUTHORITY);
+            }
+            belongRepository.delete(belong.get());
+        } else {
+            throw new BaseException(USER_NOT_FOUND);
+        }
+
+        return "프로젝트 멤버 삭제 성공";
+    }
 }

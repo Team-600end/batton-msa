@@ -60,7 +60,7 @@ public class ProjectService {
             Project project = newProject.get();
 
             for (ProjectTeamReqDTO projectTeamReqDTO : teamMemberList) {
-                //프로젝트 생성한 사람일 경우 MANAGER 권한 부여
+                //프로젝트 생성한 사람일 경우 LEADER 권한 부여
                 if (projectTeamReqDTO.getMemberId() == memberId) {
                     Belong belong = Belong.builder()
                             .project(project)
@@ -129,7 +129,7 @@ public class ProjectService {
 
         return "프로젝트 삭제 성공";
     }
-}
+
 
     // 가입한 프로젝트 리스트 조회
 //    @Transactional
@@ -149,19 +149,5 @@ public class ProjectService {
 //            throw new BaseException(PROJECT_NOT_FOUND);
 //        }
 //    }
-
-    // 프로젝트 멤버 삭제
-    @Transactional
-    public String deleteTeamMember(Long memberId, Long belongId) {
-        Optional<Belong> belong = belongRepository.findByBelongId(belongId);
-
-        if (belong.isPresent()) {
-            belongRepository.delete(belong.get());
-        } else {
-            throw new BaseException(USER_NOT_FOUND);
-        }
-
-        return "프로젝트 멤버 삭제 성공";
-    }
 }
 
