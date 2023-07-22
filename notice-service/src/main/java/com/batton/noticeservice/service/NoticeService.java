@@ -11,6 +11,7 @@ import com.batton.noticeservice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +22,7 @@ import static com.batton.noticeservice.enums.NoticeType.*;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final MemberServiceFeignClient memberServiceFeignClient;
@@ -76,7 +78,7 @@ public class NoticeService {
         List<GetNoticeResDTO> responseDTO = new ArrayList<>();
 
         for (Notice notice : noticeList) {
-            GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(notice.getSenderId()).getResult();
+            GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(notice.getSenderId());
             String date = Chrono.timesAgo(notice.getCreatedAt());
 
             if (getMemberResDTO == null) {

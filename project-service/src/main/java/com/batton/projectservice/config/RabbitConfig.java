@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
     private static final String TOPIC_EXCHANGE_NAME = "notice-exchange";
-    private static final String QUEUE_NAME = "notice";
-    private static final String ROUTING_KEY = "notice.key.#";
+    private static final String QUEUE_NAME = "notice.queue";
+    private static final String ROUTING_KEY = "notice.key";
 
     @Value("${spring.rabbitmq.host}")
     private String host;

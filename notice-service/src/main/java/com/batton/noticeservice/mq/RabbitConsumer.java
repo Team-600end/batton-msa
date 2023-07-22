@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class RabbitConsumer {
     private final NoticeRepository noticeRepository;
 
-    @RabbitListener(queues = "notice")
+    @RabbitListener(queues = "notice.queue")
     public void saveNoticeMessage(NoticeMessage noticeMessage) {
         Notice notice = NoticeMessage.toEntity(noticeMessage);
         Notice savedNotice = noticeRepository.save(notice);

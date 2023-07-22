@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class NoticeMessage {
+    private Long projectId;
     private Long senderId;
     private Long receiverId;
     private Long contentId;
@@ -16,7 +17,8 @@ public class NoticeMessage {
     private String noticeContent;
 
     @Builder
-    public NoticeMessage(Long senderId, Long receiverId, Long contentId, NoticeType noticeType, String noticeContent) {
+    public NoticeMessage(Long projectId, Long senderId, Long receiverId, Long contentId, NoticeType noticeType, String noticeContent) {
+        this.projectId = projectId;
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.contentId = contentId;
@@ -26,6 +28,7 @@ public class NoticeMessage {
 
     public static Notice toEntity(NoticeMessage dto){
         return Notice.builder()
+                .projectId(dto.getProjectId())
                 .noticeType(dto.getNoticeType())
                 .noticeContent(dto.getNoticeContent())
                 .senderId(dto.getSenderId())

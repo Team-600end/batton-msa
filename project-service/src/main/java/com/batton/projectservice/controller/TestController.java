@@ -23,8 +23,9 @@ public class TestController {
         NoticeMessage noticeMessage = NoticeMessage.builder()
                 .noticeContent("이승희님이 알림을 보냈습니다.")
                 .noticeType(NEW)
+                .projectId(1L)
                 .senderId(1L)
-                .receiverId(2L)
+                .receiverId(1L)
                 .contentId(3L)
                 .build();
         String result = rabbitProducer.sendNoticeMessage(noticeMessage);

@@ -1,23 +1,19 @@
 package com.batton.memberservice.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import static com.batton.memberservice.common.BaseResponseStatus.SUCCESS;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 @JsonPropertyOrder({"isSuccess", "code", "message", "result"})
 public class BaseResponse<T> {
-    @JsonProperty("isSuccess")
-    private Boolean isSuccess;
-    private String message;
-    private int code;
+    private final Boolean isSuccess;
+    private final String message;
+    private final int code;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T result;
 

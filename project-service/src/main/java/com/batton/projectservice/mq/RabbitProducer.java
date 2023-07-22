@@ -14,7 +14,9 @@ public class RabbitProducer {
     private final RabbitTemplate rabbitTemplate;
 
     public String sendNoticeMessage(NoticeMessage noticeMessage) {
-        rabbitTemplate.convertAndSend("notice-exchange", "notice.key.#", noticeMessage);
+        rabbitTemplate.convertAndSend("notice-exchange", "notice.key", noticeMessage);
+        rabbitTemplate.convertAndSend("notice-exchange", "user.key" + noticeMessage.getReceiverId().toString(), noticeMessage);
+
         return "알림 데이터 전송 완료";
     }
 }

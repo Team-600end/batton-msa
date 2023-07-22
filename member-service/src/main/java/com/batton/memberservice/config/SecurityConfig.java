@@ -43,7 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().anyRequest().permitAll();
 
         http.addFilter(authenticationFilter);
-
     }
 
     @Override

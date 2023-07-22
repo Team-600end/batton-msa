@@ -11,13 +11,11 @@ import static com.batton.projectservice.common.BaseResponseStatus.SUCCESS;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 @JsonPropertyOrder({"isSuccess", "code", "message", "result"})
 public class BaseResponse<T> {
-    @JsonProperty("isSuccess")
-    private Boolean isSuccess;
-    private String message;
-    private int code;
+    private final Boolean isSuccess;
+    private final String message;
+    private final int code;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T result;
 
