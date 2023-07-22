@@ -8,23 +8,23 @@ import lombok.Getter;
 public class GetProjectListResDTO {
     private Long projectId;
     private String projectTitle;
-    private String projectContent;
     private String projectImage;
+    private String projectKey;
 
     @Builder
-    public GetProjectListResDTO(Long projectId, String projectTitle, String projectContent, String projectImage) {
+    public GetProjectListResDTO(Long projectId, String projectTitle, String projectImage, String projectKey) {
         this.projectId = projectId;
         this.projectTitle = projectTitle;
-        this.projectContent = projectContent;
         this.projectImage = projectImage;
+        this.projectKey = projectKey;
     }
 
     public static GetProjectListResDTO toDTO(Project project) {
         return GetProjectListResDTO.builder()
                 .projectId(project.getId())
                 .projectTitle(project.getProjectTitle())
-                .projectContent(project.getProjectContent())
                 .projectImage(project.getProjectImage())
+                .projectKey(project.getProjectKey())
                 .build();
     }
 }

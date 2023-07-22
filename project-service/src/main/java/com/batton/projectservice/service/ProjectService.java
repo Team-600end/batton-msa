@@ -3,6 +3,7 @@ package com.batton.projectservice.service;
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Project;
+import com.batton.projectservice.dto.GetProjectListResDTO;
 import com.batton.projectservice.dto.PatchProjectReqDTO;
 import com.batton.projectservice.dto.PostProjectReqDTO;
 import com.batton.projectservice.dto.ProjectTeamReqDTO;
@@ -50,7 +51,7 @@ public class ProjectService {
     }
 
     /**
-     * 프로젝트 생성 API - 팀원 추가
+     * 프로젝트 팀원 추가 API
      * */
     @Transactional
     public String addTeamMember(Long memberId, Long projectId, List<ProjectTeamReqDTO> teamMemberList) {
@@ -130,24 +131,24 @@ public class ProjectService {
         return "프로젝트 삭제 성공";
     }
 
+    /**
+     * 프로젝트 네비바 리스트 조회 API
+     */
+    @Transactional
+    public List<GetProjectListResDTO> getProjectListForNavbar(Long memberId) {
+        List<Optional<Belong>> projectList = belongRepository.findByMemberId(memberId);
 
-    // 가입한 프로젝트 리스트 조회
-//    @Transactional
-//    public GetProjectListResDTO getProjectList(Long memberId) {
-//        Optional<Belong> projectIdList = belongRepository.findByMemberId(memberId);
-//
-//        if (projectIdList.isPresent()) {
-//            List<Long> projectIds = new ArrayList<>();
-////            for (Belong belong : projectIdList.get()) {
-////                projectIds.add(belong.getProject().getId());
-////            }
-////
-////            List<Project> projectList = projectRepository.findAllById(projectIds);
-////
-////            return GetProjectListResDTO.toDTO(projectList);
-//        } else {
-//            throw new BaseException(PROJECT_NOT_FOUND);
-//        }
-//    }
+        if (!projectList.isEmpty()) {
+            List<GetProjectListResDTO> getProjectListResDTOList = new ArrayList<>();
+
+            for (Optional<Belong> belong : projectList) {
+                getProjectListResDTOList.add(GetProjectListResDTO.toDTO(belong.get().getProject()));
+            }
+
+            return getProjectListResDTOList;
+        } else {
+            throw new BaseException(PROJECT_NOT_FOUND);
+        }
+    }
 }
 

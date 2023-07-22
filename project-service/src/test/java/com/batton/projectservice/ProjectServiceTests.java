@@ -6,6 +6,7 @@
 //import com.batton.projectservice.enums.Status;
 //import com.batton.projectservice.repository.BelongRepository;
 //import com.batton.projectservice.repository.ProjectRepository;
+//import com.batton.projectservice.service.BelongService;
 //import com.batton.projectservice.service.ProjectService;
 //import com.batton.projectservice.domain.Project;
 //import org.junit.jupiter.api.BeforeEach;
@@ -44,96 +45,78 @@
 //    BelongRepository belongRepository;
 //    @InjectMocks
 //    private ProjectService projectService;
+//    @InjectMocks
+//    private BelongService belongService;
 //
 //    @BeforeEach
 //    public void setup() {
 //        MockitoAnnotations.openMocks(this);
 //    }
 //
-//    @Autowired
-//    private MockMvc mockMvc; // mockMvc 생성
-//
 //    @Test
-//    @DisplayName("프로젝트 생성")
-//    public void testAddProject() throws Exception {
-//
-//        List<ProjectTeamReqDTO> teamMemberList = new ArrayList<>();
-//        ProjectTeamReqDTO teamMember1 = ProjectTeamReqDTO.builder()
-//                .memberId(1L)
-//                .nickname("닉네임1")
-//                .status(Status.ENABLED)
-//                .gradeType(GradeType.MANAGER)
-//                .build();
-//
-//        teamMemberList.add(teamMember1);
-//
-//        ProjectTeamReqDTO teamMember2 = ProjectTeamReqDTO.builder()
-//                .memberId(2L)
-//                .nickname("닉네임2")
-//                .status(Status.ENABLED)
-//                .gradeType(GradeType.MEMBER)
-//                .build();
-//        teamMemberList.add(teamMember2);
-//
-////        // api 요청
-////        mockMvc
-////                .perform(
-////                        post("/boards") // url
-////                                .param("name", "myName") // parameter
-////                                .param("value", "myValue") // parameter
-////                )
-////                .andDo(print()) // api 수행내역 로그 출력
-////                .andExpect(status().isOk()) // response status 200 검증
-////                .andExpect(jsonPath("method").value("GET")) // response method 데이터 검증
-////                .andExpect(jsonPath("name").value("myName")) // response name 데이터 검증
-////                .andExpect(jsonPath("value").value("myValue")); // response value 데이터 검증
-////
-//
-//
-//
-////        PostProjectReqDTO postProjectReqDTO = PostProjectReqDTO.builder()
-////
-////                .projectTitle("프로젝트 제목")
-////                .projectContent("프로젝트 내용")
-////                .projectImage("프로젝트 이미지")
-////                .teamMemberList(teamMemberList)
-////                .build();
-////
-////        Project project = Project.builder()
-////                .projectTitle("프로젝트 제목")
-////                .projectContent("프로젝트 내용")
-////                .projectImage("프로젝트 이미지")
-////                .build();
-//
+//    @DisplayName("프로젝트 네비바 리스트 조회 서비스 테스트")
+//    public void testNavbar() throws Exception {
 //        // given
-//        PostProjectReqDTO postProjectReqDTO = new PostProjectReqDTO( "프로젝트제목", "프로젝트 내용", "프로젝트 이미지", teamMemberList);
+//        List<Project> projectList = new ArrayList<>();
+//        Project project1 = Project.builder()
+//                .id(1L)
+//                .title("프로젝트1")
+//                .projectKey("프로젝트키1")
+//                .status(Status.ENABLED)
+//                .build();
+//        projectList.add(project1);
 //
-//        // when, then
-////        mockMvc.perform(
-////                        post("/boards")
-////                                .contentType(MediaType.APPLICATION_JSON)
-////                                .content(objectMapper.writeValueAsString(boardReq)))
-////                .andExpect(status().isCreated());
+//        Project project2 = Project.builder()
+//                .id(2L)
+//                .title("프로젝트2")
+//                .projectKey("프로젝트키2")
+//                .status(Status.ENABLED)
+//                .build();
+//        projectList.add(project2);
+//
+//        given(projectRepository.findProjectsByMemberId(anyLong())).willReturn(projectList);
+//
+//        // when
+//        List<Project> projects = projectService.findProjectsByMemberId(1L);
+//
+//        // then
+//        verify(projectRepository, times(1)).findProjectsByMemberId(anyLong());
+//        assertEquals(2, projects.size());
+//        assertThat(projects.get(0).getTitle()).isEqualTo("프로젝트1");
+//        assertThat(projects.get(1).getTitle()).isEqualTo("프로젝트2");
+//    }
+//
+////    @Autowired
+////    private MockMvc mockMvc; // mockMvc 생성
 ////
-////        verify(boardService).save(boardReq);
-//
-////        given(projectRepository.save(any())).willReturn(project);
-////        given(projectRepository.save(any())).willReturn(null);
-////        given(projectRepository.save(any())).willAnswer(invocation -> {
-////            Project savedProject = invocation.getArgument(0);
-////            savedProject.setId(1L);  // 예시로 ID를 1L로 설정
-////            return savedProject;
-////        });
-////        given(projectRepository.save(any())).willReturn(new Project());
-//
-//
-////        projectService.addProject(memberId, postProjectReqDTO);
-////        verify(projectRepository).save(any());
-//
+////    @Test
+////    @DisplayName("프로젝트 생성")
+////    public void testAddProject() throws Exception {
+////
+////        List<ProjectTeamReqDTO> teamMemberList = new ArrayList<>();
+////        ProjectTeamReqDTO teamMember1 = ProjectTeamReqDTO.builder()
+////                .memberId(1L)
+////                .nickname("닉네임1")
+////                .status(Status.ENABLED)
+////                .gradeType(GradeType.MANAGER)
+////                .build();
+////
+////        teamMemberList.add(teamMember1);
+////
+////        ProjectTeamReqDTO teamMember2 = ProjectTeamReqDTO.builder()
+////                .memberId(2L)
+////                .nickname("닉네임2")
+////                .status(Status.ENABLED)
+////                .gradeType(GradeType.MEMBER)
+////                .build();
+////        teamMemberList.add(teamMember2);
+////
+////        // given
+////        PostProjectReqDTO postProjectReqDTO = new PostProjectReqDTO( "프로젝트제목", "프로젝트 내용", "프로젝트 이미지", teamMemberList);
 ////        when(projectRepository.save(any())).thenReturn(savedProject);
-//        //OngoingStubbing<Object> objectOngoingStubbing = when(belongRepository.save(any())).thenReturn(new Belong());
+////        OngoingStubbing<Object> objectOngoingStubbing = when(belongRepository.save(any())).thenReturn(new Belong());
 ////        when(belongRepository.save(any())).thenReturn(new Belong());
-//
+////
 ////        // When
 ////        Long newProjectId = projectService.addProject(memberId, postProjectReqDTO);
 ////
@@ -143,10 +126,30 @@
 ////
 ////        // 응답 값에 프로젝트 ID가 포함되어 있는지 검증
 ////        assertEquals(1L, newProjectId);
-//    }
+////    }
+////
+////    @Test
+////    @DisplayName("프로젝트 멤버 삭제 서비스 테스트")
+////    void deleteBoardServiceTest() {
+////        // given
+////        Project project = new Project()
+////        Belong belong = new Belong(1L, GradeType.LEADER, 2L, "테스트닉네임", Status.ENABLED, );
+////        given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
+////
+////        // when
+////        boardService.deleteBoard(1L);
+////
+////        // then
+////        verify(boardRepository).deleteById(anyLong());
+////    }
 //}
 //
-//
+///**
+// * 프로젝트 생성 API
+// * 프로젝트 멤버 추가 API
+// * 프로젝트 멤버 삭제 API
+// * test code 작성하는 법을 모르겠음,,,
+// */
 //
 //
 //

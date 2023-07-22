@@ -17,4 +17,6 @@ public interface BelongRepository extends JpaRepository<Belong, Long> {
     List<Belong> findBelongsByProjectId(@Param("projectId") Long projectId, @Param("myMemberId") Long myMemberId);
 
     Optional<Belong> findById(Long belongId);
+
+    List<Optional<Belong>> findByMemberId(Long memberId);
 }
