@@ -10,6 +10,7 @@ import com.batton.projectservice.repository.BelongRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,13 +50,19 @@ public class BelongService {
         return "프로텍트 팀원 권한 변경 성공";
     }
 
-//    /**
-//     * 프로젝트 팀원 조회 API
-//     * */
-//    public GetBelongResDTO findBelong(Long memberId, Long projectId) {
-//        List<Belong> belongList = belongRepository.findBelongsByProjectId(projectId, memberId);
-//
-//        List<GetMemberResDTO> memberList = memberServiceFeignClient.getMember(belongList.get().getMemberId());
-//
-//    }
+    /**
+     * 프로젝트 팀원 목록 조회 API
+     * */
+    public List<GetBelongResDTO> findBelongList(Long memberId, Long projectId) {
+        List<Belong> belongList = belongRepository.findBelongsByProjectId(projectId, memberId);
+        List<GetBelongResDTO> memberList = new ArrayList<>();
+
+        for (Belong belong : belongList) {
+            GetMemberResDTO member = memberServiceFeignClient.getMember(belong.getMemberId());
+
+            memberList.add(GetBelongResDTO.toDTO(belong, member));
+        }
+
+        return memberList;
+    }
 }
