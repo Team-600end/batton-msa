@@ -4,6 +4,7 @@ import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Project;
+import com.batton.projectservice.dto.PatchIssueReqDTO;
 import com.batton.projectservice.dto.issue.PatchIssueBoardReqDTO;
 import com.batton.projectservice.dto.issue.PostIssueReqDTO;
 import com.batton.projectservice.enums.GradeType;
@@ -67,10 +68,10 @@ public class IssueService {
         }
     }
 
-    @Transactional
     /**
      * 이슈 보드 상태 및 순서 변경 API
      * */
+    @Transactional
     public String modifyIssueBoard(Long memberId, Long issueId, PatchIssueBoardReqDTO patchIssueBoardReqDTO) {
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(patchIssueBoardReqDTO.getProjectId(), memberId);
         Optional<Issue> issue =issueRepository.findById(issueId);
@@ -106,4 +107,38 @@ public class IssueService {
 
         return "이슈 상태 변경 되었습니다.";
     }
+
+    /**
+     * 이슈 수정 API
+     * */
+    @Transactional
+    public String modifyIssue(Long issueId, PatchIssueReqDTO patchIssueReqDTO) {
+        Optional<Issue> issue = issueRepository.findById(issueId);
+        Optional<Belong> belong = belongRepository.findById(patchIssueReqDTO.getBelongId());
+
+        // 소속 유저 존재 여부 검증
+        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+            // 이슈 존재 여부 검증
+            if (issue.isPresent()) {
+                // 이슈를 완료 상태로 변경하는 권한 확인
+                if (patchIssueReqDTO.getIssueStatus().equals(IssueStatus.DONE) && belong.get().getGrade().equals(GradeType.MEMBER)) {
+                    throw new BaseException(USER_NO_AUTHORITY);
+                }
+                List<Issue> issues = issueRepository.findByIssueStatusOrderByIssueSeq(patchIssueReqDTO.getIssueStatus());
+
+                // 이슈 수정
+                issue.get().modifyIssue(patchIssueReqDTO.getIssueTitle(), patchIssueReqDTO.getIssueContent(), patchIssueReqDTO.getIssueStatus(), patchIssueReqDTO.getIssueTag(), belong.get(), issues.size()+1);
+            } else {
+                throw new BaseException(ISSUE_NOT_FOUND);
+            }
+        } else {
+            throw new BaseException(BELONG_NOT_FOUND);
+        }
+
+        return "이슈 수정 성공";
+    }
+
+    /**
+     * 이슈 삭제 API
+     */
 }

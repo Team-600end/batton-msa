@@ -1,6 +1,7 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
+import com.batton.projectservice.dto.PatchIssueReqDTO;
 import com.batton.projectservice.dto.issue.PatchIssueBoardReqDTO;
 import com.batton.projectservice.dto.issue.PostIssueReqDTO;
 import com.batton.projectservice.service.IssueService;
@@ -52,4 +53,21 @@ public class IssueController {
         return new BaseResponse<>(patchIssueBoard);
     }
 
+    /**
+     * 이슈 수정 API
+     * @param issueId 상태를 변경할 이슈 아이디
+     * @return String
+     */
+    @PatchMapping("/{issueId}")
+    @Operation(summary = "이슈 수정")
+    @ApiResponses({
+            @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),
+            @ApiResponse(responseCode = "703", description = "소속 유저를 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "704", description = "이슈를 찾을 수 없습니다.")
+    })
+    private BaseResponse<String> patchIssue(@PathVariable("issueId") Long issueId, @RequestBody PatchIssueReqDTO patchIssueReqDTO) {
+        String patchIssue = issueService.modifyIssue(issueId, patchIssueReqDTO);
+
+        return new BaseResponse<>(patchIssue);
+    }
 }

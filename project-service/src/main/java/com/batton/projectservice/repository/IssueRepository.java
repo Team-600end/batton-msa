@@ -6,10 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface IssueRepository extends JpaRepository<Issue, Long> {
     List<Issue> findByIssueStatusOrderByIssueSeq(IssueStatus status);
     boolean existsByProjectId(Long projectId);
     Issue findTopByProjectIdOrderByCreatedAtDesc(Long projectId);
+    Optional<Issue> findById(Long id);
 }
