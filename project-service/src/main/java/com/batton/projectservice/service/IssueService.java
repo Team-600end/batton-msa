@@ -6,10 +6,7 @@ import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Project;
 import com.batton.projectservice.dto.client.GetMemberResDTO;
-import com.batton.projectservice.dto.issue.GetIssueInfoResDTO;
-import com.batton.projectservice.dto.issue.GetMyIssueResDTO;
-import com.batton.projectservice.dto.issue.PatchIssueBoardReqDTO;
-import com.batton.projectservice.dto.issue.PostIssueReqDTO;
+import com.batton.projectservice.dto.issue.*;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.IssueStatus;
 import com.batton.projectservice.enums.Status;
@@ -147,5 +144,25 @@ public class IssueService {
         } else {
             throw new BaseException(ISSUE_NOT_FOUND);
         }
+    }
+
+    /**
+     * 대시보드 이슈 목록 조회 API
+     */
+    public List<GetIssueListResDTO> findIssueList(Long projectId) {
+        List<Issue> issues = issueRepository.findByProjectIdOrderByUpdatedAtDesc(projectId);
+        List<GetIssueListResDTO> issueListResDTOList = new ArrayList<>();
+
+        if(issues.isEmpty()) {
+            throw new BaseException(ISSUE_NOT_FOUND);
+        }
+        for(Issue issue : issues) {
+            GetMemberResDTO member = memberServiceFeignClient.getMember(issue.getBelong().getMemberId());
+            GetIssueListResDTO issueListResDTO = GetIssueListResDTO.toDTO(issue, member);
+
+            issueListResDTOList.add(issueListResDTO);
+        }
+
+        return issueListResDTOList;
     }
 }
