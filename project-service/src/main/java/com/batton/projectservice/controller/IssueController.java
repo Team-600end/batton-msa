@@ -1,6 +1,7 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
+import com.batton.projectservice.dto.issue.GetIssueBoardResDTO;
 import com.batton.projectservice.dto.issue.PatchIssueBoardReqDTO;
 import com.batton.projectservice.dto.issue.PostIssueReqDTO;
 import com.batton.projectservice.service.IssueService;
@@ -9,6 +10,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -50,6 +53,22 @@ public class IssueController {
         String patchIssueBoard = issueService.modifyIssueBoard(memberId, issueId, patchIssueBoardReqDTO);
 
         return new BaseResponse<>(patchIssueBoard);
+    }
+
+    /**
+     * 이슈 보드 목록 조회
+     *
+     * @return GetIssueBoardResDTO
+     * */
+    @GetMapping("/board/{projectId}")
+    @Operation(summary = "이슈 보드 목록 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "701", description = "프로젝트를 찾을 수 없습니다."),
+    })
+    private BaseResponse<GetIssueBoardResDTO> getIssueBoard(@PathVariable("projectId") Long projectId) {
+        GetIssueBoardResDTO getIssueBoardResDTO = issueService.getIssueBoard(projectId);
+
+        return new BaseResponse<>(getIssueBoardResDTO);
     }
 
 }

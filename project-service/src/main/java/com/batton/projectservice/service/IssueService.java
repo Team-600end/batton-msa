@@ -1,9 +1,13 @@
 package com.batton.projectservice.service;
 
+import com.batton.projectservice.client.MemberServiceFeignClient;
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Project;
+import com.batton.projectservice.dto.client.GetMemberResDTO;
+import com.batton.projectservice.dto.issue.GetIssueBoardResDTO;
+import com.batton.projectservice.dto.issue.GetIssueListResDTO;
 import com.batton.projectservice.dto.issue.PatchIssueBoardReqDTO;
 import com.batton.projectservice.dto.issue.PostIssueReqDTO;
 import com.batton.projectservice.enums.GradeType;
@@ -16,8 +20,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.batton.projectservice.common.BaseResponseStatus.*;
 
@@ -27,6 +33,7 @@ public class IssueService {
     private final IssueRepository issueRepository;
     private final ProjectRepository projectRepository;
     private final BelongRepository belongRepository;
+    private final MemberServiceFeignClient memberServiceFeignClient;
 
     /**
      * 이슈 생성
@@ -59,10 +66,10 @@ public class IssueService {
         }
     }
 
-    @Transactional
     /**
      * 이슈 보드 상태 및 순서 변경 API
      * */
+    @Transactional
     public String modifyIssueBoard(Long memberId, Long issueId, PatchIssueBoardReqDTO patchIssueBoardReqDTO) {
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(patchIssueBoardReqDTO.getProjectId(), memberId);
         Optional<Issue> issue =issueRepository.findById(issueId);
@@ -97,5 +104,35 @@ public class IssueService {
         }
 
         return "이슈 상태 변경 되었습니다.";
+    }
+
+    /**
+     * 이슈 보드 목록 조회 API
+     * */
+    @Transactional
+    public GetIssueBoardResDTO getIssueBoard(Long projectId) {
+        List<Issue> issueList = issueRepository.findByProjectId(projectId);
+        List<GetIssueListResDTO> todoIssues = new ArrayList<>();
+        List<GetIssueListResDTO> progressIssues = new ArrayList<>();
+        List<GetIssueListResDTO> reviewIssues = new ArrayList<>();
+        List<GetIssueListResDTO> doneIssues = new ArrayList<>();
+
+        for (Issue issue : issueList) {
+            GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.getBelong().getMemberId());
+
+            if (issue.getIssueStatus().equals(IssueStatus.TODO)) {
+                todoIssues.add(GetIssueListResDTO.toDTO(issue, getMemberResDTO));
+            }
+            else if (issue.getIssueStatus().equals(IssueStatus.PROGRESS)) {
+                progressIssues.add(GetIssueListResDTO.toDTO(issue, getMemberResDTO));
+            }
+            else if (issue.getIssueStatus().equals(IssueStatus.REVIEW)) {
+                reviewIssues.add(GetIssueListResDTO.toDTO(issue, getMemberResDTO));
+            } else {
+                doneIssues.add(GetIssueListResDTO.toDTO(issue, getMemberResDTO));
+            }
+        }
+
+        return new GetIssueBoardResDTO(todoIssues, progressIssues, reviewIssues, doneIssues);
     }
 }
