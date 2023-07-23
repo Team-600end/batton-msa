@@ -21,26 +21,25 @@ public class BelongController {
     private final ProjectService projectService;
     private final BelongService belongService;
 
-//    /**
-//     * 프로젝트 멤버 추가를 위한 API
-//     * @param projectId 프로젝트 ID 값
-//     * @param memberId 추가할 멤버의 ID 값
-//     * @param invitedMemberId 초대된 멤버의 ID 값
-//     * @param projectTeamReqDTOList 요청 바디에 포함될 ProjectTeamReqDTO 객체
-//     * @return message
-//     */
-//    @PostMapping("/{projectId}")
-//    @Operation(summary = "프로젝트 멤버 추가")
-//    private BaseResponse<String> addMember(
-//            @RequestHeader Long memberId,
-//            @PathVariable("projectId") Long projectId,
-//            @RequestBody List<ProjectTeamReqDTO> projectTeamReqDTOList
-//    ) {
-//
-//        String addMemberRes = projectService.addTeamMember(memberId, projectId, projectTeamReqDTOList);
-//
-//        return new BaseResponse<>(addMemberRes);
-//    }
+    /**
+     * 프로젝트 멤버 추가를 위한 API
+     * @param projectId 프로젝트 ID 값
+     * @param memberId 추가할 멤버의 ID 값
+     * @param projectTeamReqDTOList 요청 바디에 포함될 ProjectTeamReqDTO 객체
+     * @return message
+     */
+    @PostMapping("/{projectId}")
+    @Operation(summary = "프로젝트 멤버 추가")
+    private BaseResponse<String> addMember(
+            @RequestHeader Long memberId,
+            @PathVariable("projectId") Long projectId,
+            @RequestBody List<ProjectTeamReqDTO> projectTeamReqDTOList
+    ) {
+
+        String addMemberRes = projectService.addTeamMember(memberId, projectId, projectTeamReqDTOList);
+
+        return new BaseResponse<>(addMemberRes);
+    }
 
     /**
      * 프로젝트 멤버 삭제를 위한 API
