@@ -70,4 +70,20 @@ public class IssueController {
 
         return new BaseResponse<>(patchIssue);
     }
+
+    /**
+     * 이슈 삭제 API
+     * @param issueId 상태를 변경할 이슈 아이디
+     * @return String
+     */
+    @DeleteMapping("/{issueId}")
+    @Operation(summary = "이슈 삭제")
+    @ApiResponses({
+            @ApiResponse(responseCode = "704", description = "이슈를 찾을 수 없습니다.")
+    })
+    private BaseResponse<String> deleteIssue(@PathVariable("issueId") Long issueId) {
+        String deleteIssue = issueService.deleteIssue(issueId);
+
+        return new BaseResponse<>(deleteIssue);
+    }
 }

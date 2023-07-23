@@ -141,4 +141,17 @@ public class IssueService {
     /**
      * 이슈 삭제 API
      */
+    @Transactional
+    public String deleteIssue(Long issueId) {
+        Optional<Issue> issue = issueRepository.findById(issueId);
+
+        // 이슈 존재 여부 검증
+        if (issue.isPresent()) {
+            issueRepository.delete(issue.get());
+        } else {
+            throw new BaseException(ISSUE_NOT_FOUND);
+        }
+
+        return "이슈 삭제 성공";
+    }
 }
