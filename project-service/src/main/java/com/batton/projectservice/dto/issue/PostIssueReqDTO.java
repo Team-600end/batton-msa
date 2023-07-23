@@ -29,7 +29,7 @@ public class PostIssueReqDTO {
         this.issueTag = issueTag;
     }
 
-    public static Issue toEntity(Project project, Belong belong, PostIssueReqDTO dto, IssueStatus issueStatus, int issueSeq) {
+    public static Issue toEntity(Project project, Belong belong, PostIssueReqDTO dto, IssueStatus issueStatus, int issueSeq, int issueKey) {
         return Issue.builder()
                 .project(project)
                 .belong(belong)
@@ -38,6 +38,7 @@ public class PostIssueReqDTO {
                 .issueTag(dto.issueTag)
                 .issueStatus(issueStatus)
                 .issueSeq(issueSeq)
+                .issueKey(issueKey)
                 .build();
     }
 }

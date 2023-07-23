@@ -49,7 +49,15 @@ public class IssueService {
         if (project.isPresent()) {
             // 소속 유저 존재 여부 검증
             if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
-                Issue issue = postIssueReqDTO.toEntity(project.get(), belong.get(), postIssueReqDTO, IssueStatus.TODO, lastIssueSeq+1);
+                Issue issue;
+
+                if(!issueRepository.existsByProjectId(project.get().getId())) {
+                    issue = postIssueReqDTO.toEntity(project.get(), belong.get(), postIssueReqDTO, IssueStatus.TODO, lastIssueSeq + 1, 1);
+                } else {
+                    Issue lateIssue = issueRepository.findTopByProjectIdOrderByCreatedAtDesc(project.get().getId());
+                    int key = lateIssue.getIssueKey() + 1;
+                    issue = postIssueReqDTO.toEntity(project.get(), belong.get(), postIssueReqDTO, IssueStatus.TODO, lastIssueSeq + 1, key);
+                }
                 Long issueId = issueRepository.save(issue).getId();
 
                 return issueId;
