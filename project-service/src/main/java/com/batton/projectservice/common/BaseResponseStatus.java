@@ -23,7 +23,6 @@ public enum BaseResponseStatus {
     BELONG_NOT_FOUND(false, 703, "소속 유저를 찾을 수 없습니다."),
     ISSUE_NOT_FOUND(false, 704, "이슈를 찾을 수 없습니다.");
 
-
     private final boolean isSuccess;
     private final int code;
     private final String message;

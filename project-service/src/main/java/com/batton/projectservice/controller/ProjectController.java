@@ -3,12 +3,15 @@ package com.batton.projectservice.controller;
 import com.batton.projectservice.common.BaseResponse;
 import com.batton.projectservice.dto.project.PatchProjectReqDTO;
 import com.batton.projectservice.dto.project.PostProjectReqDTO;
+import com.batton.projectservice.dto.GetProjectListResDTO;
 import com.batton.projectservice.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -18,8 +21,7 @@ public class ProjectController {
 
     /**
      * 프로젝트 생성 API
-     *
-     * @param
+     * @param postProjectReqDTO 프로젝트 생성 요청 DTO
      * @return id of Project
      * */
     @PostMapping
@@ -45,5 +47,34 @@ public class ProjectController {
         String modifyProjectRes = projectService.modifyProject(memberId, projectId, patchProjectReqDTO);
 
         return new BaseResponse<>(modifyProjectRes);
+    }
+
+    /**
+     * 프로젝트 삭제 API
+     * @param projectId 프로젝트 아이디 값
+     * @return message
+     */
+    @DeleteMapping("/{projectId}")
+    @Operation(summary = "프로젝트 삭제")
+    @ApiResponses({
+            @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),
+            @ApiResponse(responseCode = "701", description = "프로젝트를 찾을 수 없습니다.")
+    })
+    private BaseResponse<String> deleteProject (@RequestHeader Long memberId, @PathVariable("projectId") Long projectId) {
+        String deleteProjectRes = projectService.removeProject(memberId, projectId);
+
+        return new BaseResponse<>(deleteProjectRes);
+    }
+
+    /**
+     * 프로젝트 네비바 리스트 조회 API
+     * @return List of Project for Navbar
+     */
+    @GetMapping("/navbar")
+    @Operation(summary = "프로젝트 네비바 리스트 조회")
+    private BaseResponse<List<GetProjectListResDTO>> getProjectListForNavbar(@RequestHeader Long memberId) {
+        List<GetProjectListResDTO> projectListForNavbarRes = projectService.getProjectListForNavbar(memberId);
+
+        return new BaseResponse<>(projectListForNavbarRes);
     }
 }

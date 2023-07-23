@@ -42,4 +42,8 @@ public class Belong extends BaseEntity {
         this.status = status;
         this.project = project;
     }
+
+    public void update(GradeType grade) {
+        this.grade = grade;
+    }
 }
