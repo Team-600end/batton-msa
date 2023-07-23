@@ -3,7 +3,7 @@ package com.batton.projectservice.service;
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Project;
-import com.batton.projectservice.dto.GetBelongResDTO;
+import com.batton.projectservice.dto.GetProjectListResDTO;
 import com.batton.projectservice.dto.PatchProjectReqDTO;
 import com.batton.projectservice.dto.PostProjectReqDTO;
 import com.batton.projectservice.dto.ProjectTeamReqDTO;
@@ -13,6 +13,7 @@ import com.batton.projectservice.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,7 +51,7 @@ public class ProjectService {
     }
 
     /**
-     * 프로젝트 생성 API - 팀원 추가
+     * 프로젝트 팀원 추가 API
      * */
     @Transactional
     public String addTeamMember(Long memberId, Long projectId, List<ProjectTeamReqDTO> teamMemberList) {
@@ -60,7 +61,7 @@ public class ProjectService {
             Project project = newProject.get();
 
             for (ProjectTeamReqDTO projectTeamReqDTO : teamMemberList) {
-                //프로젝트 생성한 사람일 경우 MANAGER 권한 부여
+                //프로젝트 생성한 사람일 경우 LEADER 권한 부여
                 if (projectTeamReqDTO.getMemberId() == memberId) {
                     Belong belong = Belong.builder()
                             .project(project)
@@ -129,4 +130,25 @@ public class ProjectService {
 
         return "프로젝트 삭제 성공";
     }
+
+    /**
+     * 프로젝트 네비바 리스트 조회 API
+     */
+    @Transactional
+    public List<GetProjectListResDTO> getProjectListForNavbar(Long memberId) {
+        List<Optional<Belong>> projectList = belongRepository.findByMemberId(memberId);
+
+        if (!projectList.isEmpty()) {
+            List<GetProjectListResDTO> getProjectListResDTOList = new ArrayList<>();
+
+            for (Optional<Belong> belong : projectList) {
+                getProjectListResDTOList.add(GetProjectListResDTO.toDTO(belong.get().getProject()));
+            }
+
+            return getProjectListResDTOList;
+        } else {
+            throw new BaseException(PROJECT_NOT_FOUND);
+        }
+    }
 }
+

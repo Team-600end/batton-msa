@@ -66,4 +66,22 @@ public class BelongService {
 
         return memberList;
     }
+
+    // 프로젝트 멤버 삭제
+    @Transactional
+    public String deleteTeamMember(Long memberId, Long belongId) {
+        Optional<Belong> belong = belongRepository.findById(belongId);
+        Optional<Belong> myBelong = belongRepository.findByProjectIdAndMemberId(belong.get().getProject().getId(), memberId);
+
+        if (belong.isPresent()) {
+            if (myBelong.get().getGrade() == GradeType.MEMBER) {
+                throw new BaseException(USER_NO_AUTHORITY);
+            }
+            belongRepository.delete(belong.get());
+        } else {
+            throw new BaseException(USER_NOT_FOUND);
+        }
+
+        return "프로젝트 멤버 삭제 성공";
+    }
 }
