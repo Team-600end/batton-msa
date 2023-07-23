@@ -59,6 +59,7 @@ public class BelongService {
 
         for (Belong belong : belongList) {
             GetMemberResDTO member = memberServiceFeignClient.getMember(belong.getMemberId());
+            System.out.println(memberServiceFeignClient.getMember(belong.getMemberId()).getNickname());
 
             memberList.add(GetBelongResDTO.toDTO(belong, member));
         }
