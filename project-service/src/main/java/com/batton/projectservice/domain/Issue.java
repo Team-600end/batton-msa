@@ -20,6 +20,7 @@ public class Issue extends BaseEntity {
     @Column(name = "issue_id")
     private Long id;
     private String issueTitle;
+    private String issueContent;
     @Enumerated(EnumType.STRING)
     private IssueStatus issueStatus;
     @Enumerated(EnumType.STRING)
@@ -35,13 +36,22 @@ public class Issue extends BaseEntity {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Issue(Long id, String issueTitle, IssueStatus issueState, IssueTag issueTag, int issueSeq, Project project, Belong belong) {
+    public Issue(Long id, String issueTitle, String issueContent, IssueStatus issueStatus, IssueTag issueTag, int issueSeq, Project project, Belong belong) {
         this.id = id;
         this.issueTitle = issueTitle;
-        this.issueStatus = issueState;
+        this.issueContent = issueContent;
+        this.issueStatus = issueStatus;
         this.issueTag = issueTag;
         this.issueSeq = issueSeq;
         this.project = project;
         this.belong = belong;
+    }
+
+    public void updateSeq(int issueSeq) {
+        this.issueSeq = issueSeq;
+    }
+    public void updateIssue(int issueSeq, IssueStatus issueStatus) {
+        this.issueSeq = issueSeq;
+        this.issueStatus = issueStatus;
     }
 }

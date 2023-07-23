@@ -1,4 +1,4 @@
-package com.batton.projectservice.dto;
+package com.batton.projectservice.dto.project;
 
 import lombok.Builder;
 import lombok.Getter;
