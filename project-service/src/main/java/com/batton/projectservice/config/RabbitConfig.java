@@ -34,7 +34,7 @@ public class RabbitConfig {
      */
     @Bean
     public Queue queue() {
-        return new Queue(QUEUE_NAME, false);
+        return new Queue(QUEUE_NAME, true);
     }
 
     /**
