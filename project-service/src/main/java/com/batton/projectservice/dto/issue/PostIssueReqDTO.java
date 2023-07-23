@@ -16,14 +16,16 @@ public class PostIssueReqDTO {
     private Long projectId;
     private Long belongId;
     private String issueTitle;
+    private String issueContent;
     @Enumerated(EnumType.STRING)
     private IssueTag issueTag;
 
     @Builder
-    public PostIssueReqDTO(Long projectId, Long belongId, String issueTitle, IssueTag issueTag) {
+    public PostIssueReqDTO(Long projectId, Long belongId, String issueTitle, String issueContent, IssueTag issueTag) {
         this.projectId = projectId;
         this.belongId = belongId;
         this.issueTitle = issueTitle;
+        this.issueContent = issueContent;
         this.issueTag = issueTag;
     }
 
@@ -32,6 +34,7 @@ public class PostIssueReqDTO {
                 .project(project)
                 .belong(belong)
                 .issueTitle(dto.issueTitle)
+                .issueContent(dto.issueContent)
                 .issueTag(dto.issueTag)
                 .issueStatus(issueStatus)
                 .issueSeq(issueSeq)

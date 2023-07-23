@@ -40,8 +40,8 @@ public class IssueServiceTests {
         // given
         Project project = new Project(1L, "dsfdsf", "sdtre", "rteygf", "ytr");
         Belong belong = new Belong(1L, GradeType.MEMBER, 2L, "sdgert", Status.ENABLED, project);
-        Issue issue = new Issue(1L, "sdff", IssueStatus.TODO, IssueTag.CHANGED, 1, project, belong);
-        PostIssueReqDTO postIssueReqDTO = new PostIssueReqDTO(1L, 1L, "sdff", IssueTag.CHANGED);
+        Issue issue = new Issue(1L, "sdff", "sfdsfsdf", IssueStatus.TODO, IssueTag.CHANGED, 1, project, belong);
+        PostIssueReqDTO postIssueReqDTO = new PostIssueReqDTO(1L, 1L, "sdff", "sff", IssueTag.CHANGED);
         given(issueRepository.save(issue)).willReturn(issue);
 
         // when
