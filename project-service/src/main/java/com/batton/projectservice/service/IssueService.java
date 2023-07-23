@@ -181,4 +181,24 @@ public class IssueService {
             throw new BaseException(ISSUE_NOT_FOUND);
         }
     }
+
+    /**
+     * 대시보드 이슈 목록 조회 API
+     */
+    public List<GetIssueListResDTO> findIssueList(Long projectId) {
+        List<Issue> issues = issueRepository.findByProjectIdOrderByUpdatedAtDesc(projectId);
+        List<GetIssueListResDTO> issueListResDTOList = new ArrayList<>();
+
+        if(issues.isEmpty()) {
+            throw new BaseException(ISSUE_NOT_FOUND);
+        }
+        for(Issue issue : issues) {
+            GetMemberResDTO member = memberServiceFeignClient.getMember(issue.getBelong().getMemberId());
+            GetIssueListResDTO issueListResDTO = GetIssueListResDTO.toDTO(issue, member);
+
+            issueListResDTOList.add(issueListResDTO);
+        }
+
+        return issueListResDTOList;
+    }
 }
