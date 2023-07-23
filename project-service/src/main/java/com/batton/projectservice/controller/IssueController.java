@@ -1,6 +1,7 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
+import com.batton.projectservice.dto.issue.GetMyIssueResDTO;
 import com.batton.projectservice.dto.issue.PatchIssueBoardReqDTO;
 import com.batton.projectservice.dto.issue.PostIssueReqDTO;
 import com.batton.projectservice.service.IssueService;
@@ -9,6 +10,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -52,4 +55,18 @@ public class IssueController {
         return new BaseResponse<>(patchIssueBoard);
     }
 
+    /**
+     * 내가 담당한 이슈 작업 API
+     *
+     * @param belongId 사용자 소속 아이디
+     * @return GetMyIssueResDTO
+     * */
+    @GetMapping("/{belongId}/list")
+    @Operation(summary = "내가 담당한 이슈 작업 조회")
+    @ApiResponse(responseCode = "704", description = "이슈를 찾을 수 없습니다.")
+    private BaseResponse<List<GetMyIssueResDTO>> getMyIssue(@PathVariable("belongId") Long belongId) {
+        List<GetMyIssueResDTO> getMyIssueResDTO = issueService.findMyIssue(belongId);
+
+        return new BaseResponse<>(getMyIssueResDTO);
+    }
 }

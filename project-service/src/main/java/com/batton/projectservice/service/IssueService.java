@@ -4,6 +4,7 @@ import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Project;
+import com.batton.projectservice.dto.issue.GetMyIssueResDTO;
 import com.batton.projectservice.dto.issue.PatchIssueBoardReqDTO;
 import com.batton.projectservice.dto.issue.PostIssueReqDTO;
 import com.batton.projectservice.enums.GradeType;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,5 +99,25 @@ public class IssueService {
         }
 
         return "이슈 상태 변경 되었습니다.";
+    }
+
+    /**
+     * 내가 담당한 이슈 목록 조회 API
+     */
+    public List<GetMyIssueResDTO> findMyIssue(Long belongId) {
+        List<Issue> myIssues = issueRepository.findByBelongIdOrderByUpdatedAtDesc(belongId);
+        List<GetMyIssueResDTO> myIssueResDTOList = new ArrayList<>();
+
+        if(myIssues.isEmpty()) {
+            throw new BaseException(ISSUE_NOT_FOUND);
+        }
+        for(Issue issue : myIssues) {
+            String updatedDate = issue.getUpdatedAt().getYear() + ". " + issue.getUpdatedAt().getMonthValue() + ". " + issue.getUpdatedAt().getDayOfMonth();
+            GetMyIssueResDTO getMyIssueResDTO = GetMyIssueResDTO.toDTO(issue, updatedDate);
+
+            myIssueResDTOList.add(getMyIssueResDTO);
+        }
+
+        return myIssueResDTOList;
     }
 }
