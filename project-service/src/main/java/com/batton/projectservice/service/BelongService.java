@@ -10,6 +10,7 @@ import com.batton.projectservice.repository.BelongRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,7 @@ import static com.batton.projectservice.common.BaseResponseStatus.*;
 @Service
 public class BelongService {
     private final BelongRepository belongRepository;
-//    private final MemberServiceFeignClient memberServiceFeignClient;
+    private final MemberServiceFeignClient memberServiceFeignClient;
 
     /**
      * 프로젝트 팀원 권한 변경 API
@@ -50,14 +51,21 @@ public class BelongService {
     }
 
     /**
-     * 프로젝트 팀원 조회 API
+     * 프로젝트 팀원 목록 조회 API
      * */
-//    public GetBelongResDTO findBelong(Long memberId, Long projectId) {
-//        List<Belong> belongList = belongRepository.findBelongsByProjectId(projectId, memberId);
-//
-//        List<GetMemberResDTO> memberList = memberServiceFeignClient.getMember(belongList.get().getMemberId());
-//
-//    }
+    public List<GetBelongResDTO> findBelongList(Long memberId, Long projectId) {
+        List<Belong> belongList = belongRepository.findBelongsByProjectId(projectId, memberId);
+        List<GetBelongResDTO> memberList = new ArrayList<>();
+
+        for (Belong belong : belongList) {
+            GetMemberResDTO member = memberServiceFeignClient.getMember(belong.getMemberId());
+            System.out.println(memberServiceFeignClient.getMember(belong.getMemberId()).getNickname());
+
+            memberList.add(GetBelongResDTO.toDTO(belong, member));
+        }
+
+        return memberList;
+    }
 
     // 프로젝트 멤버 삭제
     @Transactional
