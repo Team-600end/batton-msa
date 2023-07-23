@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface IssueRepository extends JpaRepository<Issue, Long> {
     List<Issue> findByIssueStatusOrderByIssueSeq(IssueStatus status);
+    boolean existsByProjectId(Long projectId);
+    Issue findTopByProjectIdOrderByCreatedAtDesc(Long projectId);
 }
