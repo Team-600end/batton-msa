@@ -1,9 +1,12 @@
 package com.batton.projectservice.service;
 
+import com.batton.projectservice.client.MemberServiceFeignClient;
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Project;
+import com.batton.projectservice.dto.client.GetMemberResDTO;
+import com.batton.projectservice.dto.issue.GetIssueInfoResDTO;
 import com.batton.projectservice.dto.issue.GetMyIssueResDTO;
 import com.batton.projectservice.dto.issue.PatchIssueBoardReqDTO;
 import com.batton.projectservice.dto.issue.PostIssueReqDTO;
@@ -29,6 +32,7 @@ public class IssueService {
     private final IssueRepository issueRepository;
     private final ProjectRepository projectRepository;
     private final BelongRepository belongRepository;
+    private final MemberServiceFeignClient memberServiceFeignClient;
 
     /**
      * 이슈 생성
@@ -127,5 +131,21 @@ public class IssueService {
         }
 
         return myIssueResDTOList;
+    }
+
+    /**
+     * 이슈 상세 조회 API
+     */
+    public GetIssueInfoResDTO findIssueInfo(Long issueId) {
+        Optional<Issue> issue = issueRepository.findById(issueId);
+
+        if(issue.isPresent()) {
+            GetMemberResDTO member = memberServiceFeignClient.getMember(issue.get().getBelong().getMemberId());
+            GetIssueInfoResDTO issueInfoResDTO = GetIssueInfoResDTO.toDTO(issue.get(), member);
+
+            return issueInfoResDTO;
+        } else {
+            throw new BaseException(ISSUE_NOT_FOUND);
+        }
     }
 }
