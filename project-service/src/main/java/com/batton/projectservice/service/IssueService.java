@@ -10,6 +10,7 @@ import com.batton.projectservice.dto.issue.GetIssueBoardResDTO;
 import com.batton.projectservice.dto.issue.GetIssueListResDTO;
 import com.batton.projectservice.dto.issue.GetIssueInfoResDTO;
 import com.batton.projectservice.dto.issue.GetMyIssueResDTO;
+import com.batton.projectservice.dto.issue.PatchIssueReqDTO;
 import com.batton.projectservice.dto.issue.PatchIssueBoardReqDTO;
 import com.batton.projectservice.dto.issue.PostIssueReqDTO;
 import com.batton.projectservice.enums.GradeType;
@@ -25,7 +26,6 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.batton.projectservice.common.BaseResponseStatus.*;
 
@@ -117,6 +117,7 @@ public class IssueService {
     }
 
     /**
+<<<<<<< HEAD
      * 이슈 보드 목록 조회 API
      * */
     @Transactional
@@ -189,10 +190,10 @@ public class IssueService {
         List<Issue> issues = issueRepository.findByProjectIdOrderByUpdatedAtDesc(projectId);
         List<GetIssueListResDTO> issueListResDTOList = new ArrayList<>();
 
-        if(issues.isEmpty()) {
+        if (issues.isEmpty()) {
             throw new BaseException(ISSUE_NOT_FOUND);
         }
-        for(Issue issue : issues) {
+        for (Issue issue : issues) {
             GetMemberResDTO member = memberServiceFeignClient.getMember(issue.getBelong().getMemberId());
             GetIssueListResDTO issueListResDTO = GetIssueListResDTO.toDTO(issue, member);
 
@@ -200,5 +201,51 @@ public class IssueService {
         }
 
         return issueListResDTOList;
+    }
+    /**
+     * 이슈 수정 API
+     * */
+    @Transactional
+    public String modifyIssue(Long issueId, PatchIssueReqDTO patchIssueReqDTO) {
+        Optional<Issue> issue = issueRepository.findById(issueId);
+        Optional<Belong> belong = belongRepository.findById(patchIssueReqDTO.getBelongId());
+
+        // 소속 유저 존재 여부 검증
+        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+            // 이슈 존재 여부 검증
+            if (issue.isPresent()) {
+                // 이슈를 완료 상태로 변경하는 권한 확인
+                if (patchIssueReqDTO.getIssueStatus().equals(IssueStatus.DONE) && belong.get().getGrade().equals(GradeType.MEMBER)) {
+                    throw new BaseException(USER_NO_AUTHORITY);
+                }
+                List<Issue> issues = issueRepository.findByIssueStatusOrderByIssueSeq(patchIssueReqDTO.getIssueStatus());
+
+                // 이슈 수정
+                issue.get().modifyIssue(patchIssueReqDTO.getIssueTitle(), patchIssueReqDTO.getIssueContent(), patchIssueReqDTO.getIssueStatus(), patchIssueReqDTO.getIssueTag(), belong.get(), issues.size()+1);
+            } else {
+                throw new BaseException(ISSUE_NOT_FOUND);
+            }
+        } else {
+            throw new BaseException(BELONG_NOT_FOUND);
+        }
+
+        return "이슈 수정 성공";
+    }
+
+    /**
+     * 이슈 삭제 API
+     */
+    @Transactional
+    public String deleteIssue(Long issueId) {
+        Optional<Issue> issue = issueRepository.findById(issueId);
+
+        // 이슈 존재 여부 검증
+        if (issue.isPresent()) {
+            issueRepository.delete(issue.get());
+        } else {
+            throw new BaseException(ISSUE_NOT_FOUND);
+        }
+
+        return "이슈 삭제 성공";
     }
 }

@@ -1,10 +1,12 @@
 package com.batton.memberservice.service;
 
 import com.batton.memberservice.common.BaseException;
+import com.batton.memberservice.common.BaseResponseStatus;
 import com.batton.memberservice.domain.Member;
 import com.batton.memberservice.dto.SignupMemberReqDTO;
 import com.batton.memberservice.enums.Authority;
 import com.batton.memberservice.enums.Status;
+import com.batton.memberservice.mq.QueueService;
 import com.batton.memberservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +21,8 @@ import static com.batton.memberservice.common.BaseResponseStatus.MEMBER_PASSWORD
 public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final QueueService queueService;
 
     @Transactional
     public String signupMember(SignupMemberReqDTO reqDTO) {
@@ -37,6 +41,7 @@ public class AuthService {
                 .build();
 
         memberRepository.save(newMember);
+        queueService.createQueueForMember(newMember.getId()); // 유저 Queue 생성
 
         return "회원가입 성공하였습니다.";
     }

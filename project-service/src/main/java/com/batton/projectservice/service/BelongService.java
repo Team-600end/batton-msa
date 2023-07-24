@@ -67,7 +67,9 @@ public class BelongService {
         return memberList;
     }
 
-    // 프로젝트 멤버 삭제
+    /**
+     * 프로젝트 팀원 삭제 API
+     * */
     @Transactional
     public String deleteTeamMember(Long memberId, Long belongId) {
         Optional<Belong> belong = belongRepository.findById(belongId);

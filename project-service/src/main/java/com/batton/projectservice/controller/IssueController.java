@@ -3,10 +3,11 @@ package com.batton.projectservice.controller;
 import com.batton.projectservice.common.BaseResponse;
 import com.batton.projectservice.dto.issue.GetIssueBoardResDTO;
 import com.batton.projectservice.dto.issue.GetIssueInfoResDTO;
+import com.batton.projectservice.dto.issue.GetIssueListResDTO;
 import com.batton.projectservice.dto.issue.GetMyIssueResDTO;
 import com.batton.projectservice.dto.issue.PatchIssueBoardReqDTO;
 import com.batton.projectservice.dto.issue.PostIssueReqDTO;
-import com.batton.projectservice.dto.issue.*;
+import com.batton.projectservice.dto.issue.PatchIssueReqDTO;
 import com.batton.projectservice.service.IssueService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -59,6 +60,7 @@ public class IssueController {
     }
 
     /**
+<<<<<<< HEAD
      * 이슈 보드 목록 조회
      *
      * @return GetIssueBoardResDTO
@@ -117,5 +119,39 @@ public class IssueController {
         List<GetIssueListResDTO> getIssueListResDTO = issueService.findIssueList(projectId);
 
         return new BaseResponse<>(getIssueListResDTO);
+    }
+
+    /**
+     * 이슈 수정 API
+     * @param issueId 상태를 변경할 이슈 아이디
+     * @return String
+     */
+    @PatchMapping("/{issueId}")
+    @Operation(summary = "이슈 수정")
+    @ApiResponses({
+            @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),
+            @ApiResponse(responseCode = "703", description = "소속 유저를 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "704", description = "이슈를 찾을 수 없습니다.")
+    })
+    private BaseResponse<String> patchIssue(@PathVariable("issueId") Long issueId, @RequestBody PatchIssueReqDTO patchIssueReqDTO) {
+        String patchIssue = issueService.modifyIssue(issueId, patchIssueReqDTO);
+
+        return new BaseResponse<>(patchIssue);
+    }
+
+    /**
+     * 이슈 삭제 API
+     * @param issueId 상태를 변경할 이슈 아이디
+     * @return String
+     */
+    @DeleteMapping("/{issueId}")
+    @Operation(summary = "이슈 삭제")
+    @ApiResponses({
+            @ApiResponse(responseCode = "704", description = "이슈를 찾을 수 없습니다.")
+    })
+    private BaseResponse<String> deleteIssue(@PathVariable("issueId") Long issueId) {
+        String deleteIssue = issueService.deleteIssue(issueId);
+
+        return new BaseResponse<>(deleteIssue);
     }
 }

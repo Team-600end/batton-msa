@@ -134,7 +134,6 @@ public class ProjectService {
     /**
      * 프로젝트 네비바 리스트 조회 API
      */
-    @Transactional
     public List<GetProjectListResDTO> getProjectListForNavbar(Long memberId) {
         List<Optional<Belong>> projectList = belongRepository.findByMemberId(memberId);
 

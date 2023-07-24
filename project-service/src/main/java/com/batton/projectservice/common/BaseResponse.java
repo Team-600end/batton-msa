@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import static com.batton.projectservice.common.BaseResponseStatus.SUCCESS;
 
@@ -12,7 +13,6 @@ import static com.batton.projectservice.common.BaseResponseStatus.SUCCESS;
 @AllArgsConstructor
 @JsonPropertyOrder({"isSuccess", "code", "message", "result"})
 public class BaseResponse<T> {
-    @JsonProperty("isSuccess")
     private final Boolean isSuccess;
     private final String message;
     private final int code;
