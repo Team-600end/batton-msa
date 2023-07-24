@@ -10,6 +10,7 @@ import com.batton.projectservice.repository.BelongRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,7 @@ import static com.batton.projectservice.common.BaseResponseStatus.*;
 @Service
 public class BelongService {
     private final BelongRepository belongRepository;
-//    private final MemberServiceFeignClient memberServiceFeignClient;
+    private final MemberServiceFeignClient memberServiceFeignClient;
 
     /**
      * 프로젝트 팀원 권한 변경 API
@@ -31,7 +32,7 @@ public class BelongService {
         //본인 권한 확인
         if (myBelong.isPresent()) {
             if (myBelong.get().getGrade() == GradeType.MEMBER) {
-                throw new BaseException(USER_NO_AUTHORITY);
+                throw new BaseException(MEMBER_NO_AUTHORITY);
             } else {
                 Optional<Belong> memberBelong = belongRepository.findById(belongId);
 
@@ -39,25 +40,32 @@ public class BelongService {
                 if (memberBelong.isPresent()) {
                     memberBelong.get().update(grade);
                 } else {
-                    throw new BaseException(BELONG_NOT_FOUND);
+                    throw new BaseException(BELONG_INVALID_ID);
                 }
             }
         } else {
-            throw new BaseException(USER_NOT_FOUND);
+            throw new BaseException(USER_INVALID_ID);
         }
 
         return "프로텍트 팀원 권한 변경 성공";
     }
 
     /**
-     * 프로젝트 팀원 조회 API
+     * 프로젝트 팀원 목록 조회 API
      * */
-//    public GetBelongResDTO findBelong(Long memberId, Long projectId) {
-//        List<Belong> belongList = belongRepository.findBelongsByProjectId(projectId, memberId);
-//
-//        List<GetMemberResDTO> memberList = memberServiceFeignClient.getMember(belongList.get().getMemberId());
-//
-//    }
+    public List<GetBelongResDTO> findBelongList(Long memberId, Long projectId) {
+        List<Belong> belongList = belongRepository.findBelongsByProjectId(projectId, memberId);
+        List<GetBelongResDTO> memberList = new ArrayList<>();
+
+        for (Belong belong : belongList) {
+            GetMemberResDTO member = memberServiceFeignClient.getMember(belong.getMemberId());
+            System.out.println(memberServiceFeignClient.getMember(belong.getMemberId()).getNickname());
+
+            memberList.add(GetBelongResDTO.toDTO(belong, member));
+        }
+
+        return memberList;
+    }
 
     /**
      * 프로젝트 팀원 삭제 API
@@ -69,11 +77,11 @@ public class BelongService {
 
         if (belong.isPresent()) {
             if (myBelong.get().getGrade() == GradeType.MEMBER) {
-                throw new BaseException(USER_NO_AUTHORITY);
+                throw new BaseException(MEMBER_NO_AUTHORITY);
             }
             belongRepository.delete(belong.get());
         } else {
-            throw new BaseException(USER_NOT_FOUND);
+            throw new BaseException(USER_INVALID_ID);
         }
 
         return "프로젝트 멤버 삭제 성공";

@@ -18,7 +18,6 @@ public class HeaderAuthorizationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
         filterChain.doFilter(request, response);
     }
 }

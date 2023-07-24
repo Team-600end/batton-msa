@@ -23,7 +23,6 @@ public class MemberController {
 
     /**
      * 유저 정보 조회 API(Feign Client)
-     *
      * @param memberId 정보를 조회할 유저 아이디
      * @return GetMemberResDTO
      * */
@@ -33,19 +32,20 @@ public class MemberController {
             @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
     })
     private GetMemberResDTO getMember(@PathVariable("memberId") Long memberId) {
-        return memberService.getMember(memberId);
+        GetMemberResDTO getMemberResDTO = memberService.getMember(memberId);
+
+        return getMemberResDTO;
     }
 
     /**
      * 추가할 프로젝트 멤버 정보 조회 API
      * @param email 정보를 조회할 유저 이메일
-     * @return GetMemberResDTO
+     * @return GetMemberInfoResDTO
      */
-    @GetMapping("/add-members")
+    @GetMapping("/members")
     @Operation(summary = "추가할 프로젝트 멤버 정보 조회")
-    @Parameter(name = "email",  description = "정보를 조회할 유저 이메일", required = true)
     @ApiResponses({
-            @ApiResponse(responseCode = "600", description = "유저 이메일 값을 확인해주세요.")
+            @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
     })
     private BaseResponse<GetMemberInfoResDTO> checkMember(String email) {
         GetMemberInfoResDTO getMemberInfoResDTO = memberService.checkMember(email);
@@ -55,13 +55,11 @@ public class MemberController {
 
     /**
      * 유저 정보 수정 API
-     *
      * @param memberId 정보를 수정할 유저 아이디
      * @return String
      * */
     @PatchMapping("/{memberId}")
     @Operation(summary = "유저 정보 수정")
-    @Parameter(name = "memberId",  description = "정보를 수정할 유저 아이디", required = true)
     @ApiResponses({
             @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
     })
@@ -73,13 +71,11 @@ public class MemberController {
 
     /**
      * 유저 비밀번호 수정 API
-     *
      * @param memberId 비밀번호를 수정할 유저 아이디
      * @return String
      * */
     @PatchMapping("/{memberId}/password")
     @Operation(summary = "유저 비밀번호 수정")
-    @Parameter(name = "memberId",  description = "비밀번호를 수정할 유저 아이디", required = true)
     @ApiResponses({
             @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "602", description = "두 비밀번호를 같게 입력해주세요."),
@@ -90,20 +86,5 @@ public class MemberController {
         String patchMemberPasswordRes = memberService.patchMemberPassword(memberId, patchMemberPasswordReqDTO);
 
         return new BaseResponse<>(patchMemberPasswordRes);
-    }
-
-    /**
-     * 유저 목록 조회 API(Feign Client)
-     *
-     * @return List<GetMemberListResDTO>
-     * */
-    @GetMapping("/list")
-    @Operation(summary = "유저 목록 조회")
-    @ApiResponses({
-    })
-    private BaseResponse<List<GetMemberListResDTO>> getMember() {
-        List<GetMemberListResDTO> getMemberListResDTO = memberService.getMemberList();
-
-        return new BaseResponse<>(getMemberListResDTO);
     }
 }

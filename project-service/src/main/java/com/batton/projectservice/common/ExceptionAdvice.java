@@ -10,6 +10,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(BaseException.class)
     public BaseResponse<BaseResponseStatus> baseException(BaseException e) {
         System.out.println("Handle CommonException:" + e.getMessage());
+
         return new BaseResponse<>(e.getStatus());
     }
 }

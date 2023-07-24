@@ -8,6 +8,7 @@ import com.batton.memberservice.dto.client.GetMemberListResDTO;
 import com.batton.memberservice.dto.PatchMemberPasswordReqDTO;
 import com.batton.memberservice.dto.PatchMemberReqDTO;
 import com.batton.memberservice.dto.client.GetMemberResDTO;
+import com.batton.memberservice.enums.Status;
 import com.batton.memberservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,25 +32,25 @@ public class MemberService {
      * */
     public GetMemberResDTO getMember(Long memberId) {
         Optional<Member> member = memberRepository.findById(memberId);
+        GetMemberResDTO getMemberResDTO;
 
-        if (member.isPresent()) {
-            return GetMemberResDTO.builder()
-                    .nickname(member.get().getNickname())
-                    .profileImage(member.get().getProfileImage())
-                    .build();
+        if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
+            getMemberResDTO = GetMemberResDTO.toDTO(member.get());
         } else {
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
+
+        return getMemberResDTO;
     }
 
     /**
-     * 유저 정보 확인 조회 API
+     * 추가할 프로젝트 멤버 정보 조회 API
      * */
     public GetMemberInfoResDTO checkMember(String email) {
         Optional<Member> member = memberRepository.findByEmail(email);
         GetMemberInfoResDTO getMemberInfoResDTO;
 
-        if (member.isPresent()) {
+        if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
             getMemberInfoResDTO = GetMemberInfoResDTO.toDTO(member.get());
         } else {
             throw new BaseException(MEMBER_INVALID_USER_ID);
@@ -64,7 +65,7 @@ public class MemberService {
     public String patchMember(Long memberId, PatchMemberReqDTO patchMemberReqDTO) {
         Optional<Member> member = memberRepository.findById(memberId);
 
-        if (member.isPresent()) {
+        if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
             member.get().update(patchMemberReqDTO.getNickname(), patchMemberReqDTO.getProfileImage());
         } else {
             throw new BaseException(MEMBER_INVALID_USER_ID);
@@ -79,7 +80,7 @@ public class MemberService {
     public String patchMemberPassword(Long memberId, PatchMemberPasswordReqDTO patchMemberPasswordReqDTO) {
         Optional<Member> member = memberRepository.findById(memberId);
 
-        if (member.isPresent()) {
+        if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
             if (passwordEncoder.matches(patchMemberPasswordReqDTO.getCurrentPassword(), member.get().getPassword())) {
                 throw new BaseException(MEMBER_PASSWORD_DISCORD);
             }
@@ -92,18 +93,5 @@ public class MemberService {
         }
 
         return "회원 비밀번호 수정되었습니다.";
-    }
-
-    public List<GetMemberListResDTO> getMemberList() {
-        List<Member> getMemberList = memberRepository.findAll();
-        List<GetMemberListResDTO> getMemberListResDTOS = getMemberList.stream()
-                .map(member -> GetMemberListResDTO.builder()
-                        .nickname(member.getNickname())
-                        .profileImage(member.getProfileImage())
-                        .email(member.getEmail())
-                        .build())
-                .collect(Collectors.toList());
-
-        return getMemberListResDTOS;
     }
 }

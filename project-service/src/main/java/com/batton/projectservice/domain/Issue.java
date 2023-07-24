@@ -52,10 +52,12 @@ public class Issue extends BaseEntity {
     public void updateSeq(int issueSeq) {
         this.issueSeq = issueSeq;
     }
+
     public void updateIssue(int issueSeq, IssueStatus issueStatus) {
         this.issueSeq = issueSeq;
         this.issueStatus = issueStatus;
     }
+
     public void modifyIssue(String issueTitle, String issueContent, IssueStatus issueStatus, IssueTag issueTag, Belong belong, int issueSeq) {
         this.issueTitle = issueTitle;
         this.issueContent = issueContent;
