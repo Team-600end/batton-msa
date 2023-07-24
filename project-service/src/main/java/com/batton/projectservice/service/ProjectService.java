@@ -12,6 +12,7 @@ import com.batton.projectservice.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,7 +25,9 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final BelongRepository belongRepository;
 
-    //프로젝트 생성하기 함수
+    /**
+     * 프로젝트 생성 API
+     * */
     @Transactional
     public Long addProject(Long memberId, PostProjectReqDTO postProjectReqDTO) {
         boolean isUnique = false;
@@ -46,7 +49,9 @@ public class ProjectService {
         return newProjectId;
     }
 
-    //팀원 추가하는 함수
+    /**
+     * 프로젝트 생성 API - 팀원 추가
+     * */
     @Transactional
     public String addTeamMember(Long memberId, Long projectId, List<ProjectTeamReqDTO> teamMemberList) {
         Optional<Project> newProject = projectRepository.findById(projectId);
@@ -55,14 +60,14 @@ public class ProjectService {
             Project project = newProject.get();
 
             for (ProjectTeamReqDTO projectTeamReqDTO : teamMemberList) {
-                //프로젝트 생성한 사람일 경우 MANAGER 권한 부여
+                //프로젝트 생성한 사람일 경우 LEADER 권한 부여
                 if (projectTeamReqDTO.getMemberId() == memberId) {
                     Belong belong = Belong.builder()
                             .project(project)
                             .memberId(projectTeamReqDTO.getMemberId())
                             .nickname(projectTeamReqDTO.getNickname())
                             .status(projectTeamReqDTO.getStatus())
-                            .grade(GradeType.MANAGER)
+                            .grade(GradeType.LEADER)
                             .build();
 
                     belongRepository.save(belong);
@@ -80,6 +85,9 @@ public class ProjectService {
         return "프로젝트 팀원 추가 성공";
     }
 
+    /**
+     * 프로젝트 수정 API
+     * */
     @Transactional
     public String modifyProject(Long projectId, Long memberId, PatchProjectReqDTO patchProjectReqDTO) {
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
@@ -101,4 +109,45 @@ public class ProjectService {
 
         return "프로젝트 수정 성공";
     }
+
+    /**
+     * 프로젝트 삭제 API
+     * */
+    @Transactional
+    public String removeProject(Long memberId, Long projectId) {
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
+
+        if (belong.isPresent()) {
+            if (belong.get().getGrade() == GradeType.MEMBER) {
+                throw new BaseException(USER_NO_AUTHORITY);
+            } else {
+                projectRepository.deleteById(projectId);
+            }
+        } else {
+            throw new BaseException(PROJECT_NOT_FOUND);
+        }
+
+        return "프로젝트 삭제 성공";
+    }
+
+
+    // 가입한 프로젝트 리스트 조회
+//    @Transactional
+//    public GetProjectListResDTO getProjectList(Long memberId) {
+//        Optional<Belong> projectIdList = belongRepository.findByMemberId(memberId);
+//
+//        if (projectIdList.isPresent()) {
+//            List<Long> projectIds = new ArrayList<>();
+////            for (Belong belong : projectIdList.get()) {
+////                projectIds.add(belong.getProject().getId());
+////            }
+////
+////            List<Project> projectList = projectRepository.findAllById(projectIds);
+////
+////            return GetProjectListResDTO.toDTO(projectList);
+//        } else {
+//            throw new BaseException(PROJECT_NOT_FOUND);
+//        }
+//    }
 }
+
