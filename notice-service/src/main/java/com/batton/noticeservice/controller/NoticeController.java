@@ -4,7 +4,6 @@ import com.batton.noticeservice.common.BaseResponse;
 import com.batton.noticeservice.dto.GetNoticeResDTO;
 import com.batton.noticeservice.service.NoticeService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -22,19 +21,52 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     /**
-     * 사용자 개인 알림 목록 조회 API
+     * 사용자 전체 알림 목록 조회 API
      *
      * @param receiverId 알림 목록을 조회할 유저 아이디
      * @return List of GetNoticeListResDTO
      * */
-    @GetMapping("/{receiverId}")
-    @Operation(summary = "사용자 개인 알림 목록 조회")
-    @Parameter(name = "receiverId",  description = "알림 목록을 조회할 유저 아이디", required = true)
+    @GetMapping("/all/{receiverId}/{option}")
+    @Operation(summary = "사용자 전체 알림 목록 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "1300", description = "유저 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<List<GetNoticeResDTO>> getNoticeList(@PathVariable("receiverId") Long receiverId) {
-        List<GetNoticeResDTO> getNoticeListResDTO = noticeService.getNoticeList(receiverId);
+    private BaseResponse<List<GetNoticeResDTO>> getAllNoticeList(@PathVariable("receiverId") Long receiverId, @PathVariable("option") int option) {
+        List<GetNoticeResDTO> getNoticeListResDTO = noticeService.getAllNoticeList(receiverId, option);
+
+        return new BaseResponse<>(getNoticeListResDTO);
+    }
+
+    /**
+     * 사용자 이슈 알림 목록 조회 API
+     *
+     * @param receiverId 알림 목록을 조회할 유저 아이디
+     * @return List of GetNoticeListResDTO
+     * */
+    @GetMapping("/issue/{receiverId}/{option}")
+    @Operation(summary = "사용자 이슈 알림 목록 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "1300", description = "유저 아이디 값을 확인해주세요.")
+    })
+    private BaseResponse<List<GetNoticeResDTO>> getIssueNoticeList(@PathVariable("receiverId") Long receiverId, @PathVariable("option") int option) {
+        List<GetNoticeResDTO> getNoticeListResDTO = noticeService.getIssueNoticeList(receiverId, option);
+
+        return new BaseResponse<>(getNoticeListResDTO);
+    }
+
+    /**
+     * 사용자 프로젝트 알림 목록 조회 API
+     *
+     * @param receiverId 알림 목록을 조회할 유저 아이디
+     * @return List of GetNoticeListResDTO
+     * */
+    @GetMapping("/project/{receiverId}/{option}")
+    @Operation(summary = "사용자 프로젝트 알림 목록 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "1300", description = "유저 아이디 값을 확인해주세요.")
+    })
+    private BaseResponse<List<GetNoticeResDTO>> getProjectNoticeList(@PathVariable("receiverId") Long receiverId, @PathVariable("option") int option) {
+        List<GetNoticeResDTO> getNoticeListResDTO = noticeService.getProjectNoticeList(receiverId, option);
 
         return new BaseResponse<>(getNoticeListResDTO);
     }

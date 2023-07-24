@@ -59,4 +59,3 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/(?<segment>.*), /$\{segment}
-            - AuthorizationHeaderFilter
