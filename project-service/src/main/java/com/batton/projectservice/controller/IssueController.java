@@ -60,7 +60,6 @@ public class IssueController {
     }
 
     /**
-<<<<<<< HEAD
      * 이슈 보드 목록 조회
      *
      * @return GetIssueBoardResDTO
