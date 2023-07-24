@@ -1,8 +1,10 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
+import com.batton.projectservice.dto.comment.PostCommentReqDTO;
 import com.batton.projectservice.dto.issue.*;
 import com.batton.projectservice.service.IssueService;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -96,5 +98,24 @@ public class IssueController {
         List<GetIssueListResDTO> getIssueListResDTO = issueService.findIssueList(projectId);
 
         return new BaseResponse<>(getIssueListResDTO);
+    }
+
+    /**
+     * 이슈 코멘트 생성 API
+     *
+     * @param issuedId 코멘트를 등록할 이슈 아이디
+     * @return String
+     * */
+    @PostMapping("/{issueId}/reports/comments")
+    @Operation(summary = "이슈 코멘트 생성")
+    @ApiResponses({
+            @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),
+            @ApiResponse(responseCode = "703", description = "소속 유저를 찾을 수 없습니다."),
+            @ApiResponse(responseCode = "704", description = "이슈를 찾을 수 없습니다.")
+    })
+    private BaseResponse<String> postComment(@RequestHeader Long memberId, @PathVariable("issuedId") Long issuedId, @RequestBody PostCommentReqDTO postCommentReqDTO) {
+        String postComment = issueService.addComment(issuedId, memberId, postCommentReqDTO);
+
+        return new BaseResponse<>(postComment);
     }
 }
