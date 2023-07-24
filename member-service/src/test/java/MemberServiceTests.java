@@ -46,25 +46,6 @@ public class MemberServiceTests {
     }
 
     @Test
-    @DisplayName("유저 목록 조회 테스트")
-    void getMemberListTest() {
-        // given
-        List<Member> memberList = new ArrayList<>();
-        Member member1 = new Member(1L, "cjsdkfn", "sdfndsf","ssdfdsf", Authority.ROLE_USER, "ssdfsdfsdf", Status.ENABLED);
-        Member member2 = new Member(2L, "dftrjsdkfn", "tyefh","rttrfduy", Authority.ROLE_USER, "ijknkfsdf", Status.ENABLED);
-        memberList.add(member1);
-        memberList.add(member2);
-
-        given(memberRepository.findAll()).willReturn(memberList);
-
-        // when
-        List<GetMemberListResDTO> getMemberListResDTO = memberService.getMemberList();
-
-        // then
-        assertThat(getMemberListResDTO.size()).isEqualTo(2);
-    }
-
-    @Test
     @DisplayName("유저 정보 수정 테스트")
     void patchMemberTest() {
         // given

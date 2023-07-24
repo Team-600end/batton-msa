@@ -41,7 +41,7 @@ public class ProjectController {
     @Operation(summary = "프로젝트 수정")
     @ApiResponses({
             @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),
-            @ApiResponse(responseCode = "701", description = "프로젝트를 찾을 수 없습니다.")
+            @ApiResponse(responseCode = "701", description = "프로젝트 아이디 값을 확인해주세요.")
     })
     private BaseResponse<String> patchProject(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId, @RequestBody PatchProjectReqDTO patchProjectReqDTO) {
         String modifyProjectRes = projectService.modifyProject(memberId, projectId, patchProjectReqDTO);
@@ -58,7 +58,7 @@ public class ProjectController {
     @Operation(summary = "프로젝트 삭제")
     @ApiResponses({
             @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),
-            @ApiResponse(responseCode = "701", description = "프로젝트를 찾을 수 없습니다.")
+            @ApiResponse(responseCode = "701", description = "프로젝트 아이디 값을 확인해주세요.")
     })
     private BaseResponse<String> deleteProject (@RequestHeader Long memberId, @PathVariable("projectId") Long projectId) {
         String deleteProjectRes = projectService.removeProject(memberId, projectId);

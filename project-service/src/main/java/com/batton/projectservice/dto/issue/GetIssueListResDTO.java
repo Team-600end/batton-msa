@@ -1,6 +1,9 @@
 package com.batton.projectservice.dto.issue;
 
 import com.batton.projectservice.domain.Issue;
+import com.batton.projectservice.domain.Project;
+import com.batton.projectservice.dto.GetProjectListResDTO;
+import com.batton.projectservice.dto.client.GetMemberResDTO;
 import com.batton.projectservice.dto.client.GetMemberResDTO;
 import com.batton.projectservice.enums.IssueStatus;
 import com.batton.projectservice.enums.IssueTag;
@@ -12,20 +15,24 @@ import javax.persistence.Enumerated;
 
 @Getter
 public class GetIssueListResDTO {
-    private Long id;
+    private Long issueId;
     private String issueTitle;
     @Enumerated(EnumType.STRING)
     private IssueTag issueTag;
+    private int issueSeq;
+    private int issueKey;
     @Enumerated(EnumType.STRING)
     private IssueStatus issueStatus;
     private String nickname;
     private String profileImage;
 
     @Builder
-    public GetIssueListResDTO(Long id, String issueTitle, IssueTag issueTag, IssueStatus issueStatus, String nickname, String profileImage) {
-        this.id = id;
+    public GetIssueListResDTO (Long issueId, String issueTitle, IssueTag issueTag, int issueSeq, int issueKey, IssueStatus issueStatus, String nickname, String profileImage) {
+        this.issueId = issueId;
         this.issueTitle = issueTitle;
         this.issueTag = issueTag;
+        this.issueSeq = issueSeq;
+        this.issueKey = issueKey;
         this.issueStatus = issueStatus;
         this.nickname = nickname;
         this.profileImage = profileImage;
@@ -33,9 +40,11 @@ public class GetIssueListResDTO {
 
     public static GetIssueListResDTO toDTO(Issue issue, GetMemberResDTO getMemberResDTO) {
         return GetIssueListResDTO.builder()
-                .id(issue.getId())
+                .issueId(issue.getId())
                 .issueTitle(issue.getIssueTitle())
                 .issueTag(issue.getIssueTag())
+                .issueSeq(issue.getIssueSeq())
+                .issueKey(issue.getIssueKey())
                 .issueStatus(issue.getIssueStatus())
                 .nickname(getMemberResDTO.getNickname())
                 .profileImage(getMemberResDTO.getProfileImage())

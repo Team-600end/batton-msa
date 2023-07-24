@@ -90,6 +90,7 @@ public class TokenProvider {
 
     public boolean equalRefreshTokenId(String refreshTokenId, String refreshToken) {
         String compareToken = this.getRefreshTokenId(refreshTokenId);
+
         return refreshTokenId.equals(compareToken);
     }
 }

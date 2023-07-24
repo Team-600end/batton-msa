@@ -4,7 +4,6 @@ import com.batton.projectservice.common.BaseResponse;
 import com.batton.projectservice.dto.comment.PostCommentReqDTO;
 import com.batton.projectservice.dto.issue.*;
 import com.batton.projectservice.service.IssueService;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -27,8 +26,8 @@ public class IssueController {
     @PostMapping
     @Operation(summary = "이슈 생성 요청")
     @ApiResponses({
-            @ApiResponse(responseCode = "701", description = "프로젝트를 찾을 수 없습니다."),
-            @ApiResponse(responseCode = "703", description = "소속 유저를 찾을 수 없습니다.")
+            @ApiResponse(responseCode = "701", description = "프로젝트 아이디 값을 확인해주세요."),
+            @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요.")
     })
     public BaseResponse<Long> postIssue(@RequestBody PostIssueReqDTO postIssueReqDTO) {
         Long signupMemberRsp = issueService.addIssue(postIssueReqDTO);
@@ -46,13 +45,29 @@ public class IssueController {
     @Operation(summary = "이슈 보드 상태 및 순서 변경")
     @ApiResponses({
             @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),
-            @ApiResponse(responseCode = "703", description = "소속 유저를 찾을 수 없습니다."),
-            @ApiResponse(responseCode = "704", description = "이슈를 찾을 수 없습니다.")
+            @ApiResponse(responseCode = "703", description = "유저 아이디 값을 확인해주세요."),
+            @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
     })
     private BaseResponse<String> patchIssueBoard(@RequestHeader Long memberId, @PathVariable("issueId") Long issueId, @RequestBody PatchIssueBoardReqDTO patchIssueBoardReqDTO) {
         String patchIssueBoard = issueService.modifyIssueBoard(memberId, issueId, patchIssueBoardReqDTO);
 
         return new BaseResponse<>(patchIssueBoard);
+    }
+
+    /**
+     * 이슈 보드 목록 조회
+     *
+     * @return GetIssueBoardResDTO
+     * */
+    @GetMapping("/board/{projectId}")
+    @Operation(summary = "이슈 보드 목록 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "701", description = "프로젝트 아이디 값을 확인해주세요."),
+    })
+    private BaseResponse<GetIssueBoardResDTO> getIssueBoard(@PathVariable("projectId") Long projectId) {
+        GetIssueBoardResDTO getIssueBoardResDTO = issueService.getIssueBoard(projectId);
+
+        return new BaseResponse<>(getIssueBoardResDTO);
     }
 
     /**
@@ -63,7 +78,7 @@ public class IssueController {
      * */
     @GetMapping("/{belongId}/list")
     @Operation(summary = "내가 담당한 이슈 작업 조회")
-    @ApiResponse(responseCode = "704", description = "이슈를 찾을 수 없습니다.")
+    @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
     private BaseResponse<List<GetMyIssueResDTO>> getMyIssue(@PathVariable("belongId") Long belongId) {
         List<GetMyIssueResDTO> getMyIssueResDTO = issueService.findMyIssue(belongId);
 
@@ -78,7 +93,7 @@ public class IssueController {
      * */
     @GetMapping("/{issueId}")
     @Operation(summary = "이슈 상세 조회")
-    @ApiResponse(responseCode = "704", description = "이슈를 찾을 수 없습니다.")
+    @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
     private BaseResponse<GetIssueInfoResDTO> getIssueInfo(@PathVariable("issueId") Long issueId) {
         GetIssueInfoResDTO getIssueInfoResDTO = issueService.findIssueInfo(issueId);
 
@@ -93,7 +108,7 @@ public class IssueController {
      * */
     @GetMapping("/projects/{projectId}/list")
     @Operation(summary = "대시보드 이슈 리스트 조회")
-    @ApiResponse(responseCode = "704", description = "이슈를 찾을 수 없습니다.")
+    @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
     private BaseResponse<List<GetIssueListResDTO>> getIssueList(@PathVariable("projectId") Long projectId) {
         List<GetIssueListResDTO> getIssueListResDTO = issueService.findIssueList(projectId);
 
@@ -117,5 +132,39 @@ public class IssueController {
         String postComment = issueService.addComment(issuedId, memberId, postCommentReqDTO);
 
         return new BaseResponse<>(postComment);
+    }
+
+    /**
+     * 이슈 수정 API
+     * @param issueId 상태를 변경할 이슈 아이디
+     * @return String
+     */
+    @PatchMapping("/{issueId}")
+    @Operation(summary = "이슈 수정")
+    @ApiResponses({
+            @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),
+            @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
+            @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
+    })
+    private BaseResponse<String> patchIssue(@PathVariable("issueId") Long issueId, @RequestBody PatchIssueReqDTO patchIssueReqDTO) {
+        String patchIssue = issueService.modifyIssue(issueId, patchIssueReqDTO);
+
+        return new BaseResponse<>(patchIssue);
+    }
+
+    /**
+     * 이슈 삭제 API
+     * @param issueId 상태를 변경할 이슈 아이디
+     * @return String
+     */
+    @DeleteMapping("/{issueId}")
+    @Operation(summary = "이슈 삭제")
+    @ApiResponses({
+            @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
+    })
+    private BaseResponse<String> deleteIssue(@PathVariable("issueId") Long issueId) {
+        String deleteIssue = issueService.deleteIssue(issueId);
+
+        return new BaseResponse<>(deleteIssue);
     }
 }

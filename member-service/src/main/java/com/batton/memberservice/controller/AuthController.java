@@ -1,19 +1,15 @@
 package com.batton.memberservice.controller;
 
 import com.batton.memberservice.common.BaseResponse;
-import com.batton.memberservice.dto.SignupMemberReqDTO;
+import com.batton.memberservice.dto.PostMemberReqDTO;
 import com.batton.memberservice.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -22,17 +18,14 @@ public class AuthController {
 
     /**
      * 회원가입 API
-     *
-     * @return
+     * @param postMemberReqDTO 요청 바디에 포함될 SignupMemberReqDTO 객체
+     * @return String
      */
     @PostMapping("/signup")
     @Operation(summary = "회원가입 요청")
-    @ApiResponses({
-            @ApiResponse(responseCode = "401", description = "...")
-    })
-    public BaseResponse<String> signupMember(@RequestBody SignupMemberReqDTO reqDTO) {
-        String signupMemberRsp = authService.signupMember(reqDTO);
+    public BaseResponse<String> signupMember(@RequestBody PostMemberReqDTO postMemberReqDTO) {
+        String signupMemberRes = authService.signupMember(postMemberReqDTO);
 
-        return new BaseResponse<>(signupMemberRsp);
+        return new BaseResponse<>(signupMemberRes);
     }
 }
