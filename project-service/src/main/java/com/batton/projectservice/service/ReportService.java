@@ -3,7 +3,8 @@ package com.batton.projectservice.service;
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Report;
-import com.batton.projectservice.dto.PostIssueReportReqDTO;
+import com.batton.projectservice.dto.issue.PatchIssueReportReqDTO;
+import com.batton.projectservice.dto.issue.PostIssueReportReqDTO;
 import com.batton.projectservice.repository.CommentRepository;
 import com.batton.projectservice.repository.IssueRepository;
 import com.batton.projectservice.repository.ReportRepository;
@@ -14,6 +15,7 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 import static com.batton.projectservice.common.BaseResponseStatus.ISSUE_INVALID_ID;
+import static com.batton.projectservice.common.BaseResponseStatus.ISSUE_REPORT_INVALID_ID;
 
 @RequiredArgsConstructor
 @Service
@@ -38,5 +40,26 @@ public class ReportService {
         }
 
         return newReport;
+    }
+
+    /**
+     * 이슈 레포트 수정 API
+     * */
+    @Transactional
+    public String modifyReport(Long reportId, PatchIssueReportReqDTO patchIssueReportReqDTO) {
+        Optional<Issue> issue = issueRepository.findById(patchIssueReportReqDTO.getIssueId());
+        Optional<Report> report = reportRepository.findById(reportId);
+
+        if (issue.isPresent()) {
+            if (report.isPresent()) {
+                report.get().update(patchIssueReportReqDTO.getReportContent());
+            } else {
+                throw new BaseException(ISSUE_REPORT_INVALID_ID);
+            }
+        } else {
+            throw new BaseException(ISSUE_INVALID_ID);
+        }
+
+        return "이슈 레포트 수정 성공";
     }
 }

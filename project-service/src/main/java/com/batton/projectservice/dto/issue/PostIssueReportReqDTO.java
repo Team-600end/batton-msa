@@ -1,4 +1,4 @@
-package com.batton.projectservice.dto;
+package com.batton.projectservice.dto.issue;
 
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Report;
