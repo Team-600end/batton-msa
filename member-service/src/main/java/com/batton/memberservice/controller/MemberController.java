@@ -42,12 +42,12 @@ public class MemberController {
      * @param email 정보를 조회할 유저 이메일
      * @return GetMemberInfoResDTO
      */
-    @GetMapping("/members")
+    @GetMapping("/list")
     @Operation(summary = "추가할 프로젝트 멤버 정보 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<GetMemberInfoResDTO> checkMember(String email) {
+    private BaseResponse<GetMemberInfoResDTO> checkMember(@RequestParam("email") String email) {
         GetMemberInfoResDTO getMemberInfoResDTO = memberService.checkMember(email);
 
         return new BaseResponse<>(getMemberInfoResDTO);
