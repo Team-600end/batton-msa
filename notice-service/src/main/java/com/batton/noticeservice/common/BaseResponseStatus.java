@@ -12,8 +12,6 @@ public enum BaseResponseStatus {
     SERVER_ERROR(false, 500, "서버 처리에 오류가 발생하였습니다."),
 
     /**
-     * member-service - 600 ~ 699
-     * project-service - 700 ~ 1299
      * notice-service - 1300 ~ 1399
      */
     NOTICE_INVALID_USER_ID(false, 1300, "유저 아이디 값을 확인해주세요.");

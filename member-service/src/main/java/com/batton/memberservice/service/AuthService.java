@@ -1,9 +1,8 @@
 package com.batton.memberservice.service;
 
 import com.batton.memberservice.common.BaseException;
-import com.batton.memberservice.common.BaseResponseStatus;
 import com.batton.memberservice.domain.Member;
-import com.batton.memberservice.dto.SignupMemberReqDTO;
+import com.batton.memberservice.dto.PostMemberReqDTO;
 import com.batton.memberservice.enums.Authority;
 import com.batton.memberservice.enums.Status;
 import com.batton.memberservice.mq.QueueService;
@@ -21,27 +20,25 @@ import static com.batton.memberservice.common.BaseResponseStatus.MEMBER_PASSWORD
 public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-
     private final QueueService queueService;
 
+    /**
+     * 회원가입 API
+     */
     @Transactional
-    public String signupMember(SignupMemberReqDTO reqDTO) {
-        if (memberRepository.existsByEmail(reqDTO.getEmail())) {
+    public String signupMember(PostMemberReqDTO postMemberReqDTO) {
+        // 이메일 존재 여부 확인
+        if (memberRepository.existsByEmail(postMemberReqDTO.getEmail())) {
             throw new BaseException(EXIST_EMAIL_ERROR);
         }
-        if (!reqDTO.getPassword().equals(reqDTO.getCheckPassword())) {
+        // 비밀번호 일치 확인
+        if (!postMemberReqDTO.getPassword().equals(postMemberReqDTO.getCheckPassword())) {
             throw new BaseException(MEMBER_PASSWORD_CONFLICT);
         }
-        Member newMember = Member.builder()
-                .email(reqDTO.getEmail())
-                .nickname(reqDTO.getNickname())
-                .password(passwordEncoder.encode(reqDTO.getPassword()))
-                .authority(Authority.ROLE_USER)
-                .status(Status.ENABLED)
-                .build();
+        Member member = postMemberReqDTO.toEntity(postMemberReqDTO, passwordEncoder.encode(postMemberReqDTO.getPassword()), Authority.ROLE_USER, Status.ENABLED);
 
-        memberRepository.save(newMember);
-        queueService.createQueueForMember(newMember.getId()); // 유저 Queue 생성
+        memberRepository.save(member);
+        queueService.createQueueForMember(member.getId()); // 유저 Queue 생성
 
         return "회원가입 성공하였습니다.";
     }

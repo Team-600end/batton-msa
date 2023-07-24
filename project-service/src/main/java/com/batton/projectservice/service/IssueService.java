@@ -69,10 +69,10 @@ public class IssueService {
 
                 return issueId;
             } else {
-                throw new BaseException(BELONG_NOT_FOUND);
+                throw new BaseException(BELONG_INVALID_ID);
             }
         } else {
-            throw new BaseException(PROJECT_NOT_FOUND);
+            throw new BaseException(PROJECT_INVALID_ID);
         }
     }
 
@@ -90,7 +90,7 @@ public class IssueService {
             if (issue.isPresent()) {
                 // 이슈를 완료 상태로 변경하는 권한 확인
                 if (patchIssueBoardReqDTO.getAfterStatus().equals(IssueStatus.DONE) && belong.get().getGrade().equals(GradeType.MEMBER)) {
-                    throw new BaseException(USER_NO_AUTHORITY);
+                    throw new BaseException(MEMBER_NO_AUTHORITY);
                 }
                 List<Issue> issues = issueRepository.findByIssueStatusOrderByIssueSeq(patchIssueBoardReqDTO.getAfterStatus());
 
@@ -107,17 +107,16 @@ public class IssueService {
                 // 이슈 상태, 순서 변경
                 issue.get().updateIssue(preIssueNum+1,patchIssueBoardReqDTO.getAfterStatus());
             } else {
-                throw new BaseException(ISSUE_NOT_FOUND);
+                throw new BaseException(ISSUE_INVALID_ID);
             }
         } else {
-            throw new BaseException(BELONG_NOT_FOUND);
+            throw new BaseException(BELONG_INVALID_ID);
         }
 
         return "이슈 상태 변경 되었습니다.";
     }
 
     /**
-<<<<<<< HEAD
      * 이슈 보드 목록 조회 API
      * */
     @Transactional
@@ -154,7 +153,7 @@ public class IssueService {
         List<GetMyIssueResDTO> myIssueResDTOList = new ArrayList<>();
 
         if(myIssues.isEmpty()) {
-            throw new BaseException(ISSUE_NOT_FOUND);
+            throw new BaseException(ISSUE_INVALID_ID);
         }
         for(Issue issue : myIssues) {
             String updatedDate = issue.getUpdatedAt().getYear() + ". " + issue.getUpdatedAt().getMonthValue() + ". " + issue.getUpdatedAt().getDayOfMonth();
@@ -179,7 +178,7 @@ public class IssueService {
 
             return issueInfoResDTO;
         } else {
-            throw new BaseException(ISSUE_NOT_FOUND);
+            throw new BaseException(ISSUE_INVALID_ID);
         }
     }
 
@@ -191,7 +190,7 @@ public class IssueService {
         List<GetIssueListResDTO> issueListResDTOList = new ArrayList<>();
 
         if (issues.isEmpty()) {
-            throw new BaseException(ISSUE_NOT_FOUND);
+            throw new BaseException(ISSUE_INVALID_ID);
         }
         for (Issue issue : issues) {
             GetMemberResDTO member = memberServiceFeignClient.getMember(issue.getBelong().getMemberId());
@@ -216,17 +215,17 @@ public class IssueService {
             if (issue.isPresent()) {
                 // 이슈를 완료 상태로 변경하는 권한 확인
                 if (patchIssueReqDTO.getIssueStatus().equals(IssueStatus.DONE) && belong.get().getGrade().equals(GradeType.MEMBER)) {
-                    throw new BaseException(USER_NO_AUTHORITY);
+                    throw new BaseException(MEMBER_NO_AUTHORITY);
                 }
                 List<Issue> issues = issueRepository.findByIssueStatusOrderByIssueSeq(patchIssueReqDTO.getIssueStatus());
 
                 // 이슈 수정
                 issue.get().modifyIssue(patchIssueReqDTO.getIssueTitle(), patchIssueReqDTO.getIssueContent(), patchIssueReqDTO.getIssueStatus(), patchIssueReqDTO.getIssueTag(), belong.get(), issues.size()+1);
             } else {
-                throw new BaseException(ISSUE_NOT_FOUND);
+                throw new BaseException(ISSUE_INVALID_ID);
             }
         } else {
-            throw new BaseException(BELONG_NOT_FOUND);
+            throw new BaseException(BELONG_INVALID_ID);
         }
 
         return "이슈 수정 성공";
@@ -243,7 +242,7 @@ public class IssueService {
         if (issue.isPresent()) {
             issueRepository.delete(issue.get());
         } else {
-            throw new BaseException(ISSUE_NOT_FOUND);
+            throw new BaseException(ISSUE_INVALID_ID);
         }
 
         return "이슈 삭제 성공";

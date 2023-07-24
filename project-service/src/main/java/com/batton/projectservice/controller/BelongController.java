@@ -63,7 +63,7 @@ public class BelongController {
     @Operation(summary = "프로젝트 멤버 권한 변경")
     @ApiResponses({
             @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),
-            @ApiResponse(responseCode = "703", description = "소속을 찾을 수 없습니다.")
+            @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요.")
     })
     private BaseResponse<String> patchGrade (@RequestHeader Long memberId, @PathVariable("projectId") Long projectId, @PathVariable("belongId") Long belongId, @RequestBody GradeType grade) {
         String modifyGradeRes = belongService.modifyBelong(memberId, projectId, belongId, grade);

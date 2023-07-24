@@ -32,7 +32,7 @@ public class BelongService {
         //본인 권한 확인
         if (myBelong.isPresent()) {
             if (myBelong.get().getGrade() == GradeType.MEMBER) {
-                throw new BaseException(USER_NO_AUTHORITY);
+                throw new BaseException(MEMBER_NO_AUTHORITY);
             } else {
                 Optional<Belong> memberBelong = belongRepository.findById(belongId);
 
@@ -40,11 +40,11 @@ public class BelongService {
                 if (memberBelong.isPresent()) {
                     memberBelong.get().update(grade);
                 } else {
-                    throw new BaseException(BELONG_NOT_FOUND);
+                    throw new BaseException(BELONG_INVALID_ID);
                 }
             }
         } else {
-            throw new BaseException(USER_NOT_FOUND);
+            throw new BaseException(USER_INVALID_ID);
         }
 
         return "프로텍트 팀원 권한 변경 성공";
@@ -77,11 +77,11 @@ public class BelongService {
 
         if (belong.isPresent()) {
             if (myBelong.get().getGrade() == GradeType.MEMBER) {
-                throw new BaseException(USER_NO_AUTHORITY);
+                throw new BaseException(MEMBER_NO_AUTHORITY);
             }
             belongRepository.delete(belong.get());
         } else {
-            throw new BaseException(USER_NOT_FOUND);
+            throw new BaseException(USER_INVALID_ID);
         }
 
         return "프로젝트 멤버 삭제 성공";
