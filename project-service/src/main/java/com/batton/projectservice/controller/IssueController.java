@@ -118,7 +118,7 @@ public class IssueController {
     /**
      * 이슈 코멘트 생성 API
      *
-     * @param issuedId 코멘트를 등록할 이슈 아이디
+     * @param issueId 코멘트를 등록할 이슈 아이디
      * @return String
      * */
     @PostMapping("/{issueId}/reports/comments")
@@ -128,8 +128,8 @@ public class IssueController {
             @ApiResponse(responseCode = "703", description = "소속 유저를 찾을 수 없습니다."),
             @ApiResponse(responseCode = "704", description = "이슈를 찾을 수 없습니다.")
     })
-    private BaseResponse<String> postComment(@RequestHeader Long memberId, @PathVariable("issuedId") Long issuedId, @RequestBody PostCommentReqDTO postCommentReqDTO) {
-        String postComment = issueService.addComment(issuedId, memberId, postCommentReqDTO);
+    private BaseResponse<String> postComment(@RequestHeader Long memberId, @PathVariable("issueId") Long issueId, @RequestBody PostCommentReqDTO postCommentReqDTO) {
+        String postComment = issueService.addComment(issueId, memberId, postCommentReqDTO);
 
         return new BaseResponse<>(postComment);
     }

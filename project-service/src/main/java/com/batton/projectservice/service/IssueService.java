@@ -19,6 +19,7 @@ import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.IssueStatus;
 import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.repository.BelongRepository;
+import com.batton.projectservice.repository.CommentRepository;
 import com.batton.projectservice.repository.IssueRepository;
 import com.batton.projectservice.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ public class IssueService {
     private final IssueRepository issueRepository;
     private final ProjectRepository projectRepository;
     private final BelongRepository belongRepository;
+    private final CommentRepository commentRepository;
     private final MemberServiceFeignClient memberServiceFeignClient;
 
     /**
@@ -206,6 +208,7 @@ public class IssueService {
     /**
      * 이슈 코멘트 생성 API
      */
+    @Transactional
     public String addComment(Long issueId, Long memberId, PostCommentReqDTO postCommentReqDTO) {
         Optional<Issue> issue = issueRepository.findById(issueId);
 
@@ -219,6 +222,7 @@ public class IssueService {
                 throw new BaseException(MEMBER_NO_AUTHORITY);
             }
             Comment comment = postCommentReqDTO.toEntity(postCommentReqDTO, belong.get(), issue.get());
+            commentRepository.save(comment);
 
             return "코멘트 등록되었습니다";
         } else {
