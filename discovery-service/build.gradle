@@ -41,6 +41,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.16'
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
 
+    //Configuration
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     // Development Convenience

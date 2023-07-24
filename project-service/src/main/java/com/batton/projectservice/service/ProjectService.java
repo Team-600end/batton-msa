@@ -80,7 +80,7 @@ public class ProjectService {
                 }
             }
         } else {
-            throw new BaseException(PROJECT_NOT_FOUND);
+            throw new BaseException(PROJECT_INVALID_ID);
         }
 
         return "프로젝트 팀원 추가 성공";
@@ -95,17 +95,17 @@ public class ProjectService {
 
         if (belong.isPresent()) {
             if (belong.get().getGrade() == GradeType.MEMBER) {
-                throw new BaseException(USER_NO_AUTHORITY);
+                throw new BaseException(MEMBER_NO_AUTHORITY);
             }
             Optional<Project> project = projectRepository.findById(projectId);
 
             if (project.isPresent()) {
                 project.get().update(patchProjectReqDTO.getProjectTitle(), patchProjectReqDTO.getProjectContent(), patchProjectReqDTO.getProjectImage());
             } else {
-                throw new BaseException(PROJECT_NOT_FOUND);
+                throw new BaseException(PROJECT_INVALID_ID);
             }
         } else {
-            throw new BaseException(USER_NOT_FOUND);
+            throw new BaseException(USER_INVALID_ID);
         }
 
         return "프로젝트 수정 성공";
@@ -120,12 +120,12 @@ public class ProjectService {
 
         if (belong.isPresent()) {
             if (belong.get().getGrade() == GradeType.MEMBER) {
-                throw new BaseException(USER_NO_AUTHORITY);
+                throw new BaseException(MEMBER_NO_AUTHORITY);
             } else {
                 projectRepository.deleteById(projectId);
             }
         } else {
-            throw new BaseException(PROJECT_NOT_FOUND);
+            throw new BaseException(PROJECT_INVALID_ID);
         }
 
         return "프로젝트 삭제 성공";
@@ -146,7 +146,7 @@ public class ProjectService {
 
             return getProjectListResDTOList;
         } else {
-            throw new BaseException(PROJECT_NOT_FOUND);
+            throw new BaseException(PROJECT_INVALID_ID);
         }
     }
 }

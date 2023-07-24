@@ -20,7 +20,6 @@ public enum BaseResponseStatus {
     MEMBER_PASSWORD_DISCORD(false, 603, "비밀번호가 일치하지 않습니다.");
 
 
-
     private final boolean isSuccess;
     private final int code;
     private final String message;

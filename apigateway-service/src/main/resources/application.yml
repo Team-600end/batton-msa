@@ -44,7 +44,6 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/(?<segment>.*), /$\{segment}
-            - AuthorizationHeaderFilter
         - id: project-service
           uri: http://localhost:8082
           predicates:
@@ -59,4 +58,3 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/(?<segment>.*), /$\{segment}
-            - AuthorizationHeaderFilter
