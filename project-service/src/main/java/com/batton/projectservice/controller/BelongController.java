@@ -1,7 +1,7 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
-import com.batton.projectservice.dto.ProjectTeamReqDTO;
+import com.batton.projectservice.dto.project.ProjectTeamReqDTO;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.service.BelongService;
 import com.batton.projectservice.service.ProjectService;
@@ -24,7 +24,6 @@ public class BelongController {
      * 프로젝트 멤버 추가를 위한 API
      * @param projectId 프로젝트 ID 값
      * @param memberId 추가할 멤버의 ID 값
-     * @param invitedMemberId 초대된 멤버의 ID 값
      * @param projectTeamReqDTOList 요청 바디에 포함될 ProjectTeamReqDTO 객체
      * @return message
      */

@@ -1,9 +1,9 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
-import com.batton.projectservice.dto.PatchProjectReqDTO;
-import com.batton.projectservice.dto.PostProjectReqDTO;
-import com.batton.projectservice.dto.ProjectTeamReqDTO;
+import com.batton.projectservice.dto.project.PatchProjectReqDTO;
+import com.batton.projectservice.dto.project.PostProjectReqDTO;
+import com.batton.projectservice.dto.GetProjectListResDTO;
 import com.batton.projectservice.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -64,5 +64,17 @@ public class ProjectController {
         String deleteProjectRes = projectService.removeProject(memberId, projectId);
 
         return new BaseResponse<>(deleteProjectRes);
+    }
+
+    /**
+     * 프로젝트 네비바 리스트 조회 API
+     * @return List of Project for Navbar
+     */
+    @GetMapping("/navbar")
+    @Operation(summary = "프로젝트 네비바 리스트 조회")
+    private BaseResponse<List<GetProjectListResDTO>> getProjectListForNavbar(@RequestHeader Long memberId) {
+        List<GetProjectListResDTO> projectListForNavbarRes = projectService.getProjectListForNavbar(memberId);
+
+        return new BaseResponse<>(projectListForNavbarRes);
     }
 }

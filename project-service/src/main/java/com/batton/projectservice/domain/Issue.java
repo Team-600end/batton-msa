@@ -20,11 +20,13 @@ public class Issue extends BaseEntity {
     @Column(name = "issue_id")
     private Long id;
     private String issueTitle;
+    private String issueContent;
     @Enumerated(EnumType.STRING)
     private IssueStatus issueStatus;
     @Enumerated(EnumType.STRING)
     private IssueTag issueTag;
     private int issueSeq;
+    private int issueKey;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
@@ -35,13 +37,31 @@ public class Issue extends BaseEntity {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Issue(Long id, String issueTitle, IssueStatus issueState, IssueTag issueTag, int issueSeq, Project project, Belong belong) {
+    public Issue(Long id, String issueTitle, String issueContent, IssueStatus issueStatus, IssueTag issueTag, int issueSeq, int issueKey, Project project, Belong belong) {
         this.id = id;
         this.issueTitle = issueTitle;
-        this.issueStatus = issueState;
+        this.issueContent = issueContent;
+        this.issueStatus = issueStatus;
         this.issueTag = issueTag;
         this.issueSeq = issueSeq;
+        this.issueKey = issueKey;
         this.project = project;
         this.belong = belong;
+    }
+
+    public void updateSeq(int issueSeq) {
+        this.issueSeq = issueSeq;
+    }
+    public void updateIssue(int issueSeq, IssueStatus issueStatus) {
+        this.issueSeq = issueSeq;
+        this.issueStatus = issueStatus;
+    }
+    public void modifyIssue(String issueTitle, String issueContent, IssueStatus issueStatus, IssueTag issueTag, Belong belong, int issueSeq) {
+        this.issueTitle = issueTitle;
+        this.issueContent = issueContent;
+        this.issueStatus = issueStatus;
+        this.issueTag = issueTag;
+        this.belong = belong;
+        this.issueSeq = issueSeq;
     }
 }
