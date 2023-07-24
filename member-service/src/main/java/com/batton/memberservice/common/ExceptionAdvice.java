@@ -1,4 +1,4 @@
-package com.batton.noticeservice.common;
+package com.batton.memberservice.common;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.ExceptionHandler;
