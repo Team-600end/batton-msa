@@ -15,7 +15,6 @@ public class Report extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "report_id")
     private Long id;
-    //mongoDB로 변경 -> RDB사용?
     @Column(name = "report_content", columnDefinition = "TEXT")
     private String reportContent;
     @OneToOne
