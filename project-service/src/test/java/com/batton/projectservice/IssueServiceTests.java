@@ -45,7 +45,7 @@ public class IssueServiceTests {
         given(issueRepository.save(issue)).willReturn(issue);
 
         // when
-        issueService.addIssue(postIssueReqDTO);
+        issueService.postIssue(postIssueReqDTO);
 
         // then
         verify(issueRepository).save(any());

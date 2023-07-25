@@ -1,8 +1,6 @@
 package com.batton.memberservice.dto.client;
 
 import com.batton.memberservice.domain.Member;
-import com.batton.memberservice.dto.GetMemberInfoResDTO;
-import com.batton.memberservice.enums.Status;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

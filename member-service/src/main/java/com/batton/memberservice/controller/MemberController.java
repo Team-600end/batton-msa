@@ -4,16 +4,13 @@ import com.batton.memberservice.common.BaseResponse;
 import com.batton.memberservice.dto.GetMemberInfoResDTO;
 import com.batton.memberservice.dto.PatchMemberPasswordReqDTO;
 import com.batton.memberservice.dto.PatchMemberReqDTO;
-import com.batton.memberservice.dto.client.GetMemberListResDTO;
 import com.batton.memberservice.dto.client.GetMemberResDTO;
 import com.batton.memberservice.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -47,8 +44,8 @@ public class MemberController {
     @ApiResponses({
             @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<GetMemberInfoResDTO> checkMember(@RequestParam("email") String email) {
-        GetMemberInfoResDTO getMemberInfoResDTO = memberService.checkMember(email);
+    private BaseResponse<GetMemberInfoResDTO> getCheckMember(@RequestParam("email") String email) {
+        GetMemberInfoResDTO getMemberInfoResDTO = memberService.getCheckMember(email);
 
         return new BaseResponse<>(getMemberInfoResDTO);
     }
@@ -56,6 +53,7 @@ public class MemberController {
     /**
      * 유저 정보 수정 API
      * @param memberId 정보를 수정할 유저 아이디
+     * @param patchMemberReqDTO 정보 수정 요청 바디에 포함될 DTO
      * @return String
      * */
     @PatchMapping("/{memberId}")
@@ -72,6 +70,7 @@ public class MemberController {
     /**
      * 유저 비밀번호 수정 API
      * @param memberId 비밀번호를 수정할 유저 아이디
+     * @param patchMemberPasswordReqDTO 비밀번호 수정 요청 바디에 포함될 DTO
      * @return String
      * */
     @PatchMapping("/{memberId}/password")

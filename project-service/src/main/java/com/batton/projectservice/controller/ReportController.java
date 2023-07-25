@@ -1,9 +1,8 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
-import com.batton.projectservice.dto.issue.PatchIssueBoardReqDTO;
-import com.batton.projectservice.dto.issue.PatchIssueReportReqDTO;
-import com.batton.projectservice.dto.issue.PostIssueReportReqDTO;
+import com.batton.projectservice.dto.report.PatchIssueReportReqDTO;
+import com.batton.projectservice.dto.report.PostIssueReportReqDTO;
 import com.batton.projectservice.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,8 +18,8 @@ public class ReportController {
 
     /**
      * 이슈 레포트 생성 API
-     * @param postIssueReportReqDTO 이슈 레포트 생성 요청 DTO
-     * @return id of Report
+     * @param postIssueReportReqDTO 이슈 레포트 생성 요청 요청 바디에 포함될 PostIssueReportReqDTO
+     * @return reportId
      * */
     @PostMapping
     @Operation(summary = "이슈 레포트 생성")
@@ -28,14 +27,15 @@ public class ReportController {
             @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
     })
     private BaseResponse<Long> postReport(@RequestBody PostIssueReportReqDTO postIssueReportReqDTO) {
-        Long reportId = reportService.addReport(postIssueReportReqDTO);
+        Long postReportRes = reportService.postReport(postIssueReportReqDTO);
 
-        return new BaseResponse<>(reportId);
+        return new BaseResponse<>(postReportRes);
     }
 
     /**
      * 이슈 레포트 수정 API
-     * @param patchIssueReportReqDTO 이슈 레포트 수정 요청 DTO
+     * @param reportId 수정할 이슈 레포트 아이디
+     * @param patchIssueReportReqDTO 이슈 레포트 수정 요청 요청 바디에 포함될 PatchIssueReportReqDTO
      * @return String
      * */
     @PatchMapping("/{reportId}")
@@ -44,16 +44,16 @@ public class ReportController {
             @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "705", description = "이슈 레포트 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<String> postReport(@PathVariable("reportId") Long reportId, @RequestBody PatchIssueReportReqDTO patchIssueReportReqDTO) {
-        String modifyReportRes = reportService.modifyReport(reportId, patchIssueReportReqDTO);
+    private BaseResponse<String> patchReport(@PathVariable("reportId") Long reportId, @RequestBody PatchIssueReportReqDTO patchIssueReportReqDTO) {
+        String patchReportRes = reportService.patchReport(reportId, patchIssueReportReqDTO);
 
-        return new BaseResponse<>(modifyReportRes);
+        return new BaseResponse<>(patchReportRes);
     }
 
     /**
      * 이슈 레포트 삭제 API
-     * @param reportId 이슈 레포트 아이디 값
-     * @return message
+     * @param reportId 삭제할 이슈 레포트 아이디
+     * @return String
      */
     @DeleteMapping("/{reportId}")
     @Operation(summary = "이슈 레포트 삭제")
@@ -61,7 +61,7 @@ public class ReportController {
             @ApiResponse(responseCode = "705", description = "이슈 레포트 아이디 값을 확인해주세요.")
     })
     private BaseResponse<String> deleteReport(@PathVariable("reportId") Long reportId) {
-        String deleteReportRes = reportService.removeReport(reportId);
+        String deleteReportRes = reportService.deleteReport(reportId);
 
         return new BaseResponse<>(deleteReportRes);
     }

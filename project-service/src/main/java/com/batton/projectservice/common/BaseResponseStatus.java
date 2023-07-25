@@ -23,7 +23,6 @@ public enum BaseResponseStatus {
     ISSUE_REPORT_INVALID_ID(false, 705, "이슈 레포트 아이디 값을 확인해주세요."),
     ISSUE_REPORT_EXISTS(false, 706, "이슈 레포트가 이미 존재합니다.");
 
-
     private final boolean isSuccess;
     private final int code;
     private final String message;

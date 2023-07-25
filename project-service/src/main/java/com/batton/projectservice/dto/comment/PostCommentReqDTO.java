@@ -3,7 +3,6 @@ package com.batton.projectservice.dto.comment;
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Comment;
 import com.batton.projectservice.domain.Issue;
-import com.batton.projectservice.dto.project.PostProjectReqDTO;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -24,7 +23,7 @@ public class PostCommentReqDTO {
 
     public static Comment toEntity(PostCommentReqDTO postCommentReqDTO, Belong belong, Issue issue) {
         return Comment.builder()
-                .commentContent(postCommentReqDTO.commentContent)
+                .commentContent(postCommentReqDTO.getCommentContent())
                 .belong(belong)
                 .issue(issue)
                 .build();

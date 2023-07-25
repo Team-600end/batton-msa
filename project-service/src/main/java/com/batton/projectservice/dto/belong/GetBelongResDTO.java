@@ -1,4 +1,4 @@
-package com.batton.projectservice.dto;
+package com.batton.projectservice.dto.belong;
 
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.dto.client.GetMemberResDTO;

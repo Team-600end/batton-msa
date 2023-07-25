@@ -18,7 +18,7 @@ public class AuthController {
 
     /**
      * 회원가입 API
-     * @param postMemberReqDTO 요청 바디에 포함될 SignupMemberReqDTO 객체
+     * @param postMemberReqDTO 회원 정보 DTO
      * @return String
      */
     @PostMapping("/signup")

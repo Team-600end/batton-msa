@@ -5,12 +5,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.DateTimeException;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Getter
