@@ -49,4 +49,21 @@ public class ReportController {
 
         return new BaseResponse<>(modifyReportRes);
     }
+
+    /**
+     * 이슈 레포트 삭제 API
+     * @param reportId 이슈 레포트 아이디 값
+     * @return message
+     */
+    @DeleteMapping("/{reportId}")
+    @Operation(summary = "이슈 레포트 삭제")
+    @ApiResponses({
+            @ApiResponse(responseCode = "705", description = "이슈 레포트 아이디 값을 확인해주세요.")
+    })
+    private BaseResponse<String> deleteReport(@PathVariable("reportId") Long reportId) {
+        String deleteReportRes = reportService.removeReport(reportId);
+
+        return new BaseResponse<>(deleteReportRes);
+    }
+
 }
