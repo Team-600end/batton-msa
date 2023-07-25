@@ -3,9 +3,11 @@ package com.batton.projectservice.service;
 import com.batton.projectservice.client.MemberServiceFeignClient;
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Belong;
+import com.batton.projectservice.domain.Comment;
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Project;
 import com.batton.projectservice.dto.client.GetMemberResDTO;
+import com.batton.projectservice.dto.comment.PostCommentReqDTO;
 import com.batton.projectservice.dto.issue.GetIssueBoardResDTO;
 import com.batton.projectservice.dto.issue.GetIssueListResDTO;
 import com.batton.projectservice.dto.issue.GetIssueInfoResDTO;
@@ -17,11 +19,11 @@ import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.IssueStatus;
 import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.repository.BelongRepository;
+import com.batton.projectservice.repository.CommentRepository;
 import com.batton.projectservice.repository.IssueRepository;
 import com.batton.projectservice.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,7 @@ public class IssueService {
     private final IssueRepository issueRepository;
     private final ProjectRepository projectRepository;
     private final BelongRepository belongRepository;
+    private final CommentRepository commentRepository;
     private final MemberServiceFeignClient memberServiceFeignClient;
 
     /**
@@ -201,6 +204,33 @@ public class IssueService {
 
         return issueListResDTOList;
     }
+
+    /**
+     * 이슈 코멘트 생성 API
+     */
+    @Transactional
+    public String addComment(Long issueId, Long memberId, PostCommentReqDTO postCommentReqDTO) {
+        Optional<Issue> issue = issueRepository.findById(issueId);
+
+        if (!issue.isPresent()) {
+            throw new BaseException(ISSUE_INVALID_ID);
+        }
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(issue.get().getProject().getId(), memberId);
+
+        if (belong.isPresent()) {
+            if (belong.get().getGrade() == GradeType.MEMBER) {
+                throw new BaseException(MEMBER_NO_AUTHORITY);
+            }
+            Comment comment = postCommentReqDTO.toEntity(postCommentReqDTO, belong.get(), issue.get());
+            commentRepository.save(comment);
+
+            return "코멘트 등록되었습니다";
+        } else {
+            throw new BaseException(BELONG_INVALID_ID);
+        }
+    }
+
+
     /**
      * 이슈 수정 API
      * */
