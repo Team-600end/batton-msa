@@ -3,8 +3,10 @@ package com.batton.memberservice.dto;
 import com.batton.memberservice.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class GetMemberInfoResDTO {
     private Long memberId;
     private String nickname;

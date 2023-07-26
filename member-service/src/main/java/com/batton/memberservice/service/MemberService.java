@@ -9,6 +9,7 @@ import com.batton.memberservice.dto.client.GetMemberResDTO;
 import com.batton.memberservice.enums.Status;
 import com.batton.memberservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 import static com.batton.memberservice.common.BaseResponseStatus.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -34,6 +36,7 @@ public class MemberService {
         if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
             getMemberResDTO = GetMemberResDTO.toDTO(member.get());
         } else {
+            log.info("getMember 예외: " + MEMBER_INVALID_USER_ID.getMessage());
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
 
@@ -51,6 +54,7 @@ public class MemberService {
         if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
             getMemberInfoResDTO = GetMemberInfoResDTO.toDTO(member.get());
         } else {
+            log.info("getCheckMember 예외: " + MEMBER_INVALID_USER_ID.getMessage());
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
 
@@ -67,6 +71,7 @@ public class MemberService {
         if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
             member.get().update(patchMemberReqDTO.getNickname(), patchMemberReqDTO.getProfileImage());
         } else {
+            log.info("patchMember 예외: " + MEMBER_INVALID_USER_ID.getMessage());
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
 
@@ -83,14 +88,17 @@ public class MemberService {
         if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
             // 비밀번호 일치 여부 확인
             if (passwordEncoder.matches(patchMemberPasswordReqDTO.getCurrentPassword(), member.get().getPassword())) {
+                log.info("patchMemberPassword 예외: " + MEMBER_PASSWORD_DISCORD.getMessage());
                 throw new BaseException(MEMBER_PASSWORD_DISCORD);
             }
             // 비밀번호 2차 확인
             if (!patchMemberPasswordReqDTO.getChangedPassword().equals(patchMemberPasswordReqDTO.getCheckChangedPassword())) {
+                log.info("patchMemberPassword 예외: " + MEMBER_PASSWORD_CONFLICT.getMessage());
                 throw new BaseException(MEMBER_PASSWORD_CONFLICT);
             }
             member.get().updatePassword(passwordEncoder.encode(patchMemberPasswordReqDTO.getChangedPassword()));
         } else {
+            log.info("patchMemberPassword 예외: " + MEMBER_INVALID_USER_ID.getMessage());
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
 

@@ -10,8 +10,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/members")
@@ -30,7 +32,7 @@ public class MemberController {
     })
     private GetMemberResDTO getMember(@PathVariable("memberId") Long memberId) {
         GetMemberResDTO getMemberResDTO = memberService.getMember(memberId);
-
+        log.info("getMember 요청: " + getMemberResDTO.toString());
         return getMemberResDTO;
     }
 
@@ -46,6 +48,7 @@ public class MemberController {
     })
     private BaseResponse<GetMemberInfoResDTO> getCheckMember(@RequestParam("email") String email) {
         GetMemberInfoResDTO getMemberInfoResDTO = memberService.getCheckMember(email);
+        log.info("getCheckMember 요청: " + getMemberInfoResDTO.toString());
 
         return new BaseResponse<>(getMemberInfoResDTO);
     }
@@ -63,6 +66,7 @@ public class MemberController {
     })
     private BaseResponse<String> patchMember(@PathVariable("memberId") Long memberId, @RequestBody PatchMemberReqDTO patchMemberReqDTO) {
         String patchMemberRes = memberService.patchMember(memberId, patchMemberReqDTO);
+        log.info("patchMember 요청: " + patchMemberRes);
 
         return new BaseResponse<>(patchMemberRes);
     }
@@ -83,6 +87,7 @@ public class MemberController {
     })
     private BaseResponse<String> patchMemberPassword(@PathVariable("memberId") Long memberId, @RequestBody PatchMemberPasswordReqDTO patchMemberPasswordReqDTO) {
         String patchMemberPasswordRes = memberService.patchMemberPassword(memberId, patchMemberPasswordReqDTO);
+        log.info("patchMemberPassword 요청: " + patchMemberPasswordRes);
 
         return new BaseResponse<>(patchMemberPasswordRes);
     }
