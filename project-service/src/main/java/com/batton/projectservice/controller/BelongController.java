@@ -42,7 +42,7 @@ public class BelongController {
      * @param belongId 삭제할 멤버의 소속 아이디
      * @return String
      */
-    @DeleteMapping("/{belongId}")
+    @PatchMapping("/{belongId}")
     @Operation(summary = "프로젝트 멤버 삭제")
     private BaseResponse<String> deleteTeamMember(@RequestHeader Long memberId, @PathVariable("belongId") Long belongId) {
         String deleteTeamMemberRes = belongService.deleteTeamMember(memberId, belongId);
@@ -76,7 +76,7 @@ public class BelongController {
      * @param projectId 프로젝트 아이디
      * @return GetBelongResDTO
      */
-    @GetMapping("/{projectId}")
+    @GetMapping("/list/{projectId}")
     @Operation(summary = "프로젝트 멤버 리스트 조회")
     private BaseResponse<List<GetBelongResDTO>> getBelongList(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId) {
         List<GetBelongResDTO> getBelongResDTOList = belongService.getBelongList(memberId, projectId);

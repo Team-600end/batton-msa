@@ -42,7 +42,7 @@ public class IssueController {
      * @param patchIssueBoardReqDTO 변경 요청 바디에 포함될 PatchIssueBoardReqDTO
      * @return String
      * */
-    @PatchMapping("/{issueId}/status")
+    @PatchMapping("/board/status/{issueId}")
     @Operation(summary = "이슈 보드 상태 및 순서 변경")
     @ApiResponses({
             @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),
@@ -60,7 +60,7 @@ public class IssueController {
      * @param projectId 이슈 조회할 프로젝트 아이디
      * @return GetIssueBoardResDTO
      * */
-    @GetMapping("/board/{projectId}")
+    @GetMapping("/board/list/{projectId}")
     @Operation(summary = "이슈 보드 목록 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "701", description = "프로젝트 아이디 값을 확인해주세요."),
@@ -76,7 +76,7 @@ public class IssueController {
      * @param belongId 유저 소속 아이디
      * @return List<GetMyIssueResDTO>
      * */
-    @GetMapping("/{belongId}/list")
+    @GetMapping("/list/{belongId}")
     @Operation(summary = "개인 이슈 목록 조회")
     @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
     private BaseResponse<List<GetMyIssueResDTO>> getMyIssue(@PathVariable("belongId") Long belongId) {
@@ -104,7 +104,7 @@ public class IssueController {
      * @param projectId 조회할 프로젝트의 아이디
      * @return List<GetIssueResDTO>
      * */
-    @GetMapping("/projects/{projectId}/list")
+    @GetMapping("/projects/list/{projectId}")
     @Operation(summary = "대시보드 이슈 리스트 조회")
     @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
     private BaseResponse<List<GetIssueResDTO>> getIssueList(@PathVariable("projectId") Long projectId) {

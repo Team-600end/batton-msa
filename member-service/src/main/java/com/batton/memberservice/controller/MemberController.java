@@ -73,7 +73,7 @@ public class MemberController {
      * @param patchMemberPasswordReqDTO 비밀번호 수정 요청 바디에 포함될 DTO
      * @return String
      * */
-    @PatchMapping("/{memberId}/password")
+    @PatchMapping("/password/{memberId}")
     @Operation(summary = "유저 비밀번호 수정")
     @ApiResponses({
             @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요."),

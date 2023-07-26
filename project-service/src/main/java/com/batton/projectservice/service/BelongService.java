@@ -6,6 +6,7 @@ import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.dto.belong.GetBelongResDTO;
 import com.batton.projectservice.dto.client.GetMemberResDTO;
 import com.batton.projectservice.enums.GradeType;
+import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.repository.BelongRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -83,7 +84,7 @@ public class BelongService {
             if (myBelong.get().getGrade() == GradeType.MEMBER) {
                 throw new BaseException(MEMBER_NO_AUTHORITY);
             }
-            belongRepository.delete(belong.get());
+            belong.get().updateStatus(Status.DISABLED);
         } else {
             throw new BaseException(BELONG_INVALID_ID);
         }
