@@ -62,7 +62,7 @@ public class IssueService {
                 Issue issue;
 
                 // TO DO 상태의 이슈의 가장 마지막에 위치
-                if(!issueRepository.findexistsByProjectId(project.get().getId())) {
+                if(!issueRepository.existsByProjectId(project.get().getId())) {
                     issue = postIssueReqDTO.toEntity(project.get(), belong.get(), postIssueReqDTO, IssueStatus.TODO, lastIssueSeq + 1, 1);
                 } else {
                     Issue lateIssue = issueRepository.findTopByProjectIdOrderByCreatedAtDesc(project.get().getId());
