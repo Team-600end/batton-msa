@@ -53,7 +53,7 @@ public class MemberServiceTests {
         memberService.patchMember(2L, patchMemberReqDTO);
 
         // then
-        assertThat(member.getNickname()).isEqualTo("tryyrsdfsdf");
+        assertThat(member.getNickname()).isEqualTo(patchMemberReqDTO.getNickname());
     }
 
 
