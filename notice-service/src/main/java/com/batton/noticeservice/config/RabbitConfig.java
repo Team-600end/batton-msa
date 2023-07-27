@@ -1,9 +1,5 @@
 package com.batton.noticeservice.config;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -26,7 +22,7 @@ public class RabbitConfig {
     /**
      * RabbitMQ 연결을 위한 ConnectionFactory 빈을 생성하여 반환
      *
-     * @return ConnectionFactory 객체
+     * @return ConnectionFactory
      */
     @Bean
     public ConnectionFactory connectionFactory() {
@@ -41,9 +37,8 @@ public class RabbitConfig {
 
     /**
      * RabbitTemplate을 생성하여 반환
-     *
-     * @param connectionFactory RabbitMQ와의 연결을 위한 ConnectionFactory 객체
-     * @return RabbitTemplate 객체
+     * @param connectionFactory RabbitMQ와의 연결을 위한 ConnectionFactory
+     * @return RabbitTemplate
      */
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
@@ -55,9 +50,8 @@ public class RabbitConfig {
     }
 
     /**
-     * Jackson 라이브러리를 사용하여 메시지를 JSON 형식으로 변환하는 MessageConverter 빈을 생성
-     *
-     * @return MessageConverter 객체
+     * Jackson 라이브러리를 사용하여 메시지를 JSON 형식으로 변환하는 MessageConverter 빈 생성
+     * @return MessageConverter
      */
     @Bean
     public Jackson2JsonMessageConverter jsonMessageConverter() {

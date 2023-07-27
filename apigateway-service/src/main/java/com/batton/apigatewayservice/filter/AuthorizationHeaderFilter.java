@@ -3,8 +3,8 @@ package com.batton.apigatewayservice.filter;
 import com.batton.apigatewayservice.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -16,7 +16,6 @@ import reactor.core.publisher.Mono;
 @Component
 @Slf4j
 public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
-
     private TokenProvider tokenProvider;
 
     @Autowired
@@ -32,23 +31,21 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
-
             HttpHeaders headers = request.getHeaders();
+
             if (!headers.containsKey(HttpHeaders.AUTHORIZATION)) {
                 return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
             }
 
             String authorizationHeader = headers.get(HttpHeaders.AUTHORIZATION).get(0);
-
             // JWT 토큰 판별
             String token = authorizationHeader.replace("Bearer", "");
-
             tokenProvider.validateToken(token);
-
             String subject = tokenProvider.getMemberId(token);
 
-            if (subject.equals("feign")) return chain.filter(exchange);
-
+            if (subject.equals("feign")) {
+                return chain.filter(exchange);
+            }
             ServerHttpRequest newRequest = request.mutate()
                     .header("memberId", subject)
                     .build();
@@ -58,7 +55,6 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     }
     private Mono<Void> onError(ServerWebExchange exchange, String errorMsg, HttpStatus httpStatus) {
         log.error(errorMsg);
-
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);
 

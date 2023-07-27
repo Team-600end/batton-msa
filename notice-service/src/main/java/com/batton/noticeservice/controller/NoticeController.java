@@ -22,9 +22,8 @@ public class NoticeController {
 
     /**
      * 사용자 전체 알림 목록 조회 API
-     *
      * @param receiverId 알림 목록을 조회할 유저 아이디
-     * @return List of GetNoticeListResDTO
+     * @return List<GetNoticeResDTO>
      * */
     @GetMapping("/all/{receiverId}/{option}")
     @Operation(summary = "사용자 전체 알림 목록 조회")
@@ -32,42 +31,40 @@ public class NoticeController {
             @ApiResponse(responseCode = "1300", description = "유저 아이디 값을 확인해주세요.")
     })
     private BaseResponse<List<GetNoticeResDTO>> getAllNoticeList(@PathVariable("receiverId") Long receiverId, @PathVariable("option") int option) {
-        List<GetNoticeResDTO> getNoticeListResDTO = noticeService.getAllNoticeList(receiverId, option);
+        List<GetNoticeResDTO> getNoticeResDTOList = noticeService.getAllNoticeList(receiverId, option);
 
-        return new BaseResponse<>(getNoticeListResDTO);
+        return new BaseResponse<>(getNoticeResDTOList);
     }
 
     /**
      * 사용자 이슈 알림 목록 조회 API
-     *
      * @param receiverId 알림 목록을 조회할 유저 아이디
-     * @return List of GetNoticeListResDTO
+     * @return List<GetNoticeResDTO>
      * */
-    @GetMapping("/issue/{receiverId}/{option}")
+    @GetMapping("/issues/{receiverId}/{option}")
     @Operation(summary = "사용자 이슈 알림 목록 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "1300", description = "유저 아이디 값을 확인해주세요.")
     })
     private BaseResponse<List<GetNoticeResDTO>> getIssueNoticeList(@PathVariable("receiverId") Long receiverId, @PathVariable("option") int option) {
-        List<GetNoticeResDTO> getNoticeListResDTO = noticeService.getIssueNoticeList(receiverId, option);
+        List<GetNoticeResDTO> getNoticeResDTOList = noticeService.getIssueNoticeList(receiverId, option);
 
-        return new BaseResponse<>(getNoticeListResDTO);
+        return new BaseResponse<>(getNoticeResDTOList);
     }
 
     /**
      * 사용자 프로젝트 알림 목록 조회 API
-     *
      * @param receiverId 알림 목록을 조회할 유저 아이디
-     * @return List of GetNoticeListResDTO
+     * @return List<GetNoticeResDTO>
      * */
-    @GetMapping("/project/{receiverId}/{option}")
+    @GetMapping("/projects/{receiverId}/{option}")
     @Operation(summary = "사용자 프로젝트 알림 목록 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "1300", description = "유저 아이디 값을 확인해주세요.")
     })
     private BaseResponse<List<GetNoticeResDTO>> getProjectNoticeList(@PathVariable("receiverId") Long receiverId, @PathVariable("option") int option) {
-        List<GetNoticeResDTO> getNoticeListResDTO = noticeService.getProjectNoticeList(receiverId, option);
+        List<GetNoticeResDTO> getNoticeResDTOList = noticeService.getProjectNoticeList(receiverId, option);
 
-        return new BaseResponse<>(getNoticeListResDTO);
+        return new BaseResponse<>(getNoticeResDTOList);
     }
 }

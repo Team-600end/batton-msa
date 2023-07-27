@@ -1,4 +1,4 @@
-package com.batton.projectservice.dto;
+package com.batton.projectservice.dto.project;
 
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Project;
@@ -31,10 +31,10 @@ public class ProjectTeamReqDTO {
     public static Belong toEntity(Project project, ProjectTeamReqDTO dto) {
         return Belong.builder()
                 .project(project)
-                .memberId(dto.memberId)
-                .nickname(dto.nickname)
-                .grade(dto.gradeType)
-                .status(dto.status)
+                .memberId(dto.getMemberId())
+                .nickname(dto.getNickname())
+                .grade(dto.getGradeType())
+                .status(dto.getStatus())
                 .build();
     }
 }
