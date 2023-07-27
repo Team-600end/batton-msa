@@ -22,9 +22,9 @@ public class PostProjectReqDTO {
 
     public static Project toEntity(PostProjectReqDTO dto, String projectKey) {
         return Project.builder()
-                .projectTitle(dto.projectTitle)
-                .projectContent(dto.projectContent)
-                .projectImage(dto.projectImage)
+                .projectTitle(dto.getProjectTitle())
+                .projectContent(dto.getProjectContent())
+                .projectImage(dto.getProjectImage())
                 .projectKey(projectKey)
                 .build();
     }

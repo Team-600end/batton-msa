@@ -6,7 +6,7 @@ import com.batton.projectservice.domain.Project;
 import com.batton.projectservice.dto.project.PatchProjectReqDTO;
 import com.batton.projectservice.dto.project.PostProjectReqDTO;
 import com.batton.projectservice.dto.project.ProjectTeamReqDTO;
-import com.batton.projectservice.dto.GetProjectListResDTO;
+import com.batton.projectservice.dto.project.GetProjectResDTO;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.repository.BelongRepository;
 import com.batton.projectservice.repository.ProjectRepository;
@@ -30,7 +30,7 @@ public class ProjectService {
      * 프로젝트 생성 API
      * */
     @Transactional
-    public Long addProject(Long memberId, PostProjectReqDTO postProjectReqDTO) {
+    public Long postProject(Long memberId, PostProjectReqDTO postProjectReqDTO) {
         boolean isUnique = false;
         String projectKey = UUID.randomUUID().toString();
 
@@ -45,7 +45,7 @@ public class ProjectService {
         Long newProjectId = projectRepository.save(project).getId();
 
         //소속 테이블에 팀원들 추가하는 함수 불러오기
-        addTeamMember(memberId, newProjectId, postProjectReqDTO.getTeamMemberList());
+        postPojectMember(memberId, newProjectId, postProjectReqDTO.getTeamMemberList());
 
         return newProjectId;
     }
@@ -54,17 +54,16 @@ public class ProjectService {
      * 프로젝트 팀원 추가 API
      * */
     @Transactional
-    public String addTeamMember(Long memberId, Long projectId, List<ProjectTeamReqDTO> teamMemberList) {
-        Optional<Project> newProject = projectRepository.findById(projectId);
+    public String postPojectMember(Long memberId, Long projectId, List<ProjectTeamReqDTO> teamMemberList) {
+        Optional<Project> project = projectRepository.findById(projectId);
 
-        if (newProject.isPresent()) {
-            Project project = newProject.get();
-
+        // 프로젝트 존재 여부 확인
+        if (project.isPresent()) {
             for (ProjectTeamReqDTO projectTeamReqDTO : teamMemberList) {
                 //프로젝트 생성한 사람일 경우 LEADER 권한 부여
                 if (projectTeamReqDTO.getMemberId() == memberId) {
                     Belong belong = Belong.builder()
-                            .project(project)
+                            .project(project.get())
                             .memberId(projectTeamReqDTO.getMemberId())
                             .nickname(projectTeamReqDTO.getNickname())
                             .status(projectTeamReqDTO.getStatus())
@@ -74,7 +73,7 @@ public class ProjectService {
                     belongRepository.save(belong);
                 } else {
                     //프로젝트 생성한 사람이 아닐 경우 다른 권한 부여
-                    Belong belong = ProjectTeamReqDTO.toEntity(project, projectTeamReqDTO);
+                    Belong belong = ProjectTeamReqDTO.toEntity(project.get(), projectTeamReqDTO);
 
                     belongRepository.save(belong);
                 }
@@ -90,7 +89,7 @@ public class ProjectService {
      * 프로젝트 수정 API
      * */
     @Transactional
-    public String modifyProject(Long projectId, Long memberId, PatchProjectReqDTO patchProjectReqDTO) {
+    public String patchProject(Long projectId, Long memberId, PatchProjectReqDTO patchProjectReqDTO) {
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
 
         if (belong.isPresent()) {
@@ -115,7 +114,7 @@ public class ProjectService {
      * 프로젝트 삭제 API
      * */
     @Transactional
-    public String removeProject(Long memberId, Long projectId) {
+    public String deleteProject(Long memberId, Long projectId) {
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
 
         if (belong.isPresent()) {
@@ -134,17 +133,17 @@ public class ProjectService {
     /**
      * 프로젝트 네비바 리스트 조회 API
      */
-    public List<GetProjectListResDTO> getProjectListForNavbar(Long memberId) {
-        List<Optional<Belong>> projectList = belongRepository.findByMemberId(memberId);
+    public List<GetProjectResDTO> getProjectListForNavbar(Long memberId) {
+        List<Belong> belongList = belongRepository.findByMemberId(memberId);
 
-        if (!projectList.isEmpty()) {
-            List<GetProjectListResDTO> getProjectListResDTOList = new ArrayList<>();
+        if (!belongList.isEmpty()) {
+            List<GetProjectResDTO> getProjectResDTOList = new ArrayList<>();
 
-            for (Optional<Belong> belong : projectList) {
-                getProjectListResDTOList.add(GetProjectListResDTO.toDTO(belong.get().getProject()));
+            for (Belong belong : belongList) {
+                getProjectResDTOList.add(GetProjectResDTO.toDTO(belong.getProject()));
             }
 
-            return getProjectListResDTOList;
+            return getProjectResDTOList;
         } else {
             throw new BaseException(PROJECT_INVALID_ID);
         }

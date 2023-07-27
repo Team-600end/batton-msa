@@ -1,7 +1,6 @@
 package com.batton.projectservice.dto.issue;
 
 import com.batton.projectservice.domain.Issue;
-import com.batton.projectservice.domain.Project;
 import com.batton.projectservice.enums.IssueStatus;
 import com.batton.projectservice.enums.IssueTag;
 import lombok.Builder;
