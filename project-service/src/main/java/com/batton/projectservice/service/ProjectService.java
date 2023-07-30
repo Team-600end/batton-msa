@@ -140,7 +140,7 @@ public class ProjectService {
             List<GetProjectResDTO> getProjectResDTOList = new ArrayList<>();
 
             for (Belong belong : belongList) {
-                getProjectResDTOList.add(GetProjectResDTO.toDTO(belong.getProject()));
+                getProjectResDTOList.add(GetProjectResDTO.toDTO(belong.getProject(), belong.getGrade()));
             }
 
             return getProjectResDTOList;
