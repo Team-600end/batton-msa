@@ -140,12 +140,12 @@ public class ProjectService {
             List<GetProjectResDTO> getProjectResDTOList = new ArrayList<>();
 
             for (Belong belong : belongList) {
-                getProjectResDTOList.add(GetProjectResDTO.toDTO(belong.getProject()));
+                getProjectResDTOList.add(GetProjectResDTO.toDTO(belong.getProject(), belong.getGrade()));
             }
 
             return getProjectResDTOList;
         } else {
-            throw new BaseException(PROJECT_INVALID_ID);
+            throw new BaseException(NO_PROJECT_EXISTS);
         }
     }
 }
