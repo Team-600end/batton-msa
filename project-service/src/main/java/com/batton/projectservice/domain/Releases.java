@@ -27,12 +27,13 @@ public class Releases extends BaseEntity {
     @Column(name = "release_content", columnDefinition = "TEXT")
     private String releaseContent;
     @ElementCollection
-    private List<String> issueList = new ArrayList< >();
+    private List<Long> issueList = new ArrayList< >();
+    @Enumerated(EnumType.STRING)
     private PublishState publishState;
 
 
     @Builder
-    public Releases(Long id, int versionMajor, int versionMinor, int versionPatch, Project project, String releaseContent, List<String> issueList, PublishState publishState) {
+    public Releases(Long id, int versionMajor, int versionMinor, int versionPatch, Project project, String releaseContent, List<Long> issueList, PublishState publishState) {
         this.id = id;
         this.versionMajor = versionMajor;
         this.versionMinor = versionMinor;

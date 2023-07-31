@@ -1,0 +1,2 @@
+[2023-08-01 04:15:36:514] INFO  13096 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-01 04:15:39:3064] INFO  13096 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 2.946 seconds (JVM running for 3.274)
