@@ -22,8 +22,7 @@ public class Report extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "issue_id")
     private Issue issue;
-    @OneToMany
-    @JoinColumn(name = "comment_id", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "report", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
     @Builder

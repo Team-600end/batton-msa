@@ -1,10 +1,16 @@
 package com.batton.projectservice.service;
 
 import com.batton.projectservice.common.BaseException;
+import com.batton.projectservice.domain.Belong;
+import com.batton.projectservice.domain.Comment;
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Report;
+import com.batton.projectservice.dto.comment.PostCommentReqDTO;
+import com.batton.projectservice.dto.report.GetIssueReportResDTO;
 import com.batton.projectservice.dto.report.PatchIssueReportReqDTO;
 import com.batton.projectservice.dto.report.PostIssueReportReqDTO;
+import com.batton.projectservice.enums.GradeType;
+import com.batton.projectservice.repository.BelongRepository;
 import com.batton.projectservice.repository.CommentRepository;
 import com.batton.projectservice.repository.IssueRepository;
 import com.batton.projectservice.repository.ReportRepository;
@@ -22,6 +28,7 @@ public class ReportService {
     private final ReportRepository reportRepository;
     private final CommentRepository commentRepository;
     private final IssueRepository issueRepository;
+    private final BelongRepository belongRepository;
 
     /**
      * 이슈 레포트 생성 API
@@ -83,5 +90,42 @@ public class ReportService {
         }
 
         return "프로젝트 삭제 성공";
+    }
+
+    /**
+     * 이슈 레포트 코멘트 생성 API
+     */
+    @Transactional
+    public String postComment(Long reportId, Long memberId, PostCommentReqDTO postCommentReqDTO) {
+        Optional<Report> report = reportRepository.findById(reportId);
+
+        // 이슈 존재 여부 확인
+        if (!report.isPresent()) {
+            throw new BaseException(ISSUE_REPORT_INVALID_ID);
+        }
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(report.get().getIssue().getProject().getId(), memberId);
+
+        // 소속 유저 확인
+        if (belong.isPresent()) {
+            // 권한 확인
+            if (belong.get().getGrade() == GradeType.MEMBER) {
+                throw new BaseException(MEMBER_NO_AUTHORITY);
+            }
+            Comment comment = postCommentReqDTO.toEntity(postCommentReqDTO, belong.get(), report.get());
+            commentRepository.save(comment);
+
+            return "코멘트 등록되었습니다";
+        } else {
+            throw new BaseException(BELONG_INVALID_ID);
+        }
+    }
+
+    /**
+     * 이슈 레포트 조회 API
+     */
+    public GetIssueReportResDTO getIssueReport(){
+
+
+        return null;
     }
 }

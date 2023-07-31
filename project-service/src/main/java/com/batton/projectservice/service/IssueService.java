@@ -37,7 +37,6 @@ public class IssueService {
     private final IssueRepository issueRepository;
     private final ProjectRepository projectRepository;
     private final BelongRepository belongRepository;
-    private final CommentRepository commentRepository;
     private final MemberServiceFeignClient memberServiceFeignClient;
 
     /**
@@ -221,34 +220,6 @@ public class IssueService {
         }
 
         return getIssueResDTOArrayList;
-    }
-
-    /**
-     * 이슈 코멘트 생성 API
-     */
-    @Transactional
-    public String postComment(Long issueId, Long memberId, PostCommentReqDTO postCommentReqDTO) {
-        Optional<Issue> issue = issueRepository.findById(issueId);
-
-        // 이슈 존재 여부 확인
-        if (!issue.isPresent()) {
-            throw new BaseException(ISSUE_INVALID_ID);
-        }
-        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(issue.get().getProject().getId(), memberId);
-
-        // 소속 유저 확인
-        if (belong.isPresent()) {
-            // 권한 확인
-            if (belong.get().getGrade() == GradeType.MEMBER) {
-                throw new BaseException(MEMBER_NO_AUTHORITY);
-            }
-            Comment comment = postCommentReqDTO.toEntity(postCommentReqDTO, belong.get(), issue.get());
-            commentRepository.save(comment);
-
-            return "코멘트 등록되었습니다";
-        } else {
-            throw new BaseException(BELONG_INVALID_ID);
-        }
     }
 
     /**
