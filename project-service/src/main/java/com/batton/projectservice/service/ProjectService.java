@@ -96,6 +96,7 @@ public class ProjectService {
         // 소속 유저 확인
         if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED))  {
             // 수정 권한 확인
+
             if (belong.get().getGrade() == GradeType.MEMBER) {
                 throw new BaseException(MEMBER_NO_AUTHORITY);
             }

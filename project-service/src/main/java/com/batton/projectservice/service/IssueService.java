@@ -44,9 +44,9 @@ public class IssueService {
      * 이슈 생성
      */
     @Transactional
-    public Long postIssue(PostIssueReqDTO postIssueReqDTO) {
+    public Long postIssue(Long memberId, PostIssueReqDTO postIssueReqDTO) {
         Optional<Project> project = projectRepository.findById(postIssueReqDTO.getProjectId());
-        Optional<Belong> belong = belongRepository.findById(postIssueReqDTO.getBelongId());
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(postIssueReqDTO.getProjectId(), memberId);
         List<Issue> issueList = issueRepository.findByIssueStatusOrderByIssueSeq(IssueStatus.TODO);
 
         // 마지막 이슈의 이슈 순서
@@ -102,7 +102,6 @@ public class IssueService {
                 for (int i=patchIssueBoardReqDTO.getSeqNum(); i<issueList.size(); i++) {
                     issueList.get(i).updateSeq(issueList.get(i).getIssueSeq()+1);
                 }
-
                 int preIssueNum = 0;
                 // 이전 순서의 이슈 seq
                 if (patchIssueBoardReqDTO.getSeqNum() != 0) {
@@ -232,21 +231,16 @@ public class IssueService {
      * 이슈 수정 API
      * */
     @Transactional
-    public String patchIssue(Long issueId, PatchIssueReqDTO patchIssueReqDTO) {
+    public String patchIssue(Long memberId, Long issueId, PatchIssueReqDTO patchIssueReqDTO) {
         Optional<Issue> issue = issueRepository.findById(issueId);
-        Optional<Belong> belong = belongRepository.findById(patchIssueReqDTO.getBelongId());
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(patchIssueReqDTO.getProjectId(), memberId);
 
         // 소속 유저 존재 여부 검증
         if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
             // 이슈 존재 여부 검증
             if (issue.isPresent()) {
-                // 이슈를 완료 상태로 변경하는 권한 확인
-                if (patchIssueReqDTO.getIssueStatus().equals(IssueStatus.DONE) && belong.get().getGrade().equals(GradeType.MEMBER)) {
-                    throw new BaseException(MEMBER_NO_AUTHORITY);
-                }
-                List<Issue> issueList = issueRepository.findByIssueStatusOrderByIssueSeq(patchIssueReqDTO.getIssueStatus());
                 // 이슈 수정
-                issue.get().modifyIssue(patchIssueReqDTO.getIssueTitle(), patchIssueReqDTO.getIssueContent(), patchIssueReqDTO.getIssueStatus(), patchIssueReqDTO.getIssueTag(), belong.get(), issueList.size()+1);
+                issue.get().modifyIssue(patchIssueReqDTO.getIssueTitle(), patchIssueReqDTO.getIssueContent(), patchIssueReqDTO.getIssueTag(), belong.get());
             } else {
                 throw new BaseException(ISSUE_INVALID_ID);
             }
@@ -261,14 +255,20 @@ public class IssueService {
      * 이슈 삭제 API
      */
     @Transactional
-    public String deleteIssue(Long issueId) {
+    public String deleteIssue(Long memberId, Long projectId, Long issueId) {
         Optional<Issue> issue = issueRepository.findById(issueId);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
 
-        // 이슈 존재 여부 검증
-        if (issue.isPresent()) {
-            issueRepository.delete(issue.get());
+        // 소속 유저 존재 여부 검증
+        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+            // 이슈 존재 여부 검증
+            if (issue.isPresent()) {
+                issueRepository.delete(issue.get());
+            } else {
+                throw new BaseException(ISSUE_INVALID_ID);
+            }
         } else {
-            throw new BaseException(ISSUE_INVALID_ID);
+            throw new BaseException(BELONG_INVALID_ID);
         }
 
         return "이슈 삭제 성공";

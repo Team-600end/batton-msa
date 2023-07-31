@@ -20,6 +20,7 @@ public class IssueController {
 
     /**
      * 이슈 생성 API
+     * @param memberId 이슈 생성하는 유저 아이디
      * @param postIssueReqDTO 생성 요청 바디에 포함될 PostIssueReqDTO
      * @return IssueId
      */
@@ -29,8 +30,8 @@ public class IssueController {
             @ApiResponse(responseCode = "701", description = "프로젝트 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요.")
     })
-    public BaseResponse<Long> postIssue(@RequestBody PostIssueReqDTO postIssueReqDTO) {
-        Long postIssueRes = issueService.postIssue(postIssueReqDTO);
+    public BaseResponse<Long> postIssue(@RequestHeader Long memberId, @RequestBody PostIssueReqDTO postIssueReqDTO) {
+        Long postIssueRes = issueService.postIssue(memberId, postIssueReqDTO);
 
         return new BaseResponse<>(postIssueRes);
     }
@@ -76,10 +77,10 @@ public class IssueController {
      * @param belongId 유저 소속 아이디
      * @return List<GetMyIssueResDTO>
      * */
-    @GetMapping("/list/{belongId}")
+    @GetMapping("/list/{projectId}")
     @Operation(summary = "개인 이슈 목록 조회")
     @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
-    private BaseResponse<List<GetMyIssueResDTO>> getMyIssue(@PathVariable("belongId") Long belongId) {
+    private BaseResponse<List<GetMyIssueResDTO>> getMyIssue(@RequestHeader Long memberId, @PathVariable("belongId") Long belongId) {
         List<GetMyIssueResDTO> getMyIssueResDTOList = issueService.getMyIssue(belongId);
 
         return new BaseResponse<>(getMyIssueResDTOList);
@@ -135,6 +136,7 @@ public class IssueController {
 
     /**
      * 이슈 수정 API
+     * @param memberId 이슈 수정하는 유저 아이디
      * @param issueId 수정할 이슈 아이디
      * @param patchIssueReqDTO 수정 요청 바디에 포함될 PatchIssueReqDTO
      * @return String
@@ -146,24 +148,27 @@ public class IssueController {
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<String> patchIssue(@PathVariable("issueId") Long issueId, @RequestBody PatchIssueReqDTO patchIssueReqDTO) {
-        String patchIssueRes = issueService.patchIssue(issueId, patchIssueReqDTO);
+    private BaseResponse<String> patchIssue(@RequestHeader Long memberId, @PathVariable("issueId") Long issueId, @RequestBody PatchIssueReqDTO patchIssueReqDTO) {
+        String patchIssueRes = issueService.patchIssue(memberId, issueId, patchIssueReqDTO);
 
         return new BaseResponse<>(patchIssueRes);
     }
 
     /**
      * 이슈 삭제 API
+     * @param memberId 이슈 삭제하는 유저 아이디
+     * @param projectId 프로젝트 아이디
      * @param issueId 삭제할 이슈 아이디
      * @return String
      */
-    @DeleteMapping("/{issueId}")
+    @DeleteMapping("/{projectId}/{issueId}")
     @Operation(summary = "이슈 삭제")
     @ApiResponses({
+            @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<String> deleteIssue(@PathVariable("issueId") Long issueId) {
-        String deleteIssueRes = issueService.deleteIssue(issueId);
+    private BaseResponse<String> deleteIssue(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId, @PathVariable("issueId") Long issueId) {
+        String deleteIssueRes = issueService.deleteIssue(memberId, projectId, issueId);
 
         return new BaseResponse<>(deleteIssueRes);
     }
