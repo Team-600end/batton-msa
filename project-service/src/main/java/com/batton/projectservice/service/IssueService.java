@@ -123,26 +123,32 @@ public class IssueService {
      * 이슈 보드 목록 조회 API
      * */
     @Transactional
-    public GetIssueBoardResDTO getIssueBoard(Long projectId) {
+    public GetIssueBoardResDTO getIssueBoard(Long memberId, Long projectId) {
         List<Issue> issueList = issueRepository.findByProjectId(projectId);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
         List<GetIssueResDTO> todoIssueList = new ArrayList<>();
         List<GetIssueResDTO> progressIssueList = new ArrayList<>();
         List<GetIssueResDTO> reviewIssueList = new ArrayList<>();
         List<GetIssueResDTO> doneIssueList = new ArrayList<>();
 
-        for (Issue issue : issueList) {
-            // 이슈 담당자 이미지를 찾기 위한 통신
-            GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.getBelong().getMemberId());
+        // 소속 유저 존재 여부 검증
+        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+            for (Issue issue : issueList) {
+                // 이슈 담당자 이미지를 찾기 위한 통신
+                GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.getBelong().getMemberId());
 
-            if (issue.getIssueStatus().equals(IssueStatus.TODO)) {
-                todoIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
-            } else if (issue.getIssueStatus().equals(IssueStatus.PROGRESS)) {
-                progressIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
-            } else if (issue.getIssueStatus().equals(IssueStatus.REVIEW)) {
-                reviewIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
-            } else {
-                doneIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
+                if (issue.getIssueStatus().equals(IssueStatus.TODO)) {
+                    todoIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
+                } else if (issue.getIssueStatus().equals(IssueStatus.PROGRESS)) {
+                    progressIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
+                } else if (issue.getIssueStatus().equals(IssueStatus.REVIEW)) {
+                    reviewIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
+                } else {
+                    doneIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
+                }
             }
+        } else {
+            throw new BaseException(BELONG_INVALID_ID);
         }
 
         return new GetIssueBoardResDTO(todoIssueList, progressIssueList, reviewIssueList, doneIssueList);
@@ -152,14 +158,20 @@ public class IssueService {
      * 내가 담당한 이슈 목록 조회 API
      */
     @Transactional
-    public List<GetMyIssueResDTO> getMyIssue(Long belongId) {
-        List<Issue> myIssueList = issueRepository.findByBelongIdOrderByUpdatedAtDesc(belongId);
+    public List<GetMyIssueResDTO> getMyIssue(Long memberId, Long projectId) {
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
+        List<Issue> myIssueList = issueRepository.findByBelongIdOrderByUpdatedAtDesc(belong.get().getId());
         List<GetMyIssueResDTO> myIssueResDTOList = new ArrayList<>();
 
-        for(Issue issue : myIssueList) {
-            String updatedDate = issue.getUpdatedAt().getYear() + ". " + issue.getUpdatedAt().getMonthValue() + ". " + issue.getUpdatedAt().getDayOfMonth();
-            GetMyIssueResDTO getMyIssueResDTO = GetMyIssueResDTO.toDTO(issue, updatedDate);
-            myIssueResDTOList.add(getMyIssueResDTO);
+        // 소속 유저 존재 여부 검증
+        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+            for (Issue issue : myIssueList) {
+                String updatedDate = issue.getUpdatedAt().getYear() + ". " + issue.getUpdatedAt().getMonthValue() + ". " + issue.getUpdatedAt().getDayOfMonth();
+                GetMyIssueResDTO getMyIssueResDTO = GetMyIssueResDTO.toDTO(issue, updatedDate);
+                myIssueResDTOList.add(getMyIssueResDTO);
+            }
+        } else {
+            throw new BaseException(BELONG_INVALID_ID);
         }
 
         return myIssueResDTOList;
@@ -169,31 +181,43 @@ public class IssueService {
      * 이슈 상세 조회 API
      */
     @Transactional
-    public GetIssueInfoResDTO getIssueInfo(Long issueId) {
+    public GetIssueInfoResDTO getIssueInfo(Long memberId, Long issueId, Long projectId) {
         Optional<Issue> issue = issueRepository.findById(issueId);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
 
-        // 이슈 존재 여부 확인
-        if(issue.isPresent()) {
-            GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.get().getBelong().getMemberId());
-            GetIssueInfoResDTO getIssueInfoResDTO = GetIssueInfoResDTO.toDTO(issue.get(), getMemberResDTO);
+        // 소속 유저 존재 여부 검증
+        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+            // 이슈 존재 여부 확인
+            if (issue.isPresent()) {
+                GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.get().getBelong().getMemberId());
+                GetIssueInfoResDTO getIssueInfoResDTO = GetIssueInfoResDTO.toDTO(issue.get(), getMemberResDTO);
 
-            return getIssueInfoResDTO;
-        } else {
-            throw new BaseException(ISSUE_INVALID_ID);
+                return getIssueInfoResDTO;
+            } else {
+                throw new BaseException(ISSUE_INVALID_ID);
+            }
+        }  else {
+            throw new BaseException(BELONG_INVALID_ID);
         }
     }
 
     /**
      * 대시보드 이슈 목록 조회 API
      */
-    public List<GetIssueResDTO> getIssueList(Long projectId) {
+    public List<GetIssueResDTO> getIssueList(Long memberId, Long projectId) {
         List<Issue> issueList = issueRepository.findByProjectIdOrderByUpdatedAtDesc(projectId);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
         List<GetIssueResDTO> getIssueResDTOArrayList = new ArrayList<>();
 
-        for (Issue issue : issueList) {
-            GetMemberResDTO getMemberResDTO= memberServiceFeignClient.getMember(issue.getBelong().getMemberId());
-            GetIssueResDTO getIssueResDTO = GetIssueResDTO.toDTO(issue, getMemberResDTO);
-            getIssueResDTOArrayList.add(getIssueResDTO);
+        // 소속 유저 존재 여부 검증
+        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+            for (Issue issue : issueList) {
+                GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.getBelong().getMemberId());
+                GetIssueResDTO getIssueResDTO = GetIssueResDTO.toDTO(issue, getMemberResDTO);
+                getIssueResDTOArrayList.add(getIssueResDTO);
+            }
+        } else {
+            throw new BaseException(BELONG_INVALID_ID);
         }
 
         return getIssueResDTOArrayList;

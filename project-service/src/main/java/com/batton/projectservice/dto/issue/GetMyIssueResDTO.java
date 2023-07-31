@@ -11,7 +11,7 @@ import javax.persistence.Enumerated;
 
 @Getter
 public class GetMyIssueResDTO {
-    private Long id;
+    private Long issueId;
     private String issueTitle;
     @Enumerated(EnumType.STRING)
     private IssueTag issueTag;
@@ -21,8 +21,8 @@ public class GetMyIssueResDTO {
     private String projectTitle;
 
     @Builder
-    public GetMyIssueResDTO(Long id, String issueTitle, IssueTag issueTag, IssueStatus issueStatus, String updatedDate, String projectTitle) {
-        this.id = id;
+    public GetMyIssueResDTO(Long issueId, String issueTitle, IssueTag issueTag, IssueStatus issueStatus, String updatedDate, String projectTitle) {
+        this.issueId = issueId;
         this.issueTitle = issueTitle;
         this.issueTag = issueTag;
         this.issueStatus = issueStatus;
@@ -32,7 +32,7 @@ public class GetMyIssueResDTO {
 
     public static GetMyIssueResDTO toDTO(Issue issue, String updatedDate) {
         return GetMyIssueResDTO.builder()
-                .id(issue.getId())
+                .issueId(issue.getId())
                 .issueTitle(issue.getIssueTitle())
                 .issueTag(issue.getIssueTag())
                 .issueStatus(issue.getIssueStatus())
