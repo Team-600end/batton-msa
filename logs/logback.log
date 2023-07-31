@@ -1,0 +1,3 @@
+[2023-08-01 05:11:19:475] INFO  22408 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-01 05:18:22:639] INFO  24051 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-01 05:18:24:3046] INFO  24051 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 2.909 seconds (JVM running for 3.768)

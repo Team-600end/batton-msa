@@ -157,5 +157,5 @@ public class ReportService {
         }
 
         return getIssueReportResDTO;
-    }ß
+    }
 }
