@@ -1,7 +1,6 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
-import com.batton.projectservice.dto.comment.PostCommentReqDTO;
 import com.batton.projectservice.dto.issue.*;
 import com.batton.projectservice.service.IssueService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,7 +8,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -127,26 +125,6 @@ public class IssueController {
         List<GetIssueResDTO> getIssueResDTOList = issueService.getIssueList(memberId, projectId);
 
         return new BaseResponse<>(getIssueResDTOList);
-    }
-
-    /**
-     * 이슈 코멘트 생성 API
-     * @param memberId 코멘트 생성하는 유저 아이디
-     * @param issueId 생성할 이슈 아이디
-     * @param postCommentReqDTO 생성 요청 바디에 포함될 PostCommentReqDTO
-     * @return String
-     * */
-    @PostMapping("/{issueId}/reports/comments")
-    @Operation(summary = "이슈 코멘트 생성")
-    @ApiResponses({
-            @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),
-            @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
-            @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
-    })
-    private BaseResponse<String> postComment(@RequestHeader Long memberId, @PathVariable("issueId") Long issueId, @RequestBody PostCommentReqDTO postCommentReqDTO) {
-        String postCommentRes = issueService.postComment(issueId, memberId, postCommentReqDTO);
-
-        return new BaseResponse<>(postCommentRes);
     }
 
     /**

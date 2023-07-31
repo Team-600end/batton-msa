@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,6 +22,8 @@ public class Report extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "issue_id")
     private Issue issue;
+    @OneToMany(mappedBy = "report", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder
     public Report(Long id, String reportContent, Issue issue) {
