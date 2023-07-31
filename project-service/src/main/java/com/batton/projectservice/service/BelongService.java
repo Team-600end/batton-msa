@@ -31,7 +31,7 @@ public class BelongService {
         Optional<Belong> myBelong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
 
         // 소속 확인
-        if (myBelong.isPresent()) {
+        if (myBelong.isPresent() && myBelong.get().getStatus().equals(Status.ENABLED)) {
             // 변경 권한 확인
             if (myBelong.get().getGrade() == GradeType.MEMBER) {
                 throw new BaseException(MEMBER_NO_AUTHORITY);
@@ -39,7 +39,7 @@ public class BelongService {
                 Optional<Belong> memberBelong = belongRepository.findById(belongId);
 
                 // 소속 확인
-                if (memberBelong.isPresent()) {
+                if (memberBelong.isPresent() && memberBelong.get().getStatus().equals(Status.ENABLED)) {
                     memberBelong.get().update(grade);
                 } else {
                     throw new BaseException(BELONG_INVALID_ID);
@@ -61,10 +61,10 @@ public class BelongService {
         List<GetBelongResDTO> getBelongResDTOList = new ArrayList<>();
 
         for (Belong belong : belongList) {
-            GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(belong.getMemberId());
-            System.out.println(memberServiceFeignClient.getMember(belong.getMemberId()).getNickname());
-
-            getBelongResDTOList.add(GetBelongResDTO.toDTO(belong, getMemberResDTO));
+            if (belong.getStatus().equals(Status.ENABLED)) {
+                GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(belong.getMemberId());
+                getBelongResDTOList.add(GetBelongResDTO.toDTO(belong, getMemberResDTO));
+            }
         }
 
         return getBelongResDTOList;
@@ -79,9 +79,9 @@ public class BelongService {
         Optional<Belong> myBelong = belongRepository.findByProjectIdAndMemberId(belong.get().getProject().getId(), memberId);
 
         // 소속 확인
-        if (belong.isPresent()) {
+        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
             // 삭제 권한 확인
-            if (myBelong.get().getGrade() == GradeType.MEMBER) {
+            if (myBelong.get().getGrade() == GradeType.MEMBER  && myBelong.get().getStatus().equals(Status.ENABLED)) {
                 throw new BaseException(MEMBER_NO_AUTHORITY);
             }
             belong.get().updateStatus(Status.DISABLED);

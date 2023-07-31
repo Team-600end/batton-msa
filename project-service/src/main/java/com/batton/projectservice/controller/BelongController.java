@@ -58,7 +58,7 @@ public class BelongController {
      * @param grade 변경할 권한
      * @return String
      */
-    @PatchMapping("/{projectId}/{belongId}")
+    @PatchMapping("/grade/{projectId}/{belongId}")
     @Operation(summary = "프로젝트 멤버 권한 변경")
     @ApiResponses({
             @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),

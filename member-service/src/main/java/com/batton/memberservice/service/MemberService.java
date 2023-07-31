@@ -44,7 +44,7 @@ public class MemberService {
     }
 
     /**
-     * 추가할 프로젝트 멤버 정보 조회 API
+     * 추가할 멤버 정보 조회 API
      * */
     public GetMemberInfoResDTO getCheckMember(String email) {
         Optional<Member> member = memberRepository.findByEmail(email);

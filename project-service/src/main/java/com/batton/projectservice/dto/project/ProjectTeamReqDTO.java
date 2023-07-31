@@ -17,24 +17,21 @@ public class ProjectTeamReqDTO {
     private String nickname;
     @Enumerated(EnumType.STRING)
     private GradeType gradeType;
-    @Enumerated(EnumType.STRING)
-    private Status status;
 
     @Builder
-    public ProjectTeamReqDTO(Long memberId, String nickname, GradeType gradeType, Status status) {
+    public ProjectTeamReqDTO(Long memberId, String nickname, GradeType gradeType) {
         this.memberId = memberId;
         this.nickname = nickname;
         this.gradeType = gradeType;
-        this.status = status;
     }
 
-    public static Belong toEntity(Project project, ProjectTeamReqDTO dto) {
+    public static Belong toEntity(Project project, ProjectTeamReqDTO projectTeamReqDTO, Status status) {
         return Belong.builder()
                 .project(project)
-                .memberId(dto.getMemberId())
-                .nickname(dto.getNickname())
-                .grade(dto.getGradeType())
-                .status(dto.getStatus())
+                .memberId(projectTeamReqDTO.getMemberId())
+                .nickname(projectTeamReqDTO.getNickname())
+                .status(status)
+                .grade(projectTeamReqDTO.getGradeType())
                 .build();
     }
 }
