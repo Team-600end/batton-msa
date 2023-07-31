@@ -31,7 +31,7 @@ public class BelongController {
     @PostMapping("/{projectId}")
     @Operation(summary = "프로젝트 멤버 추가")
     private BaseResponse<String> postPojectMember(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId, @RequestBody List<ProjectTeamReqDTO> projectTeamReqDTOList) {
-        String postPojectMemberRes = projectService.postPojectMember(memberId, projectId, projectTeamReqDTOList);
+        String postPojectMemberRes = projectService.postProjectMember(memberId, projectId, projectTeamReqDTOList);
 
         return new BaseResponse<>(postPojectMemberRes);
     }
