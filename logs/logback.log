@@ -1,3 +1,8 @@
+<<<<<<< HEAD
 [2023-08-01 05:11:19:475] INFO  22408 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
 [2023-08-01 05:18:22:639] INFO  24051 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
 [2023-08-01 05:18:24:3046] INFO  24051 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 2.909 seconds (JVM running for 3.768)
+=======
+[2023-08-01 04:15:36:514] INFO  13096 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-01 04:15:39:3064] INFO  13096 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 2.946 seconds (JVM running for 3.274)
+>>>>>>> 259d15d322bb48b7abcc1920f0d91702ad702fc6
