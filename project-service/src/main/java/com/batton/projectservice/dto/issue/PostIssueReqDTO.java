@@ -14,16 +14,14 @@ import javax.persistence.Enumerated;
 @Getter
 public class PostIssueReqDTO {
     private Long projectId;
-    private Long belongId;
     private String issueTitle;
     private String issueContent;
     @Enumerated(EnumType.STRING)
     private IssueTag issueTag;
 
     @Builder
-    public PostIssueReqDTO(Long projectId, Long belongId, String issueTitle, String issueContent, IssueTag issueTag) {
+    public PostIssueReqDTO(Long projectId, String issueTitle, String issueContent, IssueTag issueTag) {
         this.projectId = projectId;
-        this.belongId = belongId;
         this.issueTitle = issueTitle;
         this.issueContent = issueContent;
         this.issueTag = issueTag;
@@ -33,9 +31,9 @@ public class PostIssueReqDTO {
         return Issue.builder()
                 .project(project)
                 .belong(belong)
-                .issueTitle(dto.issueTitle)
-                .issueContent(dto.issueContent)
-                .issueTag(dto.issueTag)
+                .issueTitle(dto.getIssueTitle())
+                .issueContent(dto.getIssueContent())
+                .issueTag(dto.getIssueTag())
                 .issueStatus(issueStatus)
                 .issueSeq(issueSeq)
                 .issueKey(issueKey)

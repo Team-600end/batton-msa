@@ -19,7 +19,10 @@ public enum BaseResponseStatus {
     PROJECT_INVALID_ID(false, 701, "프로젝트 아이디 값을 확인해주세요."),
     USER_INVALID_ID(false, 702, "유저 아이디 값을 확인해주세요."),
     BELONG_INVALID_ID(false, 703, "소속 아이디 값을 확인해주세요."),
-    ISSUE_INVALID_ID(false, 704, "이슈 아이디 값을 확인해주세요.");
+    ISSUE_INVALID_ID(false, 704, "이슈 아이디 값을 확인해주세요."),
+    ISSUE_REPORT_INVALID_ID(false, 705, "이슈 레포트 아이디 값을 확인해주세요."),
+    ISSUE_REPORT_EXISTS(false, 706, "이슈 레포트가 이미 존재합니다."),
+    PROJECT_NOT_EXISTS(false, 707, "참여한 프로젝트가 없습니다.");
 
     private final boolean isSuccess;
     private final int code;

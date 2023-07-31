@@ -7,17 +7,24 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 public class PostMemberReqDTO {
     private String email;
     private String nickname;
     private String password;
     private String checkPassword;
 
+    @Builder
+    public PostMemberReqDTO(String email, String nickname, String password, String checkPassword) {
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
+        this.checkPassword = checkPassword;
+    }
+
     public static Member toEntity(PostMemberReqDTO postMemberReqDTO, String password, Authority authority, Status status) {
         return Member.builder()
-                .email(postMemberReqDTO.email)
-                .nickname(postMemberReqDTO.nickname)
+                .email(postMemberReqDTO.getEmail())
+                .nickname(postMemberReqDTO.getNickname())
                 .password(password)
                 .authority(authority)
                 .status(status)

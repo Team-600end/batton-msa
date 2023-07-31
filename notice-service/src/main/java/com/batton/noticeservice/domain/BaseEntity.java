@@ -1,7 +1,6 @@
 package com.batton.noticeservice.domain;
 
 import javax.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

@@ -11,7 +11,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 @Getter
-public class GetIssueListResDTO {
+public class GetIssueResDTO {
     private Long issueId;
     private String issueTitle;
     @Enumerated(EnumType.STRING)
@@ -24,7 +24,7 @@ public class GetIssueListResDTO {
     private String profileImage;
 
     @Builder
-    public GetIssueListResDTO (Long issueId, String issueTitle, IssueTag issueTag, int issueSeq, int issueKey, IssueStatus issueStatus, String nickname, String profileImage) {
+    public GetIssueResDTO(Long issueId, String issueTitle, IssueTag issueTag, int issueSeq, int issueKey, IssueStatus issueStatus, String nickname, String profileImage) {
         this.issueId = issueId;
         this.issueTitle = issueTitle;
         this.issueTag = issueTag;
@@ -35,8 +35,8 @@ public class GetIssueListResDTO {
         this.profileImage = profileImage;
     }
 
-    public static GetIssueListResDTO toDTO(Issue issue, GetMemberResDTO getMemberResDTO) {
-        return GetIssueListResDTO.builder()
+    public static GetIssueResDTO toDTO(Issue issue, GetMemberResDTO getMemberResDTO) {
+        return GetIssueResDTO.builder()
                 .issueId(issue.getId())
                 .issueTitle(issue.getIssueTitle())
                 .issueTag(issue.getIssueTag())

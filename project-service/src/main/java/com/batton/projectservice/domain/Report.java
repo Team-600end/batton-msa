@@ -32,4 +32,8 @@ public class Report extends BaseEntity {
         this.reportContent = reportContent;
         this.issue = issue;
     }
+
+    public void update(String reportContent) {
+        this.reportContent = reportContent;
+    }
 }

@@ -1,4 +1,4 @@
-package com.batton.projectservice.dto;
+package com.batton.projectservice.dto.report;
 
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Report;
@@ -19,7 +19,7 @@ public class PostIssueReportReqDTO {
     public static Report toEntity(PostIssueReportReqDTO postIssueReportReqDTO, Issue issue) {
         return Report.builder()
                 .issue(issue)
-                .reportContent(postIssueReportReqDTO.reportContent)
+                .reportContent(postIssueReportReqDTO.getReportContent())
                 .build();
     }
 }

@@ -1,7 +1,6 @@
 import com.batton.memberservice.domain.Member;
 import com.batton.memberservice.dto.GetMemberInfoResDTO;
 import com.batton.memberservice.dto.PatchMemberReqDTO;
-import com.batton.memberservice.dto.client.GetMemberListResDTO;
 import com.batton.memberservice.dto.client.GetMemberResDTO;
 import com.batton.memberservice.enums.Authority;
 import com.batton.memberservice.enums.Status;
@@ -13,10 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.web.reactive.server.JsonPathAssertions;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,7 +53,7 @@ public class MemberServiceTests {
         memberService.patchMember(2L, patchMemberReqDTO);
 
         // then
-        assertThat(member.getNickname()).isEqualTo("tryyrsdfsdf");
+        assertThat(member.getNickname()).isEqualTo(patchMemberReqDTO.getNickname());
     }
 
 
@@ -69,7 +65,7 @@ public class MemberServiceTests {
         given(memberRepository.findByEmail(anyString())).willReturn(Optional.of(member));
 
         // when
-        GetMemberInfoResDTO getMemberInfoResDTO = memberService.checkMember("테스트이메일");
+        GetMemberInfoResDTO getMemberInfoResDTO = memberService.getCheckMember("테스트이메일");
 
         // then
         assertThat(getMemberInfoResDTO.getEmail()).isEqualTo(member.getEmail());

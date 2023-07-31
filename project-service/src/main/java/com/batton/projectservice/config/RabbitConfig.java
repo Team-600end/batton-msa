@@ -30,17 +30,17 @@ public class RabbitConfig {
     /**
      * 지정된 큐 이름으로 Queue 빈을 생성
      *
-     * @return Queue 빈 객체
+     * @return Queue 빈
      */
     @Bean
     public Queue queue() {
-        return new Queue(QUEUE_NAME, false);
+        return new Queue(QUEUE_NAME, true);
     }
 
     /**
-     * 지정된 토픽 이름으로 TopicExchange 빈을 생성
+     * 지정된 토픽 이름으로 TopicExchange 빈 생성
      *
-     * @return TopicExchange 빈 객체
+     * @return TopicExchange 빈
      */
     @Bean
     public TopicExchange topicExchange() {
@@ -48,11 +48,10 @@ public class RabbitConfig {
     }
 
     /**
-     * 주어진 큐와 익스체인지를 바인딩하고 라우팅 키를 사용하여 Binding 빈을 생성
-     *
+     * 주어진 큐와 익스체인지를 바인딩하고 라우팅 키를 사용하여 Binding 빈 생성
      * @param queue 바인딩 할 Queue
      * @param topicExchange 바인딩 할 TopicExchange
-     * @return Binding 빈 객체
+     * @return Binding 빈
      */
 
     @Bean
@@ -63,7 +62,7 @@ public class RabbitConfig {
     /**
      * RabbitMQ 연결을 위한 ConnectionFactory 빈을 생성하여 반환
      *
-     * @return ConnectionFactory 객체
+     * @return ConnectionFactory
      */
     @Bean
     public ConnectionFactory connectionFactory() {
@@ -78,9 +77,8 @@ public class RabbitConfig {
 
     /**
      * RabbitTemplate을 생성하여 반환
-     *
-     * @param connectionFactory RabbitMQ와의 연결을 위한 ConnectionFactory 객체
-     * @return RabbitTemplate 객체
+     * @param connectionFactory RabbitMQ와의 연결을 위한 ConnectionFactory
+     * @return RabbitTemplate
      */
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
@@ -92,7 +90,7 @@ public class RabbitConfig {
     }
 
     /**
-     * Jackson 라이브러리를 사용하여 메시지를 JSON 형식으로 변환하는 MessageConverter 빈을 생성
+     * Jackson 라이브러리를 사용하여 메시지를 JSON 형식으로 변환하는 MessageConverter 빈 생성
      *
      * @return MessageConverter 객체
      */

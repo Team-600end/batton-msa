@@ -3,9 +3,10 @@ package com.batton.projectservice.service;
 import com.batton.projectservice.client.MemberServiceFeignClient;
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Belong;
-import com.batton.projectservice.dto.GetBelongResDTO;
+import com.batton.projectservice.dto.belong.GetBelongResDTO;
 import com.batton.projectservice.dto.client.GetMemberResDTO;
 import com.batton.projectservice.enums.GradeType;
+import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.repository.BelongRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,25 +27,26 @@ public class BelongService {
      * 프로젝트 팀원 권한 변경 API
      * */
     @Transactional
-    public String modifyBelong(Long memberId, Long projectId, Long belongId, GradeType grade) {
+    public String patchGrade(Long memberId, Long projectId, Long belongId, GradeType grade) {
         Optional<Belong> myBelong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
 
-        //본인 권한 확인
-        if (myBelong.isPresent()) {
+        // 소속 확인
+        if (myBelong.isPresent() && myBelong.get().getStatus().equals(Status.ENABLED)) {
+            // 변경 권한 확인
             if (myBelong.get().getGrade() == GradeType.MEMBER) {
                 throw new BaseException(MEMBER_NO_AUTHORITY);
             } else {
                 Optional<Belong> memberBelong = belongRepository.findById(belongId);
 
-                //해당 Belong 있는지 확인
-                if (memberBelong.isPresent()) {
+                // 소속 확인
+                if (memberBelong.isPresent() && memberBelong.get().getStatus().equals(Status.ENABLED)) {
                     memberBelong.get().update(grade);
                 } else {
                     throw new BaseException(BELONG_INVALID_ID);
                 }
             }
         } else {
-            throw new BaseException(USER_INVALID_ID);
+            throw new BaseException(BELONG_INVALID_ID);
         }
 
         return "프로텍트 팀원 권한 변경 성공";
@@ -53,18 +55,19 @@ public class BelongService {
     /**
      * 프로젝트 팀원 목록 조회 API
      * */
-    public List<GetBelongResDTO> findBelongList(Long memberId, Long projectId) {
+    @Transactional
+    public List<GetBelongResDTO> getBelongList(Long memberId, Long projectId) {
         List<Belong> belongList = belongRepository.findBelongsByProjectId(projectId, memberId);
-        List<GetBelongResDTO> memberList = new ArrayList<>();
+        List<GetBelongResDTO> getBelongResDTOList = new ArrayList<>();
 
         for (Belong belong : belongList) {
-            GetMemberResDTO member = memberServiceFeignClient.getMember(belong.getMemberId());
-            System.out.println(memberServiceFeignClient.getMember(belong.getMemberId()).getNickname());
-
-            memberList.add(GetBelongResDTO.toDTO(belong, member));
+            if (belong.getStatus().equals(Status.ENABLED)) {
+                GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(belong.getMemberId());
+                getBelongResDTOList.add(GetBelongResDTO.toDTO(belong, getMemberResDTO));
+            }
         }
 
-        return memberList;
+        return getBelongResDTOList;
     }
 
     /**
@@ -75,13 +78,15 @@ public class BelongService {
         Optional<Belong> belong = belongRepository.findById(belongId);
         Optional<Belong> myBelong = belongRepository.findByProjectIdAndMemberId(belong.get().getProject().getId(), memberId);
 
-        if (belong.isPresent()) {
-            if (myBelong.get().getGrade() == GradeType.MEMBER) {
+        // 소속 확인
+        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+            // 삭제 권한 확인
+            if (myBelong.get().getGrade() == GradeType.MEMBER  && myBelong.get().getStatus().equals(Status.ENABLED)) {
                 throw new BaseException(MEMBER_NO_AUTHORITY);
             }
-            belongRepository.delete(belong.get());
+            belong.get().updateStatus(Status.DISABLED);
         } else {
-            throw new BaseException(USER_INVALID_ID);
+            throw new BaseException(BELONG_INVALID_ID);
         }
 
         return "프로젝트 멤버 삭제 성공";

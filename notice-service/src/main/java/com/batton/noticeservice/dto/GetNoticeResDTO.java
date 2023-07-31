@@ -1,5 +1,6 @@
 package com.batton.noticeservice.dto;
 
+import com.batton.noticeservice.domain.Notice;
 import com.batton.noticeservice.enums.NoticeType;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,5 +20,15 @@ public class GetNoticeResDTO {
         this.noticeContent = noticeContent;
         this.noticeDate = noticeDate;
         this.senderProfileImage = senderProfileImage;
+    }
+
+    public static GetNoticeResDTO toDTO(Notice notice, String noticeDate, String senderProfileImage) {
+        return GetNoticeResDTO.builder()
+                .contentId(notice.getContentId())
+                .noticeType(notice.getNoticeType())
+                .noticeContent(notice.getNoticeContent())
+                .noticeDate(noticeDate)
+                .senderProfileImage(senderProfileImage)
+                .build();
     }
 }
