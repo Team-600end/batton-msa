@@ -1,7 +1,6 @@
 package com.batton.memberservice.service;
 
 import com.batton.memberservice.common.BaseException;
-import com.batton.memberservice.common.BaseResponseStatus;
 import com.batton.memberservice.domain.Member;
 import com.batton.memberservice.dto.PostMemberReqDTO;
 import com.batton.memberservice.enums.Authority;
@@ -14,8 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.batton.memberservice.common.BaseResponseStatus.EXIST_EMAIL_ERROR;
-import static com.batton.memberservice.common.BaseResponseStatus.MEMBER_PASSWORD_CONFLICT;
+import static com.batton.memberservice.common.BaseResponseStatus.*;
+import static com.batton.memberservice.common.ValidationRegex.isRegexEmail;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,6 +29,10 @@ public class AuthService {
      */
     @Transactional
     public String signupMember(PostMemberReqDTO postMemberReqDTO) {
+        //이메일 정규 표현 검증
+        if (!isRegexEmail(postMemberReqDTO.getEmail()))
+            throw new BaseException(POST_MEMBERS_INVALID_EMAIL);
+
         // 이메일 존재 여부 확인
         if (memberRepository.existsByEmail(postMemberReqDTO.getEmail())) {
             log.info("signupMember 예외: " + EXIST_EMAIL_ERROR.getMessage());
