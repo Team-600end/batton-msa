@@ -145,7 +145,7 @@ public class ProjectService {
 
             return getProjectResDTOList;
         } else {
-            throw new BaseException(PROJECT_INVALID_ID);
+            throw new BaseException(NO_PROJECT_EXISTS);
         }
     }
 }
