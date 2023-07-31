@@ -18,17 +18,17 @@ public class Comment extends BaseEntity {
     private Long id;
     private String commentContent;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "issue_id")
-    private Issue issue;
+    @JoinColumn(name = "report_id")
+    private Report report;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "belong_id")
     private Belong belong;
 
     @Builder
-    public Comment(Long id, String commentContent, Issue issue, Belong belong) {
+    public Comment(Long id, String commentContent, Report report, Belong belong) {
         this.id = id;
         this.commentContent = commentContent;
-        this.issue = issue;
+        this.report = report;
         this.belong = belong;
     }
 }
