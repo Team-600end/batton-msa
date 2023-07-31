@@ -44,6 +44,24 @@ public class MemberService {
     }
 
     /**
+     * 유저 정보 조회 API
+     * */
+    public GetMemberInfoResDTO getMemberInfo(Long memberId) {
+        Optional<Member> member = memberRepository.findById(memberId);
+        GetMemberInfoResDTO getMemberInfoResDTO;
+
+        // 유저 존재 여부 확인
+        if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
+            getMemberInfoResDTO = GetMemberInfoResDTO.toDTO(member.get());
+        } else {
+            log.info("getMemberInfo 예외: " + MEMBER_INVALID_USER_ID.getMessage());
+            throw new BaseException(MEMBER_INVALID_USER_ID);
+        }
+
+        return getMemberInfoResDTO;
+    }
+
+    /**
      * 추가할 프로젝트 멤버 정보 조회 API
      * */
     public GetMemberInfoResDTO getCheckMember(String email) {

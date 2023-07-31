@@ -26,14 +26,32 @@ public class MemberController {
      * @return GetMemberResDTO
      * */
     @GetMapping("/{memberId}")
-    @Operation(summary = "유저 정보 조회")
+    @Operation(summary = "유저 정보 조회 feign client")
     @ApiResponses({
             @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
     })
     private GetMemberResDTO getMember(@PathVariable("memberId") Long memberId) {
         GetMemberResDTO getMemberResDTO = memberService.getMember(memberId);
         log.info("getMember 요청: " + getMemberResDTO.toString());
+
         return getMemberResDTO;
+    }
+
+    /**
+     * 유저 정보 조회 API
+     * @param memberId 정보를 조회할 유저 아이디
+     * @return GetMemberResDTO
+     * */
+    @GetMapping
+    @Operation(summary = "유저 정보 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
+    })
+    private BaseResponse<GetMemberInfoResDTO> getMemberInfo(@RequestHeader Long memberId) {
+        GetMemberInfoResDTO getMemberInfoResDTO = memberService.getMemberInfo(memberId);
+        log.info("getMember 요청: " + getMemberInfoResDTO.toString());
+
+        return new BaseResponse<>(getMemberInfoResDTO);
     }
 
     /**
@@ -46,7 +64,7 @@ public class MemberController {
     @ApiResponses({
             @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<GetMemberInfoResDTO> getCheckMember(@RequestParam("email") String email) {
+    private BaseResponse<GetMemberInfoResDTO> getCheckMember(@RequestParam(name = "email") String email) {
         GetMemberInfoResDTO getMemberInfoResDTO = memberService.getCheckMember(email);
         log.info("getCheckMember 요청: " + getMemberInfoResDTO.toString());
 
@@ -59,12 +77,12 @@ public class MemberController {
      * @param patchMemberReqDTO 정보 수정 요청 바디에 포함될 DTO
      * @return String
      * */
-    @PatchMapping("/{memberId}")
+    @PatchMapping
     @Operation(summary = "유저 정보 수정")
     @ApiResponses({
             @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<String> patchMember(@PathVariable("memberId") Long memberId, @RequestBody PatchMemberReqDTO patchMemberReqDTO) {
+    private BaseResponse<String> patchMember(@RequestHeader Long memberId, @RequestBody PatchMemberReqDTO patchMemberReqDTO) {
         String patchMemberRes = memberService.patchMember(memberId, patchMemberReqDTO);
         log.info("patchMember 요청: " + patchMemberRes);
 
@@ -77,7 +95,7 @@ public class MemberController {
      * @param patchMemberPasswordReqDTO 비밀번호 수정 요청 바디에 포함될 DTO
      * @return String
      * */
-    @PatchMapping("/password/{memberId}")
+    @PatchMapping("/password")
     @Operation(summary = "유저 비밀번호 수정")
     @ApiResponses({
             @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요."),
@@ -85,7 +103,7 @@ public class MemberController {
             @ApiResponse(responseCode = "603", description = "비밀번호가 일치하지 않습니다.")
 
     })
-    private BaseResponse<String> patchMemberPassword(@PathVariable("memberId") Long memberId, @RequestBody PatchMemberPasswordReqDTO patchMemberPasswordReqDTO) {
+    private BaseResponse<String> patchMemberPassword(@RequestHeader Long memberId, @RequestBody PatchMemberPasswordReqDTO patchMemberPasswordReqDTO) {
         String patchMemberPasswordRes = memberService.patchMemberPassword(memberId, patchMemberPasswordReqDTO);
         log.info("patchMemberPassword 요청: " + patchMemberPasswordRes);
 
