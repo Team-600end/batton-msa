@@ -55,12 +55,12 @@ public class MemberController {
     }
 
     /**
-     * 추가할 프로젝트 멤버 정보 조회 API
+     * 추가할 멤버 정보 조회 API
      * @param email 정보를 조회할 유저 이메일
      * @return GetMemberInfoResDTO
      */
     @GetMapping("/list")
-    @Operation(summary = "추가할 프로젝트 멤버 정보 조회")
+    @Operation(summary = "추가할 멤버 정보 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
     })

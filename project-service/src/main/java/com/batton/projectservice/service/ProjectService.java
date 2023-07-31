@@ -8,6 +8,7 @@ import com.batton.projectservice.dto.project.PostProjectReqDTO;
 import com.batton.projectservice.dto.project.ProjectTeamReqDTO;
 import com.batton.projectservice.dto.project.GetProjectResDTO;
 import com.batton.projectservice.enums.GradeType;
+import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.repository.BelongRepository;
 import com.batton.projectservice.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -66,14 +67,14 @@ public class ProjectService {
                             .project(project.get())
                             .memberId(projectTeamReqDTO.getMemberId())
                             .nickname(projectTeamReqDTO.getNickname())
-                            .status(projectTeamReqDTO.getStatus())
+                            .status(Status.ENABLED)
                             .grade(GradeType.LEADER)
                             .build();
 
                     belongRepository.save(belong);
                 } else {
                     //프로젝트 생성한 사람이 아닐 경우 다른 권한 부여
-                    Belong belong = ProjectTeamReqDTO.toEntity(project.get(), projectTeamReqDTO);
+                    Belong belong = ProjectTeamReqDTO.toEntity(project.get(), projectTeamReqDTO, Status.ENABLED);
 
                     belongRepository.save(belong);
                 }
@@ -92,19 +93,22 @@ public class ProjectService {
     public String patchProject(Long projectId, Long memberId, PatchProjectReqDTO patchProjectReqDTO) {
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
 
-        if (belong.isPresent()) {
+        // 소속 유저 확인
+        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED))  {
+            // 수정 권한 확인
             if (belong.get().getGrade() == GradeType.MEMBER) {
                 throw new BaseException(MEMBER_NO_AUTHORITY);
             }
             Optional<Project> project = projectRepository.findById(projectId);
 
+            // 프로젝트 존재 유무 확인
             if (project.isPresent()) {
                 project.get().update(patchProjectReqDTO.getProjectTitle(), patchProjectReqDTO.getProjectContent(), patchProjectReqDTO.getProjectImage());
             } else {
                 throw new BaseException(PROJECT_INVALID_ID);
             }
         } else {
-            throw new BaseException(USER_INVALID_ID);
+            throw new BaseException(BELONG_INVALID_ID);
         }
 
         return "프로젝트 수정 성공";
@@ -117,7 +121,9 @@ public class ProjectService {
     public String deleteProject(Long memberId, Long projectId) {
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
 
-        if (belong.isPresent()) {
+        // 소속 유저 확인
+        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+            // 삭제 권한 확인
             if (belong.get().getGrade() == GradeType.MEMBER) {
                 throw new BaseException(MEMBER_NO_AUTHORITY);
             } else {
@@ -140,12 +146,14 @@ public class ProjectService {
             List<GetProjectResDTO> getProjectResDTOList = new ArrayList<>();
 
             for (Belong belong : belongList) {
-                getProjectResDTOList.add(GetProjectResDTO.toDTO(belong.getProject(), belong.getGrade()));
+                if (belong.getStatus().equals(Status.ENABLED)) {
+                    getProjectResDTOList.add(GetProjectResDTO.toDTO(belong.getProject(), belong.getGrade()));
+                }
             }
 
             return getProjectResDTOList;
         } else {
-            throw new BaseException(NO_PROJECT_EXISTS);
+            throw new BaseException(PROJECT_NOT_EXISTS);
         }
     }
 }
