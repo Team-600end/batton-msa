@@ -20,7 +20,6 @@ import com.batton.projectservice.repository.IssueRepository;
 import com.batton.projectservice.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -144,10 +143,10 @@ public class ReportService {
                 commentList = null;
             } else {
                 for (Comment comment : comments) {
-                    GetMemberResDTO member = memberServiceFeignClient.getMember(comment.getBelong().getMemberId());
+                    GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(comment.getBelong().getMemberId());
                     String createdDate = Chrono.timesAgo(report.get().getCreatedAt());
 
-                    commentList.add(GetCommentResDTO.toDTO(comment, member, createdDate));
+                    commentList.add(GetCommentResDTO.toDTO(comment, getMemberResDTO, createdDate));
                 }
             }
 
