@@ -70,4 +70,27 @@ public class ReleasesService {
 
         return "릴리즈노트가 발행되었습니다.";
     }
+
+    /**
+     * 릴리즈노트 삭제 API
+     */
+    public String deleteReleases(Long memberId, Long releaseId) {
+        Optional<Releases> releases = releasesRepository.findById(releaseId);
+
+        if (releases.isPresent()) {
+            Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(releases.get().getProject().getId(), memberId);
+
+            if (belong.isEmpty()) {
+                throw new BaseException(BELONG_INVALID_ID);
+            } else if (belong.get().getGrade() == GradeType.MEMBER) {
+                throw new BaseException(MEMBER_NO_AUTHORITY);
+            }
+
+            releasesRepository.deleteById(releaseId);
+        } else {
+            throw new BaseException(RELEASE_NOTE_INVALID_ID);
+        }
+
+        return "릴리즈노트가 삭제되었습니다.";
+    }
 }
