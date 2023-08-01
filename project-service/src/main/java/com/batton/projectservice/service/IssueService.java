@@ -122,10 +122,10 @@ public class IssueService {
     public GetIssueBoardResDTO getIssueBoard(Long memberId, Long projectId) {
         List<Issue> issueList = issueRepository.findByProjectId(projectId);
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
-        List<GetIssueResDTO> todoIssueList = new ArrayList<>();
-        List<GetIssueResDTO> progressIssueList = new ArrayList<>();
-        List<GetIssueResDTO> reviewIssueList = new ArrayList<>();
-        List<GetIssueResDTO> doneIssueList = new ArrayList<>();
+        List<GetIssueBoardInfoResDTO> todoIssueList = new ArrayList<>();
+        List<GetIssueBoardInfoResDTO> progressIssueList = new ArrayList<>();
+        List<GetIssueBoardInfoResDTO> reviewIssueList = new ArrayList<>();
+        List<GetIssueBoardInfoResDTO> doneIssueList = new ArrayList<>();
 
         // 소속 유저 존재 여부 검증
         if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
@@ -134,13 +134,13 @@ public class IssueService {
                 GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.getBelong().getMemberId());
 
                 if (issue.getIssueStatus().equals(IssueStatus.TODO)) {
-                    todoIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
+                    todoIssueList.add(GetIssueBoardInfoResDTO.toDTO(issue, getMemberResDTO));
                 } else if (issue.getIssueStatus().equals(IssueStatus.PROGRESS)) {
-                    progressIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
+                    progressIssueList.add(GetIssueBoardInfoResDTO.toDTO(issue, getMemberResDTO));
                 } else if (issue.getIssueStatus().equals(IssueStatus.REVIEW)) {
-                    reviewIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
+                    reviewIssueList.add(GetIssueBoardInfoResDTO.toDTO(issue, getMemberResDTO));
                 } else if (issue.getIssueStatus().equals(IssueStatus.DONE)) {
-                    doneIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
+                    doneIssueList.add(GetIssueBoardInfoResDTO.toDTO(issue, getMemberResDTO));
                 }
             }
         } else {
