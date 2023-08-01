@@ -46,7 +46,7 @@ public class ProjectService {
         Long newProjectId = projectRepository.save(project).getId();
 
         //소속 테이블에 팀원들 추가하는 함수 불러오기
-        postPojectMember(memberId, newProjectId, postProjectReqDTO.getTeamMemberList());
+        postProjectMember(memberId, newProjectId, postProjectReqDTO.getTeamMemberList());
 
         return newProjectId;
     }
@@ -55,7 +55,7 @@ public class ProjectService {
      * 프로젝트 팀원 추가 API
      * */
     @Transactional
-    public String postPojectMember(Long memberId, Long projectId, List<ProjectTeamReqDTO> teamMemberList) {
+    public String postProjectMember(Long memberId, Long projectId, List<ProjectTeamReqDTO> teamMemberList) {
         Optional<Project> project = projectRepository.findById(projectId);
 
         // 프로젝트 존재 여부 확인

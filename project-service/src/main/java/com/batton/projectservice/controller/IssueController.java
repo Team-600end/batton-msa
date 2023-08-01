@@ -1,7 +1,6 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
-import com.batton.projectservice.dto.comment.PostCommentReqDTO;
 import com.batton.projectservice.dto.issue.*;
 import com.batton.projectservice.service.IssueService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,7 +8,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -75,6 +73,24 @@ public class IssueController {
     }
 
     /**
+     * 이슈 도넛차트 조회
+     * @param memberId 조회하는 유저 아이디
+     * @param projectId 이슈 조회할 프로젝트 아이디
+     * @return GetIssueChartResDTO
+     * */
+    @GetMapping("/chart/{projectId}")
+    @Operation(summary = "이슈 도넛차트 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "701", description = "프로젝트 아이디 값을 확인해주세요."),
+            @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요.")
+    })
+    private BaseResponse<GetIssueChartResDTO> getIssueChart(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId) {
+        GetIssueChartResDTO getIssueChartResDTO = issueService.getIssueChart(memberId, projectId);
+
+        return new BaseResponse<>(getIssueChartResDTO);
+    }
+
+    /**
      * 개인 이슈 목록 조회 API
      * @param memberId 조회하는 유저 아이디
      * @param projectId 프로젝트 아이디
@@ -96,17 +112,16 @@ public class IssueController {
      * 이슈 상세 조회 API
      * @param memberId 조회하는 유저 아이디
      * @param issueId 조회할 이슈 아이디
-     * @param projectId 프로젝트 아이디
      * @return GetIssueInfoResDTO
      * */
-    @GetMapping("/{issueId}/{projectId}")
+    @GetMapping("/{issueId}")
     @Operation(summary = "이슈 상세 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<GetIssueInfoResDTO> getIssueInfo(@RequestHeader Long memberId, @PathVariable("issueId") Long issueId, @PathVariable("projectId") Long projectId) {
-        GetIssueInfoResDTO getIssueInfoResDTO = issueService.getIssueInfo(memberId, issueId, projectId);
+    private BaseResponse<GetIssueInfoResDTO> getIssueInfo(@RequestHeader Long memberId, @PathVariable("issueId") Long issueId) {
+        GetIssueInfoResDTO getIssueInfoResDTO = issueService.getIssueInfo(memberId, issueId);
 
         return new BaseResponse<>(getIssueInfoResDTO);
     }
@@ -130,23 +145,21 @@ public class IssueController {
     }
 
     /**
-     * 이슈 코멘트 생성 API
-     * @param memberId 코멘트 생성하는 유저 아이디
-     * @param issueId 생성할 이슈 아이디
-     * @param postCommentReqDTO 생성 요청 바디에 포함될 PostCommentReqDTO
-     * @return String
+     * 이슈 히스토리 목록 조회 API
+     * @param memberId 조회하는 유저 아이디
+     * @param projectId 조회할 프로젝트의 아이디
+     * @return List<GetIssueResDTO>
      * */
-    @PostMapping("/{issueId}/reports/comments")
-    @Operation(summary = "이슈 코멘트 생성")
+    @GetMapping("/history/list/{projectId}")
+    @Operation(summary = "이슈 히스토리 목록 조회")
     @ApiResponses({
-            @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<String> postComment(@RequestHeader Long memberId, @PathVariable("issueId") Long issueId, @RequestBody PostCommentReqDTO postCommentReqDTO) {
-        String postCommentRes = issueService.postComment(issueId, memberId, postCommentReqDTO);
+    private BaseResponse<List<GetIssueResDTO>> getIssueHistory(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId) {
+        List<GetIssueResDTO> getIssueResDTOList = issueService.getIssueHistory(memberId, projectId);
 
-        return new BaseResponse<>(postCommentRes);
+        return new BaseResponse<>(getIssueResDTOList);
     }
 
     /**
@@ -172,18 +185,17 @@ public class IssueController {
     /**
      * 이슈 삭제 API
      * @param memberId 이슈 삭제하는 유저 아이디
-     * @param projectId 프로젝트 아이디
      * @param issueId 삭제할 이슈 아이디
      * @return String
      */
-    @DeleteMapping("/{projectId}/{issueId}")
+    @DeleteMapping("/{issueId}")
     @Operation(summary = "이슈 삭제")
     @ApiResponses({
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<String> deleteIssue(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId, @PathVariable("issueId") Long issueId) {
-        String deleteIssueRes = issueService.deleteIssue(memberId, projectId, issueId);
+    private BaseResponse<String> deleteIssue(@RequestHeader Long memberId, @PathVariable("issueId") Long issueId) {
+        String deleteIssueRes = issueService.deleteIssue(memberId, issueId);
 
         return new BaseResponse<>(deleteIssueRes);
     }

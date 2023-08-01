@@ -21,9 +21,10 @@ public class GetIssueInfoResDTO {
     private IssueStatus issueStatus;
     private String nickname;
     private String profileImage;
+    private int issueKey;
 
     @Builder
-    public GetIssueInfoResDTO(Long issueId, String issueTitle, String issueContent, IssueTag issueTag, IssueStatus issueStatus, String nickname, String profileImage) {
+    public GetIssueInfoResDTO(Long issueId, String issueTitle, String issueContent, IssueTag issueTag, IssueStatus issueStatus, String nickname, String profileImage, int issueKey) {
         this.issueId = issueId;
         this.issueTitle = issueTitle;
         this.issueContent = issueContent;
@@ -31,6 +32,7 @@ public class GetIssueInfoResDTO {
         this.issueStatus = issueStatus;
         this.nickname = nickname;
         this.profileImage = profileImage;
+        this.issueKey = issueKey;
     }
 
     public static GetIssueInfoResDTO toDTO(Issue issue, GetMemberResDTO getMemberResDTO) {
@@ -42,6 +44,7 @@ public class GetIssueInfoResDTO {
                 .issueStatus(issue.getIssueStatus())
                 .nickname(getMemberResDTO.getNickname())
                 .profileImage(getMemberResDTO.getProfileImage())
+                .issueKey(issue.getIssueKey())
                 .build();
     }
 }
