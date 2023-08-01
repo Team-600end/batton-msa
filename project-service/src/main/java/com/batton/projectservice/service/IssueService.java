@@ -3,17 +3,21 @@ package com.batton.projectservice.service;
 import com.batton.projectservice.client.MemberServiceFeignClient;
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Belong;
-import com.batton.projectservice.domain.Comment;
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Project;
 import com.batton.projectservice.dto.client.GetMemberResDTO;
-import com.batton.projectservice.dto.comment.PostCommentReqDTO;
+import com.batton.projectservice.dto.issue.GetIssueBoardResDTO;
+import com.batton.projectservice.dto.issue.GetIssueResDTO;
+import com.batton.projectservice.dto.issue.GetIssueInfoResDTO;
+import com.batton.projectservice.dto.issue.GetMyIssueResDTO;
+import com.batton.projectservice.dto.issue.PatchIssueReqDTO;
+import com.batton.projectservice.dto.issue.PatchIssueBoardReqDTO;
+import com.batton.projectservice.dto.issue.PostIssueReqDTO;
 import com.batton.projectservice.dto.issue.*;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.IssueStatus;
 import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.repository.BelongRepository;
-import com.batton.projectservice.repository.CommentRepository;
 import com.batton.projectservice.repository.IssueRepository;
 import com.batton.projectservice.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -356,14 +360,14 @@ class IssueComparator implements Comparator<GetMyIssueResDTO> {
             Date first = sdf.parse(data1.getUpdatedDate());
             Date second = sdf.parse(data2.getUpdatedDate());
 
-            if (first.compareTo(second)>0){
+            if (first.compareTo(second) > 0) {
                 return -1;
-            } else if (first.compareTo(second)<0) {
+            } else if (first.compareTo(second) < 0) {
                 return 1;
             } else {
                 return 0;
             }
-        }  catch (ParseException e) {
+        } catch (ParseException e) {
             e.printStackTrace();
         }
 
