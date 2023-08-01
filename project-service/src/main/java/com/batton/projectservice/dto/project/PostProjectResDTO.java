@@ -17,10 +17,10 @@ public class PostProjectResDTO {
         this.projectKey = projectKey;
     }
 
-    public static PostProjectResDTO toDto(Project project) {
+    public static PostProjectResDTO toDto(Long projectId, String projectKey) {
         return PostProjectResDTO.builder()
-                .projectId(project.getId())
-                .projectKey(project.getProjectKey())
+                .projectId(projectId)
+                .projectKey(projectKey)
                 .build();
     }
 }
