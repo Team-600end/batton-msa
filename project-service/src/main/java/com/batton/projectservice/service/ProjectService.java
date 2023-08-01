@@ -32,23 +32,29 @@ public class ProjectService {
      * */
     @Transactional
     public Long postProject(Long memberId, PostProjectReqDTO postProjectReqDTO) {
-        boolean isUnique = false;
-        String projectKey = UUID.randomUUID().toString();
-
-        //프로젝트 키가 중복되지 않을 때까지 반복
-        while(!isUnique) {
-            if(projectRepository.existsByProjectKey(projectKey))
-                projectKey = UUID.randomUUID().toString();
-            else
-                isUnique = true;
-        }
-        Project project = postProjectReqDTO.toEntity(postProjectReqDTO, projectKey);
+        Project project = postProjectReqDTO.toEntity(postProjectReqDTO);
         Long newProjectId = projectRepository.save(project).getId();
 
         //소속 테이블에 팀원들 추가하는 함수 불러오기
-        postProjectMember(memberId, newProjectId, postProjectReqDTO.getTeamMemberList());
+        postProjectMember(memberId, newProjectId, postProjectReqDTO.getProjectMemberList());
 
         return newProjectId;
+    }
+
+    /**
+     * 프로젝트 고유키 중복 확인 API
+     * */
+    @Transactional
+    public String getCheckKey(String projectKey) {
+        List<Project> projectList = projectRepository.findAll();
+
+        for (Project project : projectList) {
+            if (project.getProjectKey().equals(projectKey)) {
+                return "중복된 프로젝트 키입니다.";
+            }
+        }
+
+        return "프로젝트 키가 유효합니다.";
     }
 
     /**

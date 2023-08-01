@@ -34,6 +34,17 @@ public class ProjectController {
     }
 
     /**
+     * 프로젝트 고유키 중복 확인 API
+     */
+    @GetMapping("/project-key/{projectKey}")
+    @Operation(summary = "프로젝트 고유키 중복 확인")
+    private BaseResponse<String> getCheckKey(@PathVariable("projectKey") String projectKey){
+        String check = projectService.getCheckKey(projectKey);
+
+        return new BaseResponse<>(check);
+    }
+
+    /**
      * 프로젝트 수정 API
      * @param memberId 프로젝트 수정 작업을하는 유저 아이디
      * @param projectId 수정할 프로젝트 아이디
