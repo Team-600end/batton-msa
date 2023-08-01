@@ -34,7 +34,7 @@ public class ProjectService {
 
         //소속 테이블에 팀원들 추가하는 함수 불러오기
         postProjectMember(memberId, newProjectId, postProjectReqDTO.getProjectMemberList());
-        PostProjectResDTO postProjectResDTO = PostProjectResDTO.toDto(project);
+        PostProjectResDTO postProjectResDTO = PostProjectResDTO.toDto(newProjectId, postProjectReqDTO.getProjectKey());
 
         return postProjectResDTO;
     }
