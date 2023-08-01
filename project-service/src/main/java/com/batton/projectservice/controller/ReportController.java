@@ -22,22 +22,25 @@ public class ReportController {
 
     /**
      * 이슈 레포트 생성 API
+     * @param memberId 생성 작업을 하는 멤버의 아이디
      * @param postIssueReportReqDTO 이슈 레포트 생성 요청 요청 바디에 포함될 PostIssueReportReqDTO
      * @return reportId
      * */
     @PostMapping
     @Operation(summary = "이슈 레포트 생성")
     @ApiResponses({
+            @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<Long> postReport(@RequestBody PostIssueReportReqDTO postIssueReportReqDTO) {
-        Long postReportRes = reportService.postReport(postIssueReportReqDTO);
+    private BaseResponse<Long> postReport(@RequestHeader Long memberId, @RequestBody PostIssueReportReqDTO postIssueReportReqDTO) {
+        Long postReportRes = reportService.postReport(memberId, postIssueReportReqDTO);
 
         return new BaseResponse<>(postReportRes);
     }
 
     /**
      * 이슈 레포트 수정 API
+     * @param memberId 수정 작업을 하는 멤버의 아이디
      * @param reportId 수정할 이슈 레포트 아이디
      * @param patchIssueReportReqDTO 이슈 레포트 수정 요청 요청 바디에 포함될 PatchIssueReportReqDTO
      * @return String
@@ -45,27 +48,30 @@ public class ReportController {
     @PatchMapping("/{reportId}")
     @Operation(summary = "이슈 레포트 수정")
     @ApiResponses({
+            @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "705", description = "이슈 레포트 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<String> patchReport(@PathVariable("reportId") Long reportId, @RequestBody PatchIssueReportReqDTO patchIssueReportReqDTO) {
-        String patchReportRes = reportService.patchReport(reportId, patchIssueReportReqDTO);
+    private BaseResponse<String> patchReport(@RequestHeader Long memberId, @PathVariable("reportId") Long reportId, @RequestBody PatchIssueReportReqDTO patchIssueReportReqDTO) {
+        String patchReportRes = reportService.patchReport(memberId, reportId, patchIssueReportReqDTO);
 
         return new BaseResponse<>(patchReportRes);
     }
 
     /**
      * 이슈 레포트 삭제 API
+     * @param memberId 삭제 작업을 하는 멤버의 아이디
      * @param reportId 삭제할 이슈 레포트 아이디
      * @return String
      */
     @DeleteMapping("/{reportId}")
     @Operation(summary = "이슈 레포트 삭제")
     @ApiResponses({
+            @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "705", description = "이슈 레포트 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<String> deleteReport(@PathVariable("reportId") Long reportId) {
-        String deleteReportRes = reportService.deleteReport(reportId);
+    private BaseResponse<String> deleteReport(@RequestHeader Long memberId, @PathVariable("reportId") Long reportId) {
+        String deleteReportRes = reportService.deleteReport(memberId, reportId);
 
         return new BaseResponse<>(deleteReportRes);
     }

@@ -14,6 +14,7 @@ import com.batton.projectservice.dto.report.GetIssueReportResDTO;
 import com.batton.projectservice.dto.report.PatchIssueReportReqDTO;
 import com.batton.projectservice.dto.report.PostIssueReportReqDTO;
 import com.batton.projectservice.enums.GradeType;
+import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.repository.BelongRepository;
 import com.batton.projectservice.repository.CommentRepository;
 import com.batton.projectservice.repository.IssueRepository;
@@ -40,42 +41,54 @@ public class ReportService {
      * 이슈 레포트 생성 API
      * */
     @Transactional
-    public Long postReport(PostIssueReportReqDTO postIssueReportReqDTO) {
+    public Long postReport(Long memberId, PostIssueReportReqDTO postIssueReportReqDTO) {
         Optional<Issue> issue = issueRepository.findById(postIssueReportReqDTO.getIssueId());
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(issue.get().getProject().getId(), memberId);
 
-        Long newReport;
-        // 이슈 존재 여부 확인
-        if (issue.isPresent()) {
-            if (reportRepository.findByIssueId(issue.get().getId()).isPresent()) {
-                throw new BaseException(ISSUE_REPORT_EXISTS);
+        // 소속 유저 확인
+        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+            Long newReport;
+            // 이슈 존재 여부 확인
+            if (issue.isPresent()) {
+                if (reportRepository.findByIssueId(issue.get().getId()).isPresent()) {
+                    throw new BaseException(ISSUE_REPORT_EXISTS);
+                }
+                Report report = postIssueReportReqDTO.toEntity(postIssueReportReqDTO, issue.get());
+                newReport = reportRepository.save(report).getId();
+            } else {
+                throw new BaseException(ISSUE_INVALID_ID);
             }
-            Report report = postIssueReportReqDTO.toEntity(postIssueReportReqDTO, issue.get());
-            newReport = reportRepository.save(report).getId();
-        } else {
-            throw new BaseException(ISSUE_INVALID_ID);
-        }
 
-        return newReport;
+            return newReport;
+        } else {
+            throw new BaseException(BELONG_INVALID_ID);
+        }
     }
 
     /**
      * 이슈 레포트 수정 API
      * */
     @Transactional
-    public String patchReport(Long reportId, PatchIssueReportReqDTO patchIssueReportReqDTO) {
+    public String patchReport(Long memberId, Long reportId, PatchIssueReportReqDTO patchIssueReportReqDTO) {
         Optional<Issue> issue = issueRepository.findById(patchIssueReportReqDTO.getIssueId());
         Optional<Report> report = reportRepository.findById(reportId);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(issue.get().getProject().getId(), memberId);
 
-        // 이슈 존재 여부 확인
-        if (issue.isPresent()) {
-            // 이슈 레포트 존재 여부 확인
-            if (report.isPresent()) {
-                report.get().update(patchIssueReportReqDTO.getReportContent());
+        // 소속 유저 확인
+        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+            // 이슈 존재 여부 확인
+            if (issue.isPresent()) {
+                // 이슈 레포트 존재 여부 확인
+                if (report.isPresent()) {
+                    report.get().update(patchIssueReportReqDTO.getReportContent());
+                } else {
+                    throw new BaseException(ISSUE_REPORT_INVALID_ID);
+                }
             } else {
-                throw new BaseException(ISSUE_REPORT_INVALID_ID);
+                throw new BaseException(ISSUE_INVALID_ID);
             }
         } else {
-            throw new BaseException(ISSUE_INVALID_ID);
+            throw new BaseException(BELONG_INVALID_ID);
         }
 
         return "이슈 레포트 수정 성공";
@@ -85,14 +98,20 @@ public class ReportService {
      * 이슈 레포트 삭제 API
      * */
     @Transactional
-    public String deleteReport(Long reportId) {
+    public String deleteReport(Long memberId, Long reportId) {
         Optional<Report> report = reportRepository.findById(reportId);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(report.get().getIssue().getProject().getId(), memberId);
 
-        // 이슈 레포트 존재 여부 확인
-        if (report.isPresent()) {
+        // 소속 유저 확인
+        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+            // 이슈 레포트 존재 여부 확인
+            if (report.isPresent()) {
                 reportRepository.deleteById(reportId);
+            } else {
+                throw new BaseException(ISSUE_REPORT_INVALID_ID);
+            }
         } else {
-            throw new BaseException(ISSUE_REPORT_INVALID_ID);
+            throw new BaseException(BELONG_INVALID_ID);
         }
 
         return "프로젝트 삭제 성공";

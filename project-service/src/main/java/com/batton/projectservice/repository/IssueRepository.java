@@ -21,5 +21,6 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
     Issue findTopByProjectIdOrderByCreatedAtDesc(Long projectId);
     // 해당 프로젝트의 이슈 리스트를 마지막 수정 날짜 내림차순으로 변환
     List<Issue> findByProjectIdOrderByUpdatedAtDesc(Long projectId);
+    List<Issue> findByIssueStatus(IssueStatus status);
     Optional<Issue> findById(Long id);
 }

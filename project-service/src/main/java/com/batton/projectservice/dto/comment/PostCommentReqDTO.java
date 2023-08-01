@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
+@NoArgsConstructor
 public class PostCommentReqDTO {
     private String commentContent;
 
