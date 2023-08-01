@@ -2,25 +2,21 @@ package com.batton.projectservice.service;
 
 import com.batton.projectservice.client.MemberServiceFeignClient;
 import com.batton.projectservice.common.BaseException;
+import com.batton.projectservice.common.IssueComparator;
 import com.batton.projectservice.domain.Belong;
-import com.batton.projectservice.domain.Comment;
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Project;
 import com.batton.projectservice.dto.client.GetMemberResDTO;
-import com.batton.projectservice.dto.comment.PostCommentReqDTO;
 import com.batton.projectservice.dto.issue.*;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.IssueStatus;
 import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.repository.BelongRepository;
-import com.batton.projectservice.repository.CommentRepository;
 import com.batton.projectservice.repository.IssueRepository;
 import com.batton.projectservice.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.batton.projectservice.common.BaseResponseStatus.*;
@@ -342,31 +338,5 @@ public class IssueService {
         }
 
         return "이슈 삭제 성공";
-    }
-}
-
-// 이슈 날짜 정렬
-class IssueComparator implements Comparator<GetMyIssueResDTO> {
-    @Override
-    public int compare(GetMyIssueResDTO data1, GetMyIssueResDTO data2) {
-        try {
-            String pattern = "yyyy.mm.dd"; // 날짜 형식과 매칭되는 패턴
-            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-
-            Date first = sdf.parse(data1.getUpdatedDate());
-            Date second = sdf.parse(data2.getUpdatedDate());
-
-            if (first.compareTo(second)>0){
-                return -1;
-            } else if (first.compareTo(second)<0) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }  catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return 0;
     }
 }
