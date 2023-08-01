@@ -28,14 +28,15 @@ public class ProjectService {
      * 프로젝트 생성 API
      * */
     @Transactional
-    public Long postProject(Long memberId, PostProjectReqDTO postProjectReqDTO) {
+    public PostProjectResDTO postProject(Long memberId, PostProjectReqDTO postProjectReqDTO) {
         Project project = postProjectReqDTO.toEntity(postProjectReqDTO);
         Long newProjectId = projectRepository.save(project).getId();
 
         //소속 테이블에 팀원들 추가하는 함수 불러오기
         postProjectMember(memberId, newProjectId, postProjectReqDTO.getProjectMemberList());
+        PostProjectResDTO postProjectResDTO = PostProjectResDTO.toDto(project);
 
-        return newProjectId;
+        return postProjectResDTO;
     }
 
     /**

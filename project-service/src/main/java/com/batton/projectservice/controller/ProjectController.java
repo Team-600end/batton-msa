@@ -1,10 +1,7 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
-import com.batton.projectservice.dto.project.GetProjectInfoResDTO;
-import com.batton.projectservice.dto.project.PatchProjectReqDTO;
-import com.batton.projectservice.dto.project.PostProjectReqDTO;
-import com.batton.projectservice.dto.project.GetProjectResDTO;
+import com.batton.projectservice.dto.project.*;
 import com.batton.projectservice.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,12 +21,12 @@ public class ProjectController {
      * 프로젝트 생성 API
      * @param memberId 프로젝트 생성하는 유저 아이디
      * @param postProjectReqDTO 프로젝트 생성 요청 바디에 포함될 PostProjectReqDTO
-     * @return projectId
+     * @return PostProjectResDTO
      * */
     @PostMapping
     @Operation(summary = "프로젝트 생성")
-    private BaseResponse<Long> postProject(@RequestHeader Long memberId, @RequestBody PostProjectReqDTO postProjectReqDTO) {
-        Long postProjectRes = projectService.postProject(memberId, postProjectReqDTO);
+    private BaseResponse<PostProjectResDTO> postProject(@RequestHeader Long memberId, @RequestBody PostProjectReqDTO postProjectReqDTO) {
+        PostProjectResDTO postProjectRes = projectService.postProject(memberId, postProjectReqDTO);
 
         return new BaseResponse<>(postProjectRes);
     }
