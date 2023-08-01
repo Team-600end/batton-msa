@@ -1,10 +1,13 @@
 package com.batton.projectservice.domain;
 
+import com.batton.projectservice.enums.PublishState;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -23,14 +26,21 @@ public class Releases extends BaseEntity {
     private Project project;
     @Column(name = "release_content", columnDefinition = "TEXT")
     private String releaseContent;
+    @ElementCollection
+    private List<Long> issueList = new ArrayList< >();
+    @Enumerated(EnumType.STRING)
+    private PublishState publishState;
+
 
     @Builder
-    public Releases(Long id, int versionMajor, int versionMinor, int versionPatch, Project project, String releaseContent) {
+    public Releases(Long id, int versionMajor, int versionMinor, int versionPatch, Project project, String releaseContent, List<Long> issueList, PublishState publishState) {
         this.id = id;
         this.versionMajor = versionMajor;
         this.versionMinor = versionMinor;
         this.versionPatch = versionPatch;
         this.project = project;
         this.releaseContent = releaseContent;
+        this.issueList = issueList;
+        this.publishState = publishState;
     }
 }
