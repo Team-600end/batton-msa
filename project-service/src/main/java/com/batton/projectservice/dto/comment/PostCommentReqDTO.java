@@ -2,12 +2,13 @@ package com.batton.projectservice.dto.comment;
 
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Comment;
-import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Report;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class PostCommentReqDTO {
     private String commentContent;
     @Builder
