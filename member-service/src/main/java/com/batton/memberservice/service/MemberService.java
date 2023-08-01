@@ -105,7 +105,7 @@ public class MemberService {
         // 유저 존재 여부 확인
         if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
             // 비밀번호 일치 여부 확인
-            if (passwordEncoder.matches(patchMemberPasswordReqDTO.getCurrentPassword(), member.get().getPassword())) {
+            if (!passwordEncoder.matches(patchMemberPasswordReqDTO.getCurrentPassword(), member.get().getPassword())) {
                 log.info("patchMemberPassword 예외: " + MEMBER_PASSWORD_DISCORD.getMessage());
                 throw new BaseException(MEMBER_PASSWORD_DISCORD);
             }
