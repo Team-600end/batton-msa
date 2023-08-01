@@ -1,13 +1,18 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
+import com.batton.projectservice.dto.release.GetReleasesIssueReqDTO;
 import com.batton.projectservice.dto.release.PostReleasesReqDTO;
 import com.batton.projectservice.service.ReleasesService;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -63,5 +68,21 @@ public class ReleasesController {
         String deleteReleasesRes = releasesService.deleteReleases(memberId, releaseId);
 
         return new BaseResponse<>(deleteReleasesRes);
+    }
+
+    /**
+     * 릴리즈 노트에 포함된 이슈 목록 조회 API
+     * @param releaseId 조회할 릴리즈 노트 아이디
+     */
+    @GetMapping("/{releaseId}/issues/list")
+    @Operation(summary = "릴리즈노트에 포함된 이슈 목록 조회 요청")
+    @ApiResponses({
+            @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요."),
+            @ApiResponse(responseCode = "708", description = "릴리즈 노트 아이디 값을 확인해주세요.")
+    })
+    public BaseResponse<List<GetReleasesIssueReqDTO>> getReleasesIssues(@PathVariable Long releaseId) {
+        List<GetReleasesIssueReqDTO> getReleasesIssueRes = releasesService.getReleasesIssues(releaseId);
+
+        return new BaseResponse<>(getReleasesIssueRes);
     }
 }
