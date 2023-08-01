@@ -1,10 +1,14 @@
 package com.batton.projectservice.service;
 
+import com.batton.projectservice.client.MemberServiceFeignClient;
 import com.batton.projectservice.common.BaseException;
+import com.batton.projectservice.common.Chrono;
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Comment;
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Report;
+import com.batton.projectservice.dto.client.GetMemberResDTO;
+import com.batton.projectservice.dto.comment.GetCommentResDTO;
 import com.batton.projectservice.dto.comment.PostCommentReqDTO;
 import com.batton.projectservice.dto.report.GetIssueReportResDTO;
 import com.batton.projectservice.dto.report.PatchIssueReportReqDTO;
@@ -17,8 +21,9 @@ import com.batton.projectservice.repository.IssueRepository;
 import com.batton.projectservice.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.batton.projectservice.common.BaseResponseStatus.*;
@@ -30,6 +35,7 @@ public class ReportService {
     private final CommentRepository commentRepository;
     private final IssueRepository issueRepository;
     private final BelongRepository belongRepository;
+    private final MemberServiceFeignClient memberServiceFeignClient;
 
     /**
      * 이슈 레포트 생성 API
@@ -118,7 +124,7 @@ public class ReportService {
     public String postComment(Long reportId, Long memberId, PostCommentReqDTO postCommentReqDTO) {
         Optional<Report> report = reportRepository.findById(reportId);
 
-        // 이슈 존재 여부 확인
+        // 레포트 존재 여부 확인
         if (!report.isPresent()) {
             throw new BaseException(ISSUE_REPORT_INVALID_ID);
         }
@@ -142,9 +148,32 @@ public class ReportService {
     /**
      * 이슈 레포트 조회 API
      */
-    public GetIssueReportResDTO getIssueReport(){
+    public GetIssueReportResDTO getIssueReport(Long reportId) {
+        Optional<Report> report = reportRepository.findById(reportId);
+        GetIssueReportResDTO getIssueReportResDTO;
 
+        if(report.isPresent()){
+            List<Comment> comments = commentRepository.findByReportId(reportId);
+            List<GetCommentResDTO> commentList= new ArrayList<>();
+            String updatedDate = report.get().getUpdatedAt().getYear() + ". " + report.get().getUpdatedAt().getMonthValue() + ". " + report.get().getUpdatedAt().getDayOfMonth();
+            String nickname = report.get().getIssue().getBelong().getNickname();
 
-        return null;
+            if(comments.isEmpty()){
+                commentList = null;
+            } else {
+                for (Comment comment : comments) {
+                    GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(comment.getBelong().getMemberId());
+                    String createdDate = Chrono.timesAgo(report.get().getCreatedAt());
+
+                    commentList.add(GetCommentResDTO.toDTO(comment, getMemberResDTO, createdDate));
+                }
+            }
+
+            getIssueReportResDTO = GetIssueReportResDTO.toDTO(report.get(), updatedDate, nickname, commentList);
+        } else {
+            throw new BaseException(ISSUE_REPORT_INVALID_ID);
+        }
+
+        return getIssueReportResDTO;
     }
 }

@@ -7,6 +7,13 @@ import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Project;
 import com.batton.projectservice.dto.client.GetMemberResDTO;
+import com.batton.projectservice.dto.issue.GetIssueBoardResDTO;
+import com.batton.projectservice.dto.issue.GetIssueResDTO;
+import com.batton.projectservice.dto.issue.GetIssueInfoResDTO;
+import com.batton.projectservice.dto.issue.GetMyIssueResDTO;
+import com.batton.projectservice.dto.issue.PatchIssueReqDTO;
+import com.batton.projectservice.dto.issue.PatchIssueBoardReqDTO;
+import com.batton.projectservice.dto.issue.PostIssueReqDTO;
 import com.batton.projectservice.dto.issue.*;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.IssueStatus;
@@ -41,7 +48,7 @@ public class IssueService {
         // 마지막 이슈의 이슈 순서
         int lastIssueSeq = 0;
         if (issueList.size() != 0) {
-            lastIssueSeq = issueList.get(issueList.size()-1).getIssueSeq();
+            lastIssueSeq = issueList.get(issueList.size() - 1).getIssueSeq();
         }
 
         // 프로젝트 존재 여부 검증
@@ -51,7 +58,7 @@ public class IssueService {
                 Issue issue;
 
                 // TO DO 상태의 이슈의 가장 마지막에 위치
-                if(!issueRepository.existsByProjectId(project.get().getId())) {
+                if (!issueRepository.existsByProjectId(project.get().getId())) {
                     issue = postIssueReqDTO.toEntity(project.get(), belong.get(), postIssueReqDTO, IssueStatus.TODO, lastIssueSeq + 1, 1);
                 } else {
                     Issue lateIssue = issueRepository.findTopByProjectIdOrderByCreatedAtDesc(project.get().getId());
@@ -71,10 +78,10 @@ public class IssueService {
 
     /**
      * 이슈 보드 상태 및 순서 변경 API
-     * */
+     */
     @Transactional
     public String patchIssueBoard(Long memberId, Long issueId, PatchIssueBoardReqDTO patchIssueBoardReqDTO) {
-        Optional<Issue> issue =issueRepository.findById(issueId);
+        Optional<Issue> issue = issueRepository.findById(issueId);
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(issue.get().getProject().getId(), memberId);
 
         // 소속 유저 존재 여부 검증
@@ -88,16 +95,16 @@ public class IssueService {
                 List<Issue> issueList = issueRepository.findByIssueStatusOrderByIssueSeq(patchIssueBoardReqDTO.getAfterStatus());
 
                 // 이후 순서의 이슈들 seq 1씩 증가
-                for (int i=patchIssueBoardReqDTO.getSeqNum(); i<issueList.size(); i++) {
-                    issueList.get(i).updateSeq(issueList.get(i).getIssueSeq()+1);
+                for (int i = patchIssueBoardReqDTO.getSeqNum(); i < issueList.size(); i++) {
+                    issueList.get(i).updateSeq(issueList.get(i).getIssueSeq() + 1);
                 }
                 int preIssueNum = 0;
                 // 이전 순서의 이슈 seq
                 if (patchIssueBoardReqDTO.getSeqNum() != 0) {
-                        preIssueNum = issueList.get(patchIssueBoardReqDTO.getSeqNum()-1).getIssueSeq();
+                    preIssueNum = issueList.get(patchIssueBoardReqDTO.getSeqNum() - 1).getIssueSeq();
                 }
                 // 이슈 상태, 순서 변경
-                issue.get().updateIssue(preIssueNum+1,patchIssueBoardReqDTO.getAfterStatus());
+                issue.get().updateIssue(preIssueNum + 1, patchIssueBoardReqDTO.getAfterStatus());
             } else {
                 throw new BaseException(ISSUE_INVALID_ID);
             }
@@ -110,7 +117,7 @@ public class IssueService {
 
     /**
      * 이슈 보드 목록 조회 API
-     * */
+     */
     @Transactional
     public GetIssueBoardResDTO getIssueBoard(Long memberId, Long projectId) {
         List<Issue> issueList = issueRepository.findByProjectId(projectId);
@@ -132,7 +139,7 @@ public class IssueService {
                     progressIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
                 } else if (issue.getIssueStatus().equals(IssueStatus.REVIEW)) {
                     reviewIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
-                } else if (issue.getIssueStatus().equals(IssueStatus.DONE)){
+                } else if (issue.getIssueStatus().equals(IssueStatus.DONE)) {
                     doneIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
                 }
             }
@@ -145,7 +152,7 @@ public class IssueService {
 
     /**
      * 이슈 도넛차트 조회 API
-     * */
+     */
     @Transactional
     public GetIssueChartResDTO getIssueChart(Long memberId, Long projectId) {
         List<Issue> issueList = issueRepository.findByProjectId(projectId);
@@ -164,7 +171,7 @@ public class IssueService {
                     progress = progress + 1;
                 } else if (issue.getIssueStatus().equals(IssueStatus.REVIEW)) {
                     review = review + 1;
-                } else if (issue.getIssueStatus().equals(IssueStatus.DONE)){
+                } else if (issue.getIssueStatus().equals(IssueStatus.DONE)) {
                     done = done + 1;
                 }
             }
@@ -182,7 +189,7 @@ public class IssueService {
     @Transactional
     public List<GetMyIssueResDTO> getMyIssue(Long memberId, Long projectId) {
         // 전체 이슈 목록 조회
-        if (projectId==0) {
+        if (projectId == 0) {
             List<Belong> belongList = belongRepository.findByMemberId(memberId);
             List<GetMyIssueResDTO> myIssueResDTOList = new ArrayList<>();
 
@@ -244,7 +251,7 @@ public class IssueService {
             } else {
                 throw new BaseException(ISSUE_INVALID_ID);
             }
-        }  else {
+        } else {
             throw new BaseException(BELONG_INVALID_ID);
         }
     }
@@ -282,9 +289,9 @@ public class IssueService {
         // 소속 유저 존재 여부 검증
         if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
             for (Issue issue : issueList) {
-                    GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.getBelong().getMemberId());
-                    GetIssueResDTO getIssueResDTO = GetIssueResDTO.toDTO(issue, getMemberResDTO);
-                    getIssueResDTOList.add(getIssueResDTO);
+                GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.getBelong().getMemberId());
+                GetIssueResDTO getIssueResDTO = GetIssueResDTO.toDTO(issue, getMemberResDTO);
+                getIssueResDTOList.add(getIssueResDTO);
             }
         } else {
             throw new BaseException(BELONG_INVALID_ID);
@@ -295,7 +302,7 @@ public class IssueService {
 
     /**
      * 이슈 수정 API
-     * */
+     */
     @Transactional
     public String patchIssue(Long memberId, Long issueId, PatchIssueReqDTO patchIssueReqDTO) {
         Optional<Issue> issue = issueRepository.findById(issueId);
