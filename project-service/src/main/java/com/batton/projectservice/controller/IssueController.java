@@ -73,6 +73,24 @@ public class IssueController {
     }
 
     /**
+     * 이슈 도넛차트 조회
+     * @param memberId 조회하는 유저 아이디
+     * @param projectId 이슈 조회할 프로젝트 아이디
+     * @return GetIssueChartResDTO
+     * */
+    @GetMapping("/chart/{projectId}")
+    @Operation(summary = "이슈 도넛차트 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "701", description = "프로젝트 아이디 값을 확인해주세요."),
+            @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요.")
+    })
+    private BaseResponse<GetIssueChartResDTO> getIssueChart(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId) {
+        GetIssueChartResDTO getIssueChartResDTO = issueService.getIssueChart(memberId, projectId);
+
+        return new BaseResponse<>(getIssueChartResDTO);
+    }
+
+    /**
      * 개인 이슈 목록 조회 API
      * @param memberId 조회하는 유저 아이디
      * @param projectId 프로젝트 아이디
@@ -123,6 +141,24 @@ public class IssueController {
     })
     private BaseResponse<List<GetIssueResDTO>> getIssueList(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId) {
         List<GetIssueResDTO> getIssueResDTOList = issueService.getIssueList(memberId, projectId);
+
+        return new BaseResponse<>(getIssueResDTOList);
+    }
+
+    /**
+     * 이슈 히스토리 목록 조회 API
+     * @param memberId 조회하는 유저 아이디
+     * @param projectId 조회할 프로젝트의 아이디
+     * @return List<GetIssueResDTO>
+     * */
+    @GetMapping("/history/list/{projectId}")
+    @Operation(summary = "이슈 히스토리 목록 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
+            @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
+    })
+    private BaseResponse<List<GetIssueResDTO>> getIssueHistory(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId) {
+        List<GetIssueResDTO> getIssueResDTOList = issueService.getIssueHistory(memberId, projectId);
 
         return new BaseResponse<>(getIssueResDTOList);
     }
