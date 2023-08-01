@@ -1,23 +1,21 @@
 package com.batton.projectservice.service;
 
 import com.batton.projectservice.common.BaseException;
-import com.batton.projectservice.common.BaseResponseStatus;
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Project;
 import com.batton.projectservice.domain.Releases;
 import com.batton.projectservice.dto.release.PostReleasesReqDTO;
 import com.batton.projectservice.enums.GradeType;
+import com.batton.projectservice.enums.PublishState;
 import com.batton.projectservice.repository.BelongRepository;
 import com.batton.projectservice.repository.ProjectRepository;
 import com.batton.projectservice.repository.ReleasesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.Optional;
 
-import static com.batton.projectservice.common.BaseResponseStatus.BELONG_INVALID_ID;
-import static com.batton.projectservice.common.BaseResponseStatus.PROJECT_INVALID_ID;
+import static com.batton.projectservice.common.BaseResponseStatus.*;
 
 @RequiredArgsConstructor
 @Service
@@ -48,5 +46,28 @@ public class ReleasesService {
         } else {
             throw new BaseException(PROJECT_INVALID_ID);
         }
+    }
+
+    /**
+     * 릴리즈노트 발행(상태변경) API
+     */
+    public String patchPublish(Long memberId, Long releaseId) {
+        Optional<Releases> releases = releasesRepository.findById(releaseId);
+
+        if (releases.isPresent()) {
+            Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(releases.get().getProject().getId(), memberId);
+
+            if (belong.isEmpty()) {
+                throw new BaseException(BELONG_INVALID_ID);
+            } else if (belong.get().getGrade() == GradeType.MEMBER) {
+                throw new BaseException(MEMBER_NO_AUTHORITY);
+            }
+
+            releases.get().setPublishState(PublishState.PUBLISH);
+        } else {
+            throw new BaseException(RELEASE_NOTE_INVALID_ID);
+        }
+
+        return "릴리즈노트가 발행되었습니다.";
     }
 }
