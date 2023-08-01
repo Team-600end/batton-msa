@@ -10,7 +10,6 @@ import javax.persistence.Enumerated;
 
 @Getter
 public class PatchIssueReqDTO {
-    private Long projectId;
     private String issueTitle;
     private String issueContent;
     @Enumerated(EnumType.STRING)
@@ -18,8 +17,7 @@ public class PatchIssueReqDTO {
     private Long belongId;
 
     @Builder
-    public PatchIssueReqDTO(Long projectId, String issueTitle, String issueContent, IssueTag issueTag, Long belongId) {
-        this.projectId =projectId;
+    public PatchIssueReqDTO(String issueTitle, String issueContent, IssueTag issueTag, Long belongId) {
         this.issueTitle = issueTitle;
         this.issueContent = issueContent;
         this.issueTag = issueTag;

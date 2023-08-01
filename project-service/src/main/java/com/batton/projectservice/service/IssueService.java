@@ -78,8 +78,8 @@ public class IssueService {
      * */
     @Transactional
     public String patchIssueBoard(Long memberId, Long issueId, PatchIssueBoardReqDTO patchIssueBoardReqDTO) {
-        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(patchIssueBoardReqDTO.getProjectId(), memberId);
         Optional<Issue> issue =issueRepository.findById(issueId);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(issue.get().getProject().getId(), memberId);
 
         // 소속 유저 존재 여부 검증
         if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
@@ -233,9 +233,9 @@ public class IssueService {
      * 이슈 상세 조회 API
      */
     @Transactional
-    public GetIssueInfoResDTO getIssueInfo(Long memberId, Long issueId, Long projectId) {
+    public GetIssueInfoResDTO getIssueInfo(Long memberId, Long issueId) {
         Optional<Issue> issue = issueRepository.findById(issueId);
-        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(issue.get().getProject().getId(), memberId);
 
         // 소속 유저 존재 여부 검증
         if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
@@ -303,7 +303,7 @@ public class IssueService {
     @Transactional
     public String patchIssue(Long memberId, Long issueId, PatchIssueReqDTO patchIssueReqDTO) {
         Optional<Issue> issue = issueRepository.findById(issueId);
-        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(patchIssueReqDTO.getProjectId(), memberId);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(issue.get().getProject().getId(), memberId);
 
         // 소속 유저 존재 여부 검증
         if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
@@ -325,9 +325,9 @@ public class IssueService {
      * 이슈 삭제 API
      */
     @Transactional
-    public String deleteIssue(Long memberId, Long projectId, Long issueId) {
+    public String deleteIssue(Long memberId, Long issueId) {
         Optional<Issue> issue = issueRepository.findById(issueId);
-        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(issue.get().getProject().getId(), memberId);
 
         // 소속 유저 존재 여부 검증
         if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {

@@ -9,14 +9,12 @@ import javax.persistence.Enumerated;
 
 @Getter
 public class PatchIssueBoardReqDTO {
-    private Long projectId;
     private int seqNum;
     @Enumerated(EnumType.STRING)
     private IssueStatus afterStatus;
 
     @Builder
-    public PatchIssueBoardReqDTO(Long projectId, int seqNum, IssueStatus afterStatus) {
-        this.projectId = projectId;
+    public PatchIssueBoardReqDTO(int seqNum, IssueStatus afterStatus) {
         this.seqNum = seqNum;
         this.afterStatus = afterStatus;
     }

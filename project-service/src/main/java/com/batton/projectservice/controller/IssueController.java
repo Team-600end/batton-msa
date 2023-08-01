@@ -112,17 +112,16 @@ public class IssueController {
      * 이슈 상세 조회 API
      * @param memberId 조회하는 유저 아이디
      * @param issueId 조회할 이슈 아이디
-     * @param projectId 프로젝트 아이디
      * @return GetIssueInfoResDTO
      * */
-    @GetMapping("/{issueId}/{projectId}")
+    @GetMapping("/{issueId}")
     @Operation(summary = "이슈 상세 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<GetIssueInfoResDTO> getIssueInfo(@RequestHeader Long memberId, @PathVariable("issueId") Long issueId, @PathVariable("projectId") Long projectId) {
-        GetIssueInfoResDTO getIssueInfoResDTO = issueService.getIssueInfo(memberId, issueId, projectId);
+    private BaseResponse<GetIssueInfoResDTO> getIssueInfo(@RequestHeader Long memberId, @PathVariable("issueId") Long issueId) {
+        GetIssueInfoResDTO getIssueInfoResDTO = issueService.getIssueInfo(memberId, issueId);
 
         return new BaseResponse<>(getIssueInfoResDTO);
     }
@@ -186,18 +185,17 @@ public class IssueController {
     /**
      * 이슈 삭제 API
      * @param memberId 이슈 삭제하는 유저 아이디
-     * @param projectId 프로젝트 아이디
      * @param issueId 삭제할 이슈 아이디
      * @return String
      */
-    @DeleteMapping("/{projectId}/{issueId}")
+    @DeleteMapping("/{issueId}")
     @Operation(summary = "이슈 삭제")
     @ApiResponses({
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<String> deleteIssue(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId, @PathVariable("issueId") Long issueId) {
-        String deleteIssueRes = issueService.deleteIssue(memberId, projectId, issueId);
+    private BaseResponse<String> deleteIssue(@RequestHeader Long memberId, @PathVariable("issueId") Long issueId) {
+        String deleteIssueRes = issueService.deleteIssue(memberId, issueId);
 
         return new BaseResponse<>(deleteIssueRes);
     }
