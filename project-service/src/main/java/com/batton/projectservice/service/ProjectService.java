@@ -3,10 +3,7 @@ package com.batton.projectservice.service;
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Project;
-import com.batton.projectservice.dto.project.PatchProjectReqDTO;
-import com.batton.projectservice.dto.project.PostProjectReqDTO;
-import com.batton.projectservice.dto.project.ProjectTeamReqDTO;
-import com.batton.projectservice.dto.project.GetProjectResDTO;
+import com.batton.projectservice.dto.project.*;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.repository.BelongRepository;
@@ -141,6 +138,29 @@ public class ProjectService {
         }
 
         return "프로젝트 삭제 성공";
+    }
+
+    /**
+     * 프로젝트 상세 조회 API
+     * */
+    @Transactional
+    public GetProjectInfoResDTO getProject(Long memberId, Long projectId) {
+        Optional<Project> project = projectRepository.findById(projectId);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
+
+        //프로젝트 존재 유뮤 확인
+        if (project.isPresent()) {
+            // 소속 유저 확인
+            if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+                GetProjectInfoResDTO getProjectInfoResDTO = GetProjectInfoResDTO.toDTO(project.get());
+
+                return getProjectInfoResDTO;
+            } else {
+                throw new BaseException(BELONG_INVALID_ID);
+            }
+        } else {
+            throw new BaseException(PROJECT_INVALID_ID);
+        }
     }
 
     /**

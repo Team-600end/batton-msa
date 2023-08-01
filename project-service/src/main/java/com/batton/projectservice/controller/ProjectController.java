@@ -1,6 +1,7 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
+import com.batton.projectservice.dto.project.GetProjectInfoResDTO;
 import com.batton.projectservice.dto.project.PatchProjectReqDTO;
 import com.batton.projectservice.dto.project.PostProjectReqDTO;
 import com.batton.projectservice.dto.project.GetProjectResDTO;
@@ -35,6 +36,7 @@ public class ProjectController {
 
     /**
      * 프로젝트 고유키 중복 확인 API
+     * @param projectKey 확인할 프로젝트 고유키
      */
     @GetMapping("/project-key/{projectKey}")
     @Operation(summary = "프로젝트 고유키 중복 확인")
@@ -77,10 +79,28 @@ public class ProjectController {
             @ApiResponse(responseCode = "701", description = "프로젝트 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<String> deleteProject (@RequestHeader Long memberId, @PathVariable("projectId") Long projectId) {
+    private BaseResponse<String> deleteProject(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId) {
         String deleteProjectRes = projectService.deleteProject(memberId, projectId);
 
         return new BaseResponse<>(deleteProjectRes);
+    }
+
+    /**
+     * 프로젝트 상세 조회 API
+     * @param memberId 프로젝트 조회 작업을하는 유저 아이디
+     * @param projectId 조회할 프로젝트 아이디
+     * @return GetProjectInfoResDTO
+     */
+    @GetMapping("/{projectId}")
+    @Operation(summary = "프로젝트 상세 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "701", description = "프로젝트 아이디 값을 확인해주세요."),
+            @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요.")
+    })
+    private BaseResponse<GetProjectInfoResDTO> getProject(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId) {
+        GetProjectInfoResDTO getProjectInfoResDTO = projectService.getProject(memberId, projectId);
+
+        return new BaseResponse<>(getProjectInfoResDTO);
     }
 
     /**
