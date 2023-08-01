@@ -6,18 +6,18 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class GetReleasesIssueReqDTO {
+public class GetReleasesIssueResDTO {
     private IssueTag issueTag;
     private String issueTitle;
 
     @Builder
-    public GetReleasesIssueReqDTO(IssueTag issueTag, String issueTitle) {
+    public GetReleasesIssueResDTO(IssueTag issueTag, String issueTitle) {
         this.issueTag = issueTag;
         this.issueTitle = issueTitle;
     }
 
-    public static GetReleasesIssueReqDTO toDTO(Issue issue) {
-        return GetReleasesIssueReqDTO.builder()
+    public static GetReleasesIssueResDTO toDTO(Issue issue) {
+        return GetReleasesIssueResDTO.builder()
                 .issueTag(issue.getIssueTag())
                 .issueTitle(issue.getIssueTitle())
                 .build();

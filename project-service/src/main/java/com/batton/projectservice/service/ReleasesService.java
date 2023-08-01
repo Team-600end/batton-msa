@@ -5,7 +5,8 @@ import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Project;
 import com.batton.projectservice.domain.Releases;
-import com.batton.projectservice.dto.release.GetReleasesIssueReqDTO;
+import com.batton.projectservice.dto.release.GetReleasesIssueResDTO;
+import com.batton.projectservice.dto.release.GetReleasesResDTO;
 import com.batton.projectservice.dto.release.PostReleasesReqDTO;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.PublishState;
@@ -103,9 +104,9 @@ public class ReleasesService {
     /**
      * 릴리즈노트에 포함된 이슈 목록 조회 API
      */
-    public List<GetReleasesIssueReqDTO> getReleasesIssues(Long releaseId) {
+    public List<GetReleasesIssueResDTO> getReleasesIssues(Long releaseId) {
         Optional<Releases> releases = releasesRepository.findById(releaseId);
-        List<GetReleasesIssueReqDTO> getReleasesIssueReqDTO = new ArrayList<>();
+        List<GetReleasesIssueResDTO> getReleasesIssueResDTO = new ArrayList<>();
 
         if (releases.isPresent()) {
             List<Long> issueList = releases.get().getIssueList();
@@ -114,7 +115,7 @@ public class ReleasesService {
                 Optional<Issue> issue = issueRepository.findById(issueId);
 
                 if(issue.isPresent()){
-                    getReleasesIssueReqDTO.add(GetReleasesIssueReqDTO.toDTO(issue.get()));
+                    getReleasesIssueResDTO.add(GetReleasesIssueResDTO.toDTO(issue.get()));
                 } else {
                     throw new BaseException(ISSUE_INVALID_ID);
                 }
@@ -123,6 +124,24 @@ public class ReleasesService {
             throw new BaseException(RELEASE_NOTE_INVALID_ID);
         }
 
-        return getReleasesIssueReqDTO;
+        return getReleasesIssueResDTO;
+    }
+
+    /**
+     * 릴리즈노트에 상세 조회 API
+     */
+    public GetReleasesResDTO getReleases(Long releaseId) {
+        Optional<Releases> releases = releasesRepository.findById(releaseId);
+
+        if (releases.isPresent()) {
+            String publishedDate = releases.get().getUpdatedAt().getYear() + ". " + releases.get().getUpdatedAt().getMonthValue() + ". " + releases.get().getUpdatedAt().getDayOfMonth();
+            List<GetReleasesIssueResDTO> issueList = getReleasesIssues(releaseId);
+
+            GetReleasesResDTO getReleasesResDTO = GetReleasesResDTO.toDTO(releases.get(), publishedDate, issueList);
+
+            return getReleasesResDTO;
+        } else {
+            throw new BaseException(RELEASE_NOTE_INVALID_ID);
+        }
     }
 }

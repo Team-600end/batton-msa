@@ -1,14 +1,13 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
-import com.batton.projectservice.dto.release.GetReleasesIssueReqDTO;
+import com.batton.projectservice.dto.release.GetReleasesIssueResDTO;
+import com.batton.projectservice.dto.release.GetReleasesResDTO;
 import com.batton.projectservice.dto.release.PostReleasesReqDTO;
 import com.batton.projectservice.service.ReleasesService;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +27,7 @@ public class ReleasesController {
      */
     @PostMapping
     @Operation(summary = "릴리즈노트 생성 요청")
-    public BaseResponse<Long> postReleases(@RequestHeader Long memberId, @RequestBody PostReleasesReqDTO postReleasesReqDTO) {
+    private BaseResponse<Long> postReleases(@RequestHeader Long memberId, @RequestBody PostReleasesReqDTO postReleasesReqDTO) {
         Long postReleasesRes = releasesService.postReleases(memberId, postReleasesReqDTO);
 
         return new BaseResponse<>(postReleasesRes);
@@ -46,7 +45,7 @@ public class ReleasesController {
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "708", description = "릴리즈 노트 아이디 값을 확인해주세요.")
     })
-    public BaseResponse<String> patchPublish(@RequestHeader Long memberId, @PathVariable Long releaseId) {
+    private BaseResponse<String> patchPublish(@RequestHeader Long memberId, @PathVariable("releaseId") Long releaseId) {
         String publishReleasesRes = releasesService.patchPublish(memberId, releaseId);
 
         return new BaseResponse<>(publishReleasesRes);
@@ -64,7 +63,7 @@ public class ReleasesController {
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "708", description = "릴리즈 노트 아이디 값을 확인해주세요.")
     })
-    public BaseResponse<String> deleteReleases(@RequestHeader Long memberId, @PathVariable Long releaseId) {
+    private BaseResponse<String> deleteReleases(@RequestHeader Long memberId, @PathVariable("releaseId") Long releaseId) {
         String deleteReleasesRes = releasesService.deleteReleases(memberId, releaseId);
 
         return new BaseResponse<>(deleteReleasesRes);
@@ -80,9 +79,24 @@ public class ReleasesController {
             @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "708", description = "릴리즈 노트 아이디 값을 확인해주세요.")
     })
-    public BaseResponse<List<GetReleasesIssueReqDTO>> getReleasesIssues(@PathVariable Long releaseId) {
-        List<GetReleasesIssueReqDTO> getReleasesIssueRes = releasesService.getReleasesIssues(releaseId);
+    private BaseResponse<List<GetReleasesIssueResDTO>> getReleasesIssues(@PathVariable("releaseId") Long releaseId) {
+        List<GetReleasesIssueResDTO> getReleasesIssueRes = releasesService.getReleasesIssues(releaseId);
 
         return new BaseResponse<>(getReleasesIssueRes);
+    }
+
+    /**
+     * 릴리즈 노트 상세 조회 API
+     * @param releaseId 이슈 추가할 릴리즈 노트 아이디
+     */
+    @GetMapping("/{releaseId}")
+    @Operation(summary = "릴리즈노트 상세 조회 요청")
+    @ApiResponses({
+            @ApiResponse(responseCode = "708", description = "릴리즈 노트 아이디 값을 확인해주세요.")
+    })
+    private BaseResponse<GetReleasesResDTO> getReleases(@PathVariable("releaseId") Long releaseId) {
+        GetReleasesResDTO getReleasesRes = releasesService.getReleases(releaseId);
+
+        return new BaseResponse<>(getReleasesRes);
     }
 }
