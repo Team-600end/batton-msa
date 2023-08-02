@@ -10,6 +10,7 @@ import com.batton.projectservice.domain.Report;
 import com.batton.projectservice.dto.client.GetMemberResDTO;
 import com.batton.projectservice.dto.comment.GetCommentResDTO;
 import com.batton.projectservice.dto.comment.PostCommentReqDTO;
+import com.batton.projectservice.dto.report.GetAddReportResDTO;
 import com.batton.projectservice.dto.report.GetIssueReportResDTO;
 import com.batton.projectservice.dto.report.PatchIssueReportReqDTO;
 import com.batton.projectservice.dto.report.PostIssueReportReqDTO;
@@ -175,5 +176,20 @@ public class ReportService {
         }
 
         return getIssueReportResDTO;
+    }
+
+    /**
+     * 추가할 이슈 레포트 조회 API
+     */
+    public GetAddReportResDTO getAddReport(Long issueId) {
+        Optional<Report> report = reportRepository.findByIssueId(issueId);
+
+        if (report.isPresent()) {
+            String issueTitle = issueRepository.findById(issueId).get().getIssueTitle();
+            GetAddReportResDTO getAddReport = GetAddReportResDTO.toDTO(report.get(), issueTitle);
+            return getAddReport;
+        } else {
+            throw new BaseException(ISSUE_REPORT_INVALID_ID);
+        }
     }
 }
