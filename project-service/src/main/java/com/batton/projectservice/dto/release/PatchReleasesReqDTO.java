@@ -13,7 +13,6 @@ public class PatchReleasesReqDTO {
     private int versionPatch;
     private String releaseContent;
     private List<Long> issueList;
-    private PublishState publishState;
 
     @Builder
     public PatchReleasesReqDTO(int versionMajor, int versionMinor, int versionPatch, String releaseContent, List<Long> issueList) {

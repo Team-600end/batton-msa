@@ -16,7 +16,6 @@ public class PostReleasesReqDTO {
     private int versionPatch;
     private String releaseContent;
     private List<Long> issueList;
-    private PublishState publishState;
 
     @Builder
     public PostReleasesReqDTO(Long projectId, int versionMajor, int versionMinor, int versionPatch, String releaseContent, List<Long> issueList) {
@@ -36,7 +35,7 @@ public class PostReleasesReqDTO {
                 .project(project)
                 .releaseContent(dto.getReleaseContent())
                 .issueList(dto.getIssueList())
-                .publishState(dto.getPublishState())
+                .publishState(publishState)
                 .build();
     }
 }
