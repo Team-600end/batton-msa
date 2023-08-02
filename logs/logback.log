@@ -1,2 +1,3 @@
-[2023-08-01 04:15:36:514] INFO  13096 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
-[2023-08-01 04:15:39:3064] INFO  13096 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 2.946 seconds (JVM running for 3.274)
+[2023-08-02 13:20:55:10086] INFO  22204 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-02 13:21:21:36056] INFO  22204 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 35.379 seconds (JVM running for 42.846)
+[2023-08-02 13:25:37:292212] INFO  22204 --- [nio-8081-exec-5] c.b.m.controller.MemberController        : getMember 요청: GetMemberInfoResDTO(memberId=2, nickname=승희, profileImage=null, email=lsh929500@gmail.com)
