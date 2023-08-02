@@ -8,6 +8,7 @@ import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.repository.BelongRepository;
 import com.batton.projectservice.repository.ProjectRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -31,6 +32,17 @@ public class ProjectService {
     public PostProjectResDTO postProject(Long memberId, PostProjectReqDTO postProjectReqDTO) {
         Project project = postProjectReqDTO.toEntity(postProjectReqDTO);
         Long newProjectId = projectRepository.save(project).getId();
+
+        // 프로젝트 생성한 사람일 경우 LEADER 권한 부여
+        Belong leaderBelong = Belong.builder()
+                .project(project)
+                .memberId(memberId)
+                .nickname(postProjectReqDTO.getNickname())
+                .status(Status.ENABLED)
+                .grade(GradeType.LEADER)
+                .build();
+
+        belongRepository.save(leaderBelong);
 
         //소속 테이블에 팀원들 추가하는 함수 불러오기
         postProjectMember(memberId, newProjectId, postProjectReqDTO.getProjectMemberList());
@@ -61,27 +73,19 @@ public class ProjectService {
     @Transactional
     public String postProjectMember(Long memberId, Long projectId, List<ProjectTeamReqDTO> teamMemberList) {
         Optional<Project> project = projectRepository.findById(projectId);
+        Optional<Belong> leaderBelong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
 
         // 프로젝트 존재 여부 확인
         if (project.isPresent()) {
-            for (ProjectTeamReqDTO projectTeamReqDTO : teamMemberList) {
-                //프로젝트 생성한 사람일 경우 LEADER 권한 부여
-                if (projectTeamReqDTO.getMemberId() == memberId) {
-                    Belong belong = Belong.builder()
-                            .project(project.get())
-                            .memberId(projectTeamReqDTO.getMemberId())
-                            .nickname(projectTeamReqDTO.getNickname())
-                            .status(Status.ENABLED)
-                            .grade(GradeType.LEADER)
-                            .build();
-
-                    belongRepository.save(belong);
-                } else {
-                    //프로젝트 생성한 사람이 아닐 경우 다른 권한 부여
+            // 리더 권한 확인
+            if (leaderBelong.isPresent() && leaderBelong.get().getGrade() == GradeType.LEADER) {
+                // 팀원 추가
+                for (ProjectTeamReqDTO projectTeamReqDTO : teamMemberList) {
                     Belong belong = ProjectTeamReqDTO.toEntity(project.get(), projectTeamReqDTO, Status.ENABLED);
-
                     belongRepository.save(belong);
                 }
+            } else {
+                throw new BaseException(MEMBER_NO_AUTHORITY);
             }
         } else {
             throw new BaseException(PROJECT_INVALID_ID);

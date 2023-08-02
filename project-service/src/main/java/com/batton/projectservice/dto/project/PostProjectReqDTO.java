@@ -11,14 +11,16 @@ public class PostProjectReqDTO {
     private String projectKey;
     private String projectContent;
     private String projectImage;
+    private String nickname;
     private List<ProjectTeamReqDTO> projectMemberList;
 
     @Builder
-    public PostProjectReqDTO(String projectTitle, String projectKey, String projectContent, String projectImage, List<ProjectTeamReqDTO> projectMemberList) {
+    public PostProjectReqDTO(String projectTitle, String projectKey, String projectContent, String projectImage, String nickname, List<ProjectTeamReqDTO> projectMemberList) {
         this.projectTitle = projectTitle;
         this.projectKey = projectKey;
         this.projectContent = projectContent;
         this.projectImage = projectImage;
+        this.nickname = nickname;
         this.projectMemberList = projectMemberList;
     }
 
