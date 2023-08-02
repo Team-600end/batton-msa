@@ -2,6 +2,7 @@ package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
 import com.batton.projectservice.dto.comment.PostCommentReqDTO;
+import com.batton.projectservice.dto.report.GetIssueReportResDTO;
 import com.batton.projectservice.dto.report.PatchIssueReportReqDTO;
 import com.batton.projectservice.dto.report.PostIssueReportReqDTO;
 import com.batton.projectservice.service.ReportService;
@@ -10,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import javax.ws.rs.Path;
 
 @RequiredArgsConstructor
 @RestController
@@ -91,5 +94,18 @@ public class ReportController {
         String postCommentRes = reportService.postComment(reportId, memberId, postCommentReqDTO);
 
         return new BaseResponse<>(postCommentRes);
+    }
+
+    /**
+     * 이슈 레포트 조회 API
+     * @param reportId 조회할 이슈 레포트 아이디
+     */
+    @GetMapping("/{reportId}")
+    @Operation(summary = "이슈 레포트 조회")
+    @ApiResponse(responseCode = "705", description = "이슈 레포트 아이디 값을 확인해주세요.")
+    private BaseResponse<GetIssueReportResDTO> getIssueReport(@PathVariable("reportId") Long reportId) {
+        GetIssueReportResDTO getIssueReportResDTO = reportService.getIssueReport(reportId);
+
+        return new BaseResponse<>(getIssueReportResDTO);
     }
 }

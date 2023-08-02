@@ -7,10 +7,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @NoArgsConstructor
+@Getter
 public class PostCommentReqDTO {
     private String commentContent;
+
     @Builder
     public PostCommentReqDTO(String commentContent) {
         this.commentContent = commentContent;
