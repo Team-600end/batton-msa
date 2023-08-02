@@ -37,6 +37,9 @@ public class ProjectController {
      */
     @GetMapping("/project-key/{projectKey}")
     @Operation(summary = "프로젝트 고유키 중복 확인")
+    @ApiResponses({
+            @ApiResponse(responseCode = "708", description = "중복된 프로젝트 키입니다.")
+    })
     private BaseResponse<String> getCheckKey(@PathVariable("projectKey") String projectKey){
         String check = projectService.getCheckKey(projectKey);
 
