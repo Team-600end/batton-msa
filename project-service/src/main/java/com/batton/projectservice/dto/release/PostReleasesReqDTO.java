@@ -19,17 +19,16 @@ public class PostReleasesReqDTO {
     private PublishState publishState;
 
     @Builder
-    public PostReleasesReqDTO(Long projectId, int versionMajor, int versionMinor, int versionPatch, String releaseContent, List<Long> issueList, PublishState publishState) {
+    public PostReleasesReqDTO(Long projectId, int versionMajor, int versionMinor, int versionPatch, String releaseContent, List<Long> issueList) {
         this.projectId = projectId;
         this.versionMajor = versionMajor;
         this.versionMinor = versionMinor;
         this.versionPatch = versionPatch;
         this.releaseContent = releaseContent;
         this.issueList = issueList;
-        this.publishState = publishState;
     }
 
-    public static Releases toEntity(Project project, PostReleasesReqDTO dto) {
+    public static Releases toEntity(Project project, PostReleasesReqDTO dto, PublishState publishState) {
         return Releases.builder()
                 .versionMajor(dto.getVersionMajor())
                 .versionMinor(dto.getVersionMinor())
