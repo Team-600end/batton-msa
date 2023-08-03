@@ -60,7 +60,7 @@ public class ProjectService {
 
         for (Project project : projectList) {
             if (project.getProjectKey().equals(projectKey)) {
-                return "중복된 프로젝트 키입니다.";
+                throw new BaseException(PROJECT_KEY_EXISTS);
             }
         }
 
