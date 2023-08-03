@@ -56,3 +56,4 @@ public class Releases extends BaseEntity {
         this.publishState = publishState;
     }
 }
+

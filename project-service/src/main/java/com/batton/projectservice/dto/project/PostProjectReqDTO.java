@@ -3,29 +3,34 @@ package com.batton.projectservice.dto.project;
 import com.batton.projectservice.domain.Project;
 import lombok.Builder;
 import lombok.Getter;
+
 import java.util.List;
 
 @Getter
 public class PostProjectReqDTO {
     private String projectTitle;
+    private String projectKey;
     private String projectContent;
     private String projectImage;
-    private List<ProjectTeamReqDTO> teamMemberList;
+    private String nickname;
+    private List<ProjectTeamReqDTO> projectMemberList;
 
     @Builder
-    public PostProjectReqDTO(String projectTitle, String projectContent, String projectImage, List<ProjectTeamReqDTO> teamMemberList) {
+    public PostProjectReqDTO(String projectTitle, String projectKey, String projectContent, String projectImage, String nickname, List<ProjectTeamReqDTO> projectMemberList) {
         this.projectTitle = projectTitle;
+        this.projectKey = projectKey;
         this.projectContent = projectContent;
         this.projectImage = projectImage;
-        this.teamMemberList = teamMemberList;
+        this.nickname = nickname;
+        this.projectMemberList = projectMemberList;
     }
 
-    public static Project toEntity(PostProjectReqDTO dto, String projectKey) {
+    public static Project toEntity(PostProjectReqDTO postProjectReqDTO) {
         return Project.builder()
-                .projectTitle(dto.getProjectTitle())
-                .projectContent(dto.getProjectContent())
-                .projectImage(dto.getProjectImage())
-                .projectKey(projectKey)
+                .projectTitle(postProjectReqDTO.getProjectTitle())
+                .projectContent(postProjectReqDTO.getProjectContent())
+                .projectImage(postProjectReqDTO.getProjectImage())
+                .projectKey(postProjectReqDTO.getProjectKey())
                 .build();
     }
 }

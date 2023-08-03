@@ -16,6 +16,7 @@ import com.batton.projectservice.dto.issue.PatchIssueBoardReqDTO;
 import com.batton.projectservice.dto.issue.PostIssueReqDTO;
 import com.batton.projectservice.dto.issue.*;
 import com.batton.projectservice.enums.GradeType;
+import com.batton.projectservice.enums.IssueCase;
 import com.batton.projectservice.enums.IssueStatus;
 import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.repository.BelongRepository;
@@ -88,20 +89,32 @@ public class IssueService {
         if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
             // 이슈 존재 여부 검증
             if (issue.isPresent()) {
-                // 이슈를 완료 상태로 변경하는 권한 확인
-                if (patchIssueBoardReqDTO.getAfterStatus().equals(IssueStatus.DONE) && belong.get().getGrade().equals(GradeType.MEMBER)) {
-                    throw new BaseException(MEMBER_NO_AUTHORITY);
-                }
                 List<Issue> issueList = issueRepository.findByIssueStatusOrderByIssueSeq(patchIssueBoardReqDTO.getAfterStatus());
-
-                // 이후 순서의 이슈들 seq 1씩 증가
-                for (int i = patchIssueBoardReqDTO.getSeqNum(); i < issueList.size(); i++) {
-                    issueList.get(i).updateSeq(issueList.get(i).getIssueSeq() + 1);
-                }
                 int preIssueNum = 0;
-                // 이전 순서의 이슈 seq
-                if (patchIssueBoardReqDTO.getSeqNum() != 0) {
-                    preIssueNum = issueList.get(patchIssueBoardReqDTO.getSeqNum() - 1).getIssueSeq();
+
+                // 같은 상태에서 순서를 밑으로 내리는 경우
+                if (patchIssueBoardReqDTO.getIssueCase().equals(IssueCase.SPECIFIC)) {
+                    // 이후 순서의 이슈들 seq 1씩 증가
+                    for (int i = patchIssueBoardReqDTO.getSeqNum() + 1; i < issueList.size(); i++) {
+                        issueList.get(i).updateSeq(issueList.get(i).getIssueSeq() + 1);
+                    }
+                    // 이전 순서의 이슈 seq
+                    if (patchIssueBoardReqDTO.getSeqNum() != 0) {
+                        preIssueNum = issueList.get(patchIssueBoardReqDTO.getSeqNum()).getIssueSeq();
+                    }
+                } else {
+                    // 이슈를 완료 상태로 변경하는 권한 확인
+                    if (patchIssueBoardReqDTO.getAfterStatus().equals(IssueStatus.DONE) && belong.get().getGrade().equals(GradeType.MEMBER)) {
+                        throw new BaseException(MEMBER_NO_AUTHORITY);
+                    }
+                    // 이후 순서의 이슈들 seq 1씩 증가
+                    for (int i = patchIssueBoardReqDTO.getSeqNum(); i < issueList.size(); i++) {
+                        issueList.get(i).updateSeq(issueList.get(i).getIssueSeq() + 1);
+                    }
+                    // 이전 순서의 이슈 seq
+                    if (patchIssueBoardReqDTO.getSeqNum() != 0) {
+                        preIssueNum = issueList.get(patchIssueBoardReqDTO.getSeqNum() - 1).getIssueSeq();
+                    }
                 }
                 // 이슈 상태, 순서 변경
                 issue.get().updateIssue(preIssueNum + 1, patchIssueBoardReqDTO.getAfterStatus());
@@ -122,10 +135,10 @@ public class IssueService {
     public GetIssueBoardResDTO getIssueBoard(Long memberId, Long projectId) {
         List<Issue> issueList = issueRepository.findByProjectId(projectId);
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
-        List<GetIssueResDTO> todoIssueList = new ArrayList<>();
-        List<GetIssueResDTO> progressIssueList = new ArrayList<>();
-        List<GetIssueResDTO> reviewIssueList = new ArrayList<>();
-        List<GetIssueResDTO> doneIssueList = new ArrayList<>();
+        List<GetIssueBoardInfoResDTO> todoIssueList = new ArrayList<>();
+        List<GetIssueBoardInfoResDTO> progressIssueList = new ArrayList<>();
+        List<GetIssueBoardInfoResDTO> reviewIssueList = new ArrayList<>();
+        List<GetIssueBoardInfoResDTO> doneIssueList = new ArrayList<>();
 
         // 소속 유저 존재 여부 검증
         if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
@@ -134,13 +147,13 @@ public class IssueService {
                 GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.getBelong().getMemberId());
 
                 if (issue.getIssueStatus().equals(IssueStatus.TODO)) {
-                    todoIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
+                    todoIssueList.add(GetIssueBoardInfoResDTO.toDTO(issue, getMemberResDTO));
                 } else if (issue.getIssueStatus().equals(IssueStatus.PROGRESS)) {
-                    progressIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
+                    progressIssueList.add(GetIssueBoardInfoResDTO.toDTO(issue, getMemberResDTO));
                 } else if (issue.getIssueStatus().equals(IssueStatus.REVIEW)) {
-                    reviewIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
+                    reviewIssueList.add(GetIssueBoardInfoResDTO.toDTO(issue, getMemberResDTO));
                 } else if (issue.getIssueStatus().equals(IssueStatus.DONE)) {
-                    doneIssueList.add(GetIssueResDTO.toDTO(issue, getMemberResDTO));
+                    doneIssueList.add(GetIssueBoardInfoResDTO.toDTO(issue, getMemberResDTO));
                 }
             }
         } else {
