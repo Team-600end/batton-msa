@@ -132,6 +132,7 @@ public class ReleasesService {
         Optional<List<Releases>> releases = releasesRepository.findByProjectIdOrderByCreatedAtAsc(projectId);
         List<GetProjectReleasesListResDTO> getProjectReleasesListResDTOList = new ArrayList<>();
         String versionChanged;
+        String createdDate;
 
         // 프로젝트 존재 여부 검증
         if (project.isPresent()) {
@@ -140,6 +141,8 @@ public class ReleasesService {
                 List<Releases> releasesList = releases.get();
                 for (int i = 0; i < releasesList.size(); i++) {
                     Releases release = releasesList.get(i);
+
+                    // 버전 변경 여부 검증
                     if (i == 0) {
                         versionChanged = "Major";
                     } else {
@@ -151,11 +154,14 @@ public class ReleasesService {
                         } else {
                             versionChanged = "Patch";
                         }
-
-                        GetProjectReleasesListResDTO getProjectReleasesListResDTO = GetProjectReleasesListResDTO.toDTO(versionChanged, release.getVersionMajor(), release.getVersionMinor(), release.getVersionPatch(), release.getCreatedAt(), release.getIssueList());
-                        getProjectReleasesListResDTOList.add(getProjectReleasesListResDTO);
                     }
 
+                    // 이슈 태그 리스트
+
+
+                    createdDate = release.getCreatedAt().getYear() + ". " + release.getCreatedAt().getMonthValue() + ". " + release.getCreatedAt().getDayOfMonth();
+                    GetProjectReleasesListResDTO getProjectReleasesListResDTO = GetProjectReleasesListResDTO.toDTO(versionChanged, release.getVersionMajor(), release.getVersionMinor(), release.getVersionPatch(), createdDate, release.getIssueList());
+                    getProjectReleasesListResDTOList.add(getProjectReleasesListResDTO);
                 }
                 return getProjectReleasesListResDTOList;
 
