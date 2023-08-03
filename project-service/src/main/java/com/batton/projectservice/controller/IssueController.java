@@ -199,4 +199,17 @@ public class IssueController {
 
         return new BaseResponse<>(deleteIssueRes);
     }
+
+    /**
+     * 완료된 이슈 목록 조회 API
+     * @param projectId 조회할 프로젝트의 아이디
+     * @return List<GetIssueResDTO>
+     */
+    @GetMapping("/{projectId}/done-list")
+    @Operation(summary = "완료된 이슈 목록 조회")
+    private BaseResponse<List<GetIssueResDTO>> getDoneIssue(@PathVariable("projectId") Long projectId) {
+        List<GetIssueResDTO> getIssueResDTOList = issueService.getDoneIssue(projectId);
+
+        return new BaseResponse<>(getIssueResDTOList);
+    }
 }

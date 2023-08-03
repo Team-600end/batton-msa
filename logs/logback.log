@@ -1,3 +1,5 @@
+[2023-08-02 17:16:17:97621557] INFO  30937 --- [nio-8081-exec-9] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=서현, profileImage=null)
+[2023-08-02 17:16:17:97621602] INFO  30937 --- [io-8081-exec-10] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=서현, profileImage=null)
 [2023-08-03 09:41:38:11542] INFO  45652 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
 [2023-08-03 09:42:11:44867] INFO  45652 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 44.193 seconds (JVM running for 48.515)
 [2023-08-03 09:44:24:178237] INFO  45652 --- [nio-8081-exec-3] c.b.m.controller.MemberController        : getMember 요청: GetMemberInfoResDTO(memberId=2, nickname=승희, profileImage=null, email=lsh929500@gmail.com)
