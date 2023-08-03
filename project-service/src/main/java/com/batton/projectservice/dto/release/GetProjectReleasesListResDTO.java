@@ -14,10 +14,12 @@ public class GetProjectReleasesListResDTO {
     private int versionMinor;
     private int versionPatch;
     private String createdDate;
-    private List<Long> issueList;
+//    private List<Long> issueList;
+//    private List<Issue> issueList;
+    private List<ReleaseIssueListResDTO> issueList;
 
     @Builder
-    public GetProjectReleasesListResDTO(String versionChanged, int versionMajor, int versionMinor, int versionPatch, String createdDate, List<Long> issueList) {
+    public GetProjectReleasesListResDTO(String versionChanged, int versionMajor, int versionMinor, int versionPatch, String createdDate, List<ReleaseIssueListResDTO> issueList) {
         this.versionChanged = versionChanged;
         this.versionMajor = versionMajor;
         this.versionMinor = versionMinor;
@@ -26,7 +28,7 @@ public class GetProjectReleasesListResDTO {
         this.issueList = issueList;
     }
 
-    public static GetProjectReleasesListResDTO toDTO(String versionChanged, int versionMajor, int versionMinor, int versionPatch, String createdDate, List<Long> issueList) {
+    public static GetProjectReleasesListResDTO toDTO(String versionChanged, int versionMajor, int versionMinor, int versionPatch, String createdDate, List<ReleaseIssueListResDTO> issueList) {
         return GetProjectReleasesListResDTO.builder()
                 .versionChanged(versionChanged)
                 .versionMajor(versionMajor)

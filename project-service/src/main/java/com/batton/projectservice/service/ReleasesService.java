@@ -10,6 +10,7 @@ import com.batton.projectservice.dto.release.GetReleasesResDTO;
 import com.batton.projectservice.dto.release.GetProjectReleasesListResDTO;
 import com.batton.projectservice.dto.release.PatchReleasesReqDTO;
 import com.batton.projectservice.dto.release.PostReleasesReqDTO;
+import com.batton.projectservice.dto.release.ReleaseIssueListResDTO;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.PublishState;
 import com.batton.projectservice.repository.BelongRepository;
@@ -206,10 +207,17 @@ public class ReleasesService {
                     }
 
                     // 이슈 태그 리스트
-
+                    List<ReleaseIssueListResDTO> issueList = new ArrayList<>();
+                    for (Long issueId : release.getIssueList()) {
+                        Optional<Issue> issue = issueRepository.findById(issueId);
+                        // 이슈 존재 여부 검증
+                        if (issue.isPresent()) {
+                            issueList.add(ReleaseIssueListResDTO.toDTO(issueId, issue.get()));
+                        }
+                    }
 
                     createdDate = release.getCreatedAt().getYear() + ". " + release.getCreatedAt().getMonthValue() + ". " + release.getCreatedAt().getDayOfMonth();
-                    GetProjectReleasesListResDTO getProjectReleasesListResDTO = GetProjectReleasesListResDTO.toDTO(versionChanged, release.getVersionMajor(), release.getVersionMinor(), release.getVersionPatch(), createdDate, release.getIssueList());
+                    GetProjectReleasesListResDTO getProjectReleasesListResDTO = GetProjectReleasesListResDTO.toDTO(versionChanged, release.getVersionMajor(), release.getVersionMinor(), release.getVersionPatch(), createdDate, issueList);
                     getProjectReleasesListResDTOList.add(getProjectReleasesListResDTO);
                 }
                 return getProjectReleasesListResDTOList;
