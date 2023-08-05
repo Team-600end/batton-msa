@@ -58,6 +58,9 @@ dependencies {
     // JPA, Hibernate
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.hibernate:hibernate-validator-test-utils:5.4.3.Final'
+
+    //JSON
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 }
 
 dependencyManagement {

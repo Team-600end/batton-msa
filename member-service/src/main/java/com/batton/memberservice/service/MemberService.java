@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -24,6 +26,7 @@ import static com.batton.memberservice.common.BaseResponseStatus.*;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ObjectStorageService objectStorageService;
 
     /**
      * 유저 정보 조회 API(Feign Client)
@@ -82,18 +85,19 @@ public class MemberService {
     /**
      * 유저 정보 수정 API
      * */
-    public String patchMember(Long memberId, PatchMemberReqDTO patchMemberReqDTO) {
+    public String patchMember(Long memberId, MultipartFile profileImage, String nickname) {
         Optional<Member> member = memberRepository.findById(memberId);
-
+        String url;
         // 유저 존재 여부 확인
         if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
-            member.get().update(patchMemberReqDTO.getNickname(), patchMemberReqDTO.getProfileImage());
+            url = objectStorageService.uploadFile(profileImage);
+            member.get().update(nickname, url);
         } else {
             log.info("patchMember 예외: " + MEMBER_INVALID_USER_ID.getMessage());
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
 
-        return "회원 정보 수정되었습니다.";
+        return url;
     }
 
     /**

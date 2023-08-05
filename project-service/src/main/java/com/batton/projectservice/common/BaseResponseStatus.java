@@ -23,8 +23,8 @@ public enum BaseResponseStatus {
     ISSUE_REPORT_INVALID_ID(false, 705, "이슈 레포트 아이디 값을 확인해주세요."),
     ISSUE_REPORT_EXISTS(false, 706, "이슈 레포트가 이미 존재합니다."),
     PROJECT_NOT_EXISTS(false, 707, "참여한 프로젝트가 없습니다."),
-    PROJECT_KEY_EXISTS(false, 708, "중복된 프로젝트 키입니다.");
-
+    PROJECT_KEY_EXISTS(false, 708, "중복된 프로젝트 키입니다."),
+    IMAGE_UPLOAD_ERROR(false, 710, "이미지 업로드에 실패하였습니다.");
 
     private final boolean isSuccess;
     private final int code;
