@@ -1,0 +1,18 @@
+[2023-08-03 16:24:09:3317] INFO  35556 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-03 16:24:18:11692] INFO  35556 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 11.511 seconds (JVM running for 12.49)
+[2023-08-03 16:26:46:159457] INFO  35556 --- [nio-8081-exec-3] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
+[2023-08-03 16:26:57:170849] INFO  35556 --- [nio-8081-exec-8] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
+[2023-08-03 19:38:44:4169] INFO  39984 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-03 19:38:55:15800] INFO  39984 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 15.494 seconds (JVM running for 16.811)
+[2023-08-03 19:39:58:78375] INFO  39984 --- [io-8081-exec-10] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
+[2023-08-03 19:40:41:121740] INFO  39984 --- [nio-8081-exec-2] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
+[2023-08-03 19:56:33:1073220] INFO  39984 --- [nio-8081-exec-6] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=1번 유저, profileImage=null)
+[2023-08-03 19:56:33:1073256] INFO  39984 --- [nio-8081-exec-5] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=1번 유저, profileImage=null)
+[2023-08-03 19:56:33:1073267] INFO  39984 --- [nio-8081-exec-7] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=1번 유저, profileImage=null)
+[2023-08-03 19:56:33:1073285] INFO  39984 --- [nio-8081-exec-8] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=2번 유저, profileImage=null)
+[2023-08-03 19:56:33:1073297] INFO  39984 --- [nio-8081-exec-9] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=2번 유저, profileImage=null)
+[2023-08-03 19:56:43:1083847] INFO  39984 --- [io-8081-exec-10] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=2번 유저, profileImage=null)
+[2023-08-03 19:56:43:1083860] INFO  39984 --- [nio-8081-exec-3] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=2번 유저, profileImage=null)
+[2023-08-03 19:56:43:1083872] INFO  39984 --- [nio-8081-exec-1] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=1번 유저, profileImage=null)
+[2023-08-03 19:56:44:1083883] INFO  39984 --- [nio-8081-exec-2] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=1번 유저, profileImage=null)
+[2023-08-03 19:56:44:1083894] INFO  39984 --- [nio-8081-exec-4] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=1번 유저, profileImage=null)
