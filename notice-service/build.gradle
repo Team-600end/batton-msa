@@ -41,9 +41,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
 
     // Lombok
-    implementation 'org.projectlombok:lombok'
-    compileOnly 'org.projectlombok:lombok:1.18.16'
-    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
     // Development Convenience
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
