@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -74,7 +75,8 @@ public class MemberController {
     /**
      * 유저 정보 수정 API
      * @param memberId 정보를 수정할 유저 아이디
-     * @param patchMemberReqDTO 정보 수정 요청 바디에 포함될 DTO
+     * @param profileImage 변경할 이미지
+     * @param nickname 변경할 닉네임
      * @return String
      * */
     @PatchMapping
@@ -82,8 +84,9 @@ public class MemberController {
     @ApiResponses({
             @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<String> patchMember(@RequestHeader Long memberId, @RequestBody PatchMemberReqDTO patchMemberReqDTO) {
-        String patchMemberRes = memberService.patchMember(memberId, patchMemberReqDTO);
+    private BaseResponse<String> patchMember(@RequestHeader Long memberId, @RequestPart(value = "profileImg", required = false) MultipartFile profileImage,
+                                             @RequestPart(value = "nickname", required = false) String nickname) {
+        String patchMemberRes = memberService.patchMember(memberId, profileImage, nickname);
         log.info("patchMember 요청: " + patchMemberRes);
 
         return new BaseResponse<>(patchMemberRes);

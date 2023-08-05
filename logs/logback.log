@@ -691,3 +691,7 @@
 [2023-08-03 14:00:49:15563221] INFO  45652 --- [nio-8081-exec-5] c.b.m.service.MemberService              : getMember 예외: 유저 아이디 값을 확인해주세요.
 [2023-08-03 14:00:49:15563226] INFO  45652 --- [nio-8081-exec-6] c.b.m.service.MemberService              : getMember 예외: 유저 아이디 값을 확인해주세요.
 [2023-08-03 14:00:49:15563231] INFO  45652 --- [nio-8081-exec-7] c.b.m.service.MemberService              : getMember 예외: 유저 아이디 값을 확인해주세요.
+[2023-08-05 20:28:40:9689] INFO  23284 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-05 20:29:17:47395] INFO  23284 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 46.834 seconds (JVM running for 55.814)
+[2023-08-05 20:29:47:77142] INFO  23284 --- [nio-8081-exec-2] c.b.m.controller.MemberController        : getMember 요청: GetMemberInfoResDTO(memberId=2, nickname=해리234, profileImage=https://objectstorage.kr-gov-central-1.kakaoicloud-kr-gov.com/v1/72a1e5bc92824b1e85f86463b972eb74/batton/IMAGE/233f8465-566d-40c2-a034-a4bf3ec3fdb3-승희2.jpg, email=lsh929500@gmail.com)
+[2023-08-05 20:35:29:418803] INFO  23284 --- [nio-8081-exec-4] c.b.m.controller.MemberController        : patchMember 요청: https://objectstorage.kr-gov-central-1.kakaoicloud-kr-gov.com/v1/72a1e5bc92824b1e85f86463b972eb74/batton/IMAGE/7283e6c1-fec0-4dd2-be95-99ee54033d1a-portfolio_spare.png
