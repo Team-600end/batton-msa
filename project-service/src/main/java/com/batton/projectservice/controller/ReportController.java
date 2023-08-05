@@ -2,6 +2,7 @@ package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
 import com.batton.projectservice.dto.comment.PostCommentReqDTO;
+import com.batton.projectservice.dto.report.GetAddReportResDTO;
 import com.batton.projectservice.dto.report.GetIssueReportResDTO;
 import com.batton.projectservice.dto.report.PatchIssueReportReqDTO;
 import com.batton.projectservice.dto.report.PostIssueReportReqDTO;
@@ -107,5 +108,18 @@ public class ReportController {
         GetIssueReportResDTO getIssueReportResDTO = reportService.getIssueReport(reportId);
 
         return new BaseResponse<>(getIssueReportResDTO);
+    }
+
+    /**
+     * 추가할 이슈 레포트 조회 API
+     * @param issueId 조회할 이슈 아이디
+     */
+    @GetMapping("/releases/{issueId}")
+    @Operation(summary = "추가할 이슈 레포트 조회")
+    @ApiResponse(responseCode = "705", description = "이슈 레포트 아이디 값을 확인해주세요.")
+    private BaseResponse<GetAddReportResDTO> getAddReport(@PathVariable("issueId") Long issueId) {
+        GetAddReportResDTO getAddReportResDTO = reportService.getAddReport(issueId);
+
+        return new BaseResponse<>(getAddReportResDTO);
     }
 }

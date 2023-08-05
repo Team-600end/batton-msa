@@ -31,7 +31,6 @@ public class Releases extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PublishState publishState;
 
-
     @Builder
     public Releases(Long id, int versionMajor, int versionMinor, int versionPatch, Project project, String releaseContent, List<Long> issueList, PublishState publishState) {
         this.id = id;
@@ -43,4 +42,18 @@ public class Releases extends BaseEntity {
         this.issueList = issueList;
         this.publishState = publishState;
     }
+
+    public void setPublishState(PublishState publishState) {
+        this.publishState = publishState;
+    }
+
+    public void update(int versionMajor, int versionMinor, int versionPatch, String releaseContent, List<Long> issueList, PublishState publishState) {
+        this.versionMajor = versionMajor;
+        this.versionMinor = versionMinor;
+        this.versionPatch = versionPatch;
+        this.releaseContent = releaseContent;
+        this.issueList = issueList;
+        this.publishState = publishState;
+    }
 }
+

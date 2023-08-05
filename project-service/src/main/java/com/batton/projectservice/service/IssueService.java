@@ -360,4 +360,20 @@ public class IssueService {
 
         return "이슈 삭제 성공";
     }
+
+    /**
+     * 완료 이슈 리스트 조회 API
+     */
+    public List<GetIssueResDTO> getDoneIssue(Long projectId) {
+        List<Issue> doneIssueList = issueRepository.findByProjectIdAndIssueStatusOrderByIssueSeq(projectId, IssueStatus.DONE);
+        List<GetIssueResDTO> issueList = new ArrayList<>();
+
+        for(Issue issue : doneIssueList) {
+            GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.getBelong().getMemberId());
+            GetIssueResDTO getIssueResDTO = GetIssueResDTO.toDTO(issue, getMemberResDTO);
+            issueList.add(getIssueResDTO);
+        }
+
+        return issueList;
+    }
 }

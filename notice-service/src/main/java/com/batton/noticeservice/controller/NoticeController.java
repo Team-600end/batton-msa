@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,48 +19,48 @@ public class NoticeController {
 
     /**
      * 사용자 전체 알림 목록 조회 API
-     * @param receiverId 알림 목록을 조회할 유저 아이디
+     * @param memberId 알림 목록을 조회할 유저 아이디
      * @return List<GetNoticeResDTO>
      * */
-    @GetMapping("/all/{receiverId}/{option}")
+    @GetMapping("/all/{option}")
     @Operation(summary = "사용자 전체 알림 목록 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "1300", description = "유저 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<List<GetNoticeResDTO>> getAllNoticeList(@PathVariable("receiverId") Long receiverId, @PathVariable("option") int option) {
-        List<GetNoticeResDTO> getNoticeResDTOList = noticeService.getAllNoticeList(receiverId, option);
+    private BaseResponse<List<GetNoticeResDTO>> getAllNoticeList(@RequestHeader Long memberId, @PathVariable("option") int option) {
+        List<GetNoticeResDTO> getNoticeResDTOList = noticeService.getAllNoticeList(memberId, option);
 
         return new BaseResponse<>(getNoticeResDTOList);
     }
 
     /**
      * 사용자 이슈 알림 목록 조회 API
-     * @param receiverId 알림 목록을 조회할 유저 아이디
+     * @param memberId 알림 목록을 조회할 유저 아이디
      * @return List<GetNoticeResDTO>
      * */
-    @GetMapping("/issues/{receiverId}/{option}")
+    @GetMapping("/issues/{option}")
     @Operation(summary = "사용자 이슈 알림 목록 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "1300", description = "유저 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<List<GetNoticeResDTO>> getIssueNoticeList(@PathVariable("receiverId") Long receiverId, @PathVariable("option") int option) {
-        List<GetNoticeResDTO> getNoticeResDTOList = noticeService.getIssueNoticeList(receiverId, option);
+    private BaseResponse<List<GetNoticeResDTO>> getIssueNoticeList(@RequestHeader Long memberId, @PathVariable("option") int option) {
+        List<GetNoticeResDTO> getNoticeResDTOList = noticeService.getIssueNoticeList(memberId, option);
 
         return new BaseResponse<>(getNoticeResDTOList);
     }
 
     /**
      * 사용자 프로젝트 알림 목록 조회 API
-     * @param receiverId 알림 목록을 조회할 유저 아이디
+     * @param memberId 알림 목록을 조회할 유저 아이디
      * @return List<GetNoticeResDTO>
      * */
-    @GetMapping("/projects/{receiverId}/{option}")
+    @GetMapping("/projects/{option}")
     @Operation(summary = "사용자 프로젝트 알림 목록 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "1300", description = "유저 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<List<GetNoticeResDTO>> getProjectNoticeList(@PathVariable("receiverId") Long receiverId, @PathVariable("option") int option) {
-        List<GetNoticeResDTO> getNoticeResDTOList = noticeService.getProjectNoticeList(receiverId, option);
+    private BaseResponse<List<GetNoticeResDTO>> getProjectNoticeList(@RequestHeader Long memberId, @PathVariable("option") int option) {
+        List<GetNoticeResDTO> getNoticeResDTOList = noticeService.getProjectNoticeList(memberId, option);
 
         return new BaseResponse<>(getNoticeResDTOList);
     }
