@@ -30,4 +30,9 @@ public class PostMemberReqDTO {
                 .status(status)
                 .build();
     }
+
+    public PostMemberReqDTO(String email, String nickname) {
+        this.email = email;
+        this.nickname = nickname;
+    }
 }
