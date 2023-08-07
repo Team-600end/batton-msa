@@ -2,7 +2,6 @@ package com.batton.projectservice.service;
 
 import com.batton.projectservice.client.MemberServiceFeignClient;
 import com.batton.projectservice.common.BaseException;
-import com.batton.projectservice.common.IssueComparator;
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Project;
@@ -24,6 +23,8 @@ import com.batton.projectservice.repository.IssueRepository;
 import com.batton.projectservice.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -133,7 +134,7 @@ public class IssueService {
      */
     @Transactional
     public GetIssueBoardResDTO getIssueBoard(Long memberId, Long projectId) {
-        List<Issue> issueList = issueRepository.findByProjectId(projectId);
+        List<Issue> issueList = issueRepository.findByProjectIdOrderByIssueSeq(projectId);
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
         List<GetIssueBoardInfoResDTO> todoIssueList = new ArrayList<>();
         List<GetIssueBoardInfoResDTO> progressIssueList = new ArrayList<>();
@@ -197,52 +198,52 @@ public class IssueService {
 
 
     /**
-     * 내가 담당한 이슈 목록 조회 API
+     * 개인 이슈 목록 조회 API
      */
     @Transactional
-    public List<GetMyIssueResDTO> getMyIssue(Long memberId, Long projectId) {
-        // 전체 이슈 목록 조회
-        if (projectId == 0) {
+    public List<GetMyIssueResDTO> getMyIssue(Long memberId, IssueStatus issueStatus, String keyword) {
             List<Belong> belongList = belongRepository.findByMemberId(memberId);
             List<GetMyIssueResDTO> myIssueResDTOList = new ArrayList<>();
+            List<Issue> issueList = new ArrayList<>();
 
             for (Belong belong : belongList) {
                 if (belong.getStatus().equals(Status.ENABLED)) {
-                    List<Issue> myIssueList = issueRepository.findByBelongIdOrderByUpdatedAtDesc(belong.getId());
+                    List<Issue> myIssueList = new ArrayList<>();
+                    if (StringUtils.isEmpty(issueStatus) && StringUtils.isEmpty(keyword)) {
+                        System.out.println("전체이슈");
+                        // 전체 이슈 조회
+                        myIssueList = issueRepository.findByBelongIdOrderByUpdatedAtDesc(belong.getId());
+                    } else if (StringUtils.isEmpty(issueStatus) && !StringUtils.isEmpty(keyword)){
+                        System.out.println("특정키워드");
+                        // 특정 키워드 조회
+                        myIssueList = issueRepository.findByBelongIdAndIssueTitleContaining(belong.getId(),keyword);
+                    } else if (!StringUtils.isEmpty(issueStatus) && StringUtils.isEmpty(keyword)) {
+                        System.out.println("특정이슈상태");
+                        // 특정 이슈 상태 조회
+                        myIssueList = issueRepository.findByBelongIdAndIssueStatus(belong.getId(), issueStatus);
+                    } else {
+                        System.out.println("특정키워드와 이슈상태");
+                        // 특정 키워드와 이슈 상태 조회
+                        myIssueList = issueRepository.findByBelongIdAndIssueStatusAndIssueTitleContaining(belong.getId(), issueStatus, keyword);
+                    }
 
                     for (Issue issue : myIssueList) {
-                        String updatedDate = issue.getUpdatedAt().getYear() + ". " + issue.getUpdatedAt().getMonthValue() + ". " + issue.getUpdatedAt().getDayOfMonth();
-                        GetMyIssueResDTO getMyIssueResDTO = GetMyIssueResDTO.toDTO(issue, updatedDate);
-                        myIssueResDTOList.add(getMyIssueResDTO);
+                        issueList.add(issue);
                     }
                 } else {
                     throw new BaseException(BELONG_INVALID_ID);
                 }
             }
-            //이슈 날짜 정렬
-            IssueComparator comp = new IssueComparator();
-            Collections.sort(myIssueResDTOList, comp);
+            // 이슈 날짜 내림차순 정렬
+            Collections.sort(issueList);
 
-            return myIssueResDTOList;
-        } else {
-            // 특정 프로젝트 이슈 목록 조회
-            Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
-            List<Issue> myIssueList = issueRepository.findByBelongIdOrderByUpdatedAtDesc(belong.get().getId());
-            List<GetMyIssueResDTO> myIssueResDTOList = new ArrayList<>();
-
-            // 소속 유저 존재 여부 검증
-            if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
-                for (Issue issue : myIssueList) {
-                    String updatedDate = issue.getUpdatedAt().getYear() + ". " + issue.getUpdatedAt().getMonthValue() + ". " + issue.getUpdatedAt().getDayOfMonth();
-                    GetMyIssueResDTO getMyIssueResDTO = GetMyIssueResDTO.toDTO(issue, updatedDate);
-                    myIssueResDTOList.add(getMyIssueResDTO);
-                }
-            } else {
-                throw new BaseException(BELONG_INVALID_ID);
+            for (Issue issue : issueList) {
+                String updatedDate = issue.getUpdatedAt().getYear() + ". " + issue.getUpdatedAt().getMonthValue() + ". " + issue.getUpdatedAt().getDayOfMonth();
+                GetMyIssueResDTO getMyIssueResDTO = GetMyIssueResDTO.toDTO(issue, updatedDate);
+                myIssueResDTOList.add(getMyIssueResDTO);
             }
 
             return myIssueResDTOList;
-        }
     }
 
     /**
