@@ -5,6 +5,7 @@ import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Project;
+import com.batton.projectservice.domain.Report;
 import com.batton.projectservice.dto.client.GetMemberResDTO;
 import com.batton.projectservice.dto.issue.GetIssueBoardResDTO;
 import com.batton.projectservice.dto.issue.GetIssueResDTO;
@@ -20,6 +21,7 @@ import com.batton.projectservice.mq.dto.NoticeMessage;
 import com.batton.projectservice.repository.BelongRepository;
 import com.batton.projectservice.repository.IssueRepository;
 import com.batton.projectservice.repository.ProjectRepository;
+import com.batton.projectservice.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -38,6 +40,7 @@ public class IssueService {
     private final IssueRepository issueRepository;
     private final ProjectRepository projectRepository;
     private final BelongRepository belongRepository;
+    private final ReportRepository reportRepository;
     private final MemberServiceFeignClient memberServiceFeignClient;
     private final RabbitProducer rabbitProducer;
 
@@ -296,13 +299,14 @@ public class IssueService {
     public GetIssueInfoResDTO getIssueInfo(Long memberId, Long issueId) {
         Optional<Issue> issue = issueRepository.findById(issueId);
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(issue.get().getProject().getId(), memberId);
+        Optional<Report> report = reportRepository.findByIssueId(issueId);
 
         // 소속 유저 존재 여부 검증
         if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
             // 이슈 존재 여부 확인
             if (issue.isPresent()) {
                 GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.get().getBelong().getMemberId());
-                GetIssueInfoResDTO getIssueInfoResDTO = GetIssueInfoResDTO.toDTO(issue.get(), getMemberResDTO);
+                GetIssueInfoResDTO getIssueInfoResDTO = GetIssueInfoResDTO.toDTO(issue.get(), getMemberResDTO, report.get().getReportContent());
 
                 return getIssueInfoResDTO;
             } else {
