@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "issue")
-public class Issue extends BaseEntity {
+public class Issue extends BaseEntity implements Comparable<Issue> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "issue_id")
@@ -59,5 +59,10 @@ public class Issue extends BaseEntity {
         this.issueContent = issueContent;
         this.issueTag = issueTag;
         this.belong = belong;
+    }
+
+    @Override
+    public int compareTo(Issue issue) {
+        return this.getUpdatedAt().compareTo(issue.getUpdatedAt());
     }
 }

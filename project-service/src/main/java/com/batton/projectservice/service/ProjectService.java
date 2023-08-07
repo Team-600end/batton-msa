@@ -1,8 +1,10 @@
 package com.batton.projectservice.service;
 
+import com.batton.projectservice.client.MemberServiceFeignClient;
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Project;
+import com.batton.projectservice.dto.client.GetMemberResDTO;
 import com.batton.projectservice.dto.project.*;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.NoticeType;
@@ -14,7 +16,10 @@ import com.batton.projectservice.repository.ProjectRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
 import javax.transaction.Transactional;
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +34,8 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final BelongRepository belongRepository;
     private final RabbitProducer rabbitProducer;
+    private final MemberServiceFeignClient memberServiceFeignClient;
+
 
     /**
      * 프로젝트 생성 API
@@ -201,6 +208,30 @@ public class ProjectService {
         } else {
             throw new BaseException(PROJECT_NOT_EXISTS);
         }
+    }
+
+    /**
+     * 프로젝트 목록 검색 조회 API
+     */
+    public List<GetProjectListResDTO> getProjectList(Long memberId, String keyword) {
+        GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(memberId);
+        List<GetProjectListResDTO> getProjectListResDTOSList = new ArrayList<>();
+        List<Project> projectList = new ArrayList<>();
+
+        if (StringUtils.isEmpty(keyword)) {
+            // 전체 조회
+            projectList = projectRepository.findAll();
+
+        } else {
+            // 특정 키워드 조회
+            projectList = projectRepository.findByProjectTitleContaining(keyword);
+        }
+
+        for (Project project : projectList) {
+            getProjectListResDTOSList.add(GetProjectListResDTO.toDTO(project));
+        }
+
+        return  getProjectListResDTOSList;
     }
 }
 
