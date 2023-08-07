@@ -11,10 +11,9 @@ import java.util.Optional;
 
 @Repository
 public interface ReleasesRepository extends JpaRepository<Releases, Long> {
-//    @Query("SELECT r FROM Releases r WHERE r.project.id = :projectId ORDER BY r.updatedAt DESC, r.id DESC")
-//    Optional<Releases> findFirstByProjectIdOrderByUpdatedAtDescIdDesc(Long projectId);
-
     @Query("SELECT r FROM Releases r WHERE r.project.id = :projectId ORDER BY r.updatedAt DESC, r.id DESC")
     List<Releases> findByProjectIdOrderByUpdatedAtDescIdDesc(Long projectId);
 
+    Optional<Releases> findById(Long releaseId);
+    Optional<List<Releases>> findByProjectIdOrderByCreatedAtAsc(Long projectId);
 }

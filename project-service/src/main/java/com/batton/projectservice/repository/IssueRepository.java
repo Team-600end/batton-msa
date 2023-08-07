@@ -23,4 +23,6 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
     List<Issue> findByProjectIdOrderByUpdatedAtDesc(Long projectId);
     List<Issue> findByIssueStatus(IssueStatus status);
     Optional<Issue> findById(Long id);
+    //해당 프로젝트에서 이슈 상태에 따른 이슈 목록 조회
+    List<Issue> findByProjectIdAndIssueStatusOrderByIssueSeq(Long projectId, IssueStatus status);
 }
