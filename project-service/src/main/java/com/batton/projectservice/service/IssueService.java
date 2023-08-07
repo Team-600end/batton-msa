@@ -134,7 +134,7 @@ public class IssueService {
      */
     @Transactional
     public GetIssueBoardResDTO getIssueBoard(Long memberId, Long projectId) {
-        List<Issue> issueList = issueRepository.findByProjectId(projectId);
+        List<Issue> issueList = issueRepository.findByProjectIdOrderByIssueSeq(projectId);
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
         List<GetIssueBoardInfoResDTO> todoIssueList = new ArrayList<>();
         List<GetIssueBoardInfoResDTO> progressIssueList = new ArrayList<>();

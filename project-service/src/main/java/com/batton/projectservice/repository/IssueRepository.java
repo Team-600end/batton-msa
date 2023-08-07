@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface IssueRepository extends JpaRepository<Issue, Long> {
     // 이슈 상태에 따라 이슈 Seq 순서대로 정렬 조회
     List<Issue> findByIssueStatusOrderByIssueSeq(IssueStatus status);
+    List<Issue> findByProjectIdOrderByIssueSeq(Long projectId);
     List<Issue> findByProjectId(Long projectId);
     // 사용자가 담당한 이슈 리스트를 마지막 수정 날짜 내림차순으로 반환
     List<Issue> findByBelongIdOrderByUpdatedAtDesc(Long belongId);
