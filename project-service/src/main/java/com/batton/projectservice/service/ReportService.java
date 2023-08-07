@@ -16,6 +16,8 @@ import com.batton.projectservice.dto.report.PatchIssueReportReqDTO;
 import com.batton.projectservice.dto.report.PostIssueReportReqDTO;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.Status;
+import com.batton.projectservice.mq.RabbitProducer;
+import com.batton.projectservice.mq.dto.NoticeMessage;
 import com.batton.projectservice.repository.BelongRepository;
 import com.batton.projectservice.repository.CommentRepository;
 import com.batton.projectservice.repository.IssueRepository;
@@ -28,6 +30,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.batton.projectservice.common.BaseResponseStatus.*;
+import static com.batton.projectservice.enums.NoticeType.COMMENT;
+import static com.batton.projectservice.enums.NoticeType.INVITE;
 
 @RequiredArgsConstructor
 @Service
@@ -37,6 +41,7 @@ public class ReportService {
     private final IssueRepository issueRepository;
     private final BelongRepository belongRepository;
     private final MemberServiceFeignClient memberServiceFeignClient;
+    private final RabbitProducer rabbitProducer;
 
     /**
      * 이슈 레포트 생성 API
@@ -139,6 +144,16 @@ public class ReportService {
             }
             Comment comment = postCommentReqDTO.toEntity(postCommentReqDTO, belong.get(), report.get());
             commentRepository.save(comment);
+            rabbitProducer.sendNoticeMessage(
+                    NoticeMessage.builder()
+                            .projectId(belong.get().getProject().getId())
+                            .noticeType(COMMENT)
+                            .contentId(comment.getId())
+                            .senderId(memberId)
+                            .receiverId(report.get().getIssue().getBelong().getMemberId())
+                            .noticeContent("[" + report.get().getIssue().getProject().getProjectTitle() + "] " + report.get().getIssue().getIssueTitle() +
+                                    " 이슈 레포트에 새로운 댓글이 달렸습니다.")
+                            .build());
 
             return "코멘트 등록되었습니다";
         } else {

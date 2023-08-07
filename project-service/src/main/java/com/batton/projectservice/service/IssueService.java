@@ -14,10 +14,9 @@ import com.batton.projectservice.dto.issue.PatchIssueReqDTO;
 import com.batton.projectservice.dto.issue.PatchIssueBoardReqDTO;
 import com.batton.projectservice.dto.issue.PostIssueReqDTO;
 import com.batton.projectservice.dto.issue.*;
-import com.batton.projectservice.enums.GradeType;
-import com.batton.projectservice.enums.IssueCase;
-import com.batton.projectservice.enums.IssueStatus;
-import com.batton.projectservice.enums.Status;
+import com.batton.projectservice.enums.*;
+import com.batton.projectservice.mq.RabbitProducer;
+import com.batton.projectservice.mq.dto.NoticeMessage;
 import com.batton.projectservice.repository.BelongRepository;
 import com.batton.projectservice.repository.IssueRepository;
 import com.batton.projectservice.repository.ProjectRepository;
@@ -29,6 +28,9 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 import static com.batton.projectservice.common.BaseResponseStatus.*;
+import static com.batton.projectservice.enums.IssueStatus.*;
+import static com.batton.projectservice.enums.NoticeType.BATTON;
+import static com.batton.projectservice.enums.NoticeType.EXCLUDE;
 
 @RequiredArgsConstructor
 @Service
@@ -37,6 +39,7 @@ public class IssueService {
     private final ProjectRepository projectRepository;
     private final BelongRepository belongRepository;
     private final MemberServiceFeignClient memberServiceFeignClient;
+    private final RabbitProducer rabbitProducer;
 
     /**
      * 이슈 생성
@@ -45,7 +48,7 @@ public class IssueService {
     public Long postIssue(Long memberId, PostIssueReqDTO postIssueReqDTO) {
         Optional<Project> project = projectRepository.findById(postIssueReqDTO.getProjectId());
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(postIssueReqDTO.getProjectId(), memberId);
-        List<Issue> issueList = issueRepository.findByIssueStatusOrderByIssueSeq(IssueStatus.TODO);
+        List<Issue> issueList = issueRepository.findByIssueStatusOrderByIssueSeq(TODO);
 
         // 마지막 이슈의 이슈 순서
         int lastIssueSeq = 0;
@@ -61,11 +64,11 @@ public class IssueService {
 
                 // TO DO 상태의 이슈의 가장 마지막에 위치
                 if (!issueRepository.existsByProjectId(project.get().getId())) {
-                    issue = postIssueReqDTO.toEntity(project.get(), belong.get(), postIssueReqDTO, IssueStatus.TODO, lastIssueSeq + 1, 1);
+                    issue = postIssueReqDTO.toEntity(project.get(), belong.get(), postIssueReqDTO, TODO, lastIssueSeq + 1, 1);
                 } else {
                     Issue lateIssue = issueRepository.findTopByProjectIdOrderByCreatedAtDesc(project.get().getId());
                     int key = lateIssue.getIssueKey() + 1;
-                    issue = postIssueReqDTO.toEntity(project.get(), belong.get(), postIssueReqDTO, IssueStatus.TODO, lastIssueSeq + 1, key);
+                    issue = postIssueReqDTO.toEntity(project.get(), belong.get(), postIssueReqDTO, TODO, lastIssueSeq + 1, key);
                 }
                 Long issueId = issueRepository.save(issue).getId();
 
@@ -91,6 +94,7 @@ public class IssueService {
             // 이슈 존재 여부 검증
             if (issue.isPresent()) {
                 List<Issue> issueList = issueRepository.findByIssueStatusOrderByIssueSeq(patchIssueBoardReqDTO.getAfterStatus());
+                List<Belong> belongs = belongRepository.findLeader(issue.get().getProject().getId(), GradeType.LEADER);
                 int preIssueNum = 0;
 
                 // 같은 상태에서 순서를 밑으로 내리는 경우
@@ -105,7 +109,7 @@ public class IssueService {
                     }
                 } else {
                     // 이슈를 완료 상태로 변경하는 권한 확인
-                    if (patchIssueBoardReqDTO.getAfterStatus().equals(IssueStatus.DONE) && belong.get().getGrade().equals(GradeType.MEMBER)) {
+                    if (patchIssueBoardReqDTO.getAfterStatus().equals(DONE) && belong.get().getGrade().equals(GradeType.MEMBER)) {
                         throw new BaseException(MEMBER_NO_AUTHORITY);
                     }
                     // 이후 순서의 이슈들 seq 1씩 증가
@@ -116,6 +120,45 @@ public class IssueService {
                     if (patchIssueBoardReqDTO.getSeqNum() != 0) {
                         preIssueNum = issueList.get(patchIssueBoardReqDTO.getSeqNum() - 1).getIssueSeq();
                     }
+
+                    if (patchIssueBoardReqDTO.getAfterStatus().equals(REVIEW)) { // 검토 이슈 발생
+                        // 소속 프로젝트의 리더들에게만 알림전송
+                        for (Belong b : belongs) {
+                            rabbitProducer.sendNoticeMessage(
+                                    NoticeMessage.builder()
+                                            .projectId(b.getProject().getId())
+                                            .noticeType(NoticeType.REVIEW)
+                                            .contentId(issueId)
+                                            .senderId(memberId)
+                                            .receiverId(b.getMemberId())
+                                            .noticeContent("[" + b.getProject().getProjectTitle() + "] " + "이슈 '" + issue.get().getIssueTitle() +
+                                                    "'의 상태가 검토로 변경되었습니다.")
+                                            .build());
+                        }
+                    } else if (patchIssueBoardReqDTO.getAfterStatus().equals(DONE)) { // 이슈 승인
+                        rabbitProducer.sendNoticeMessage(
+                                NoticeMessage.builder()
+                                        .projectId(issue.get().getProject().getId())
+                                        .noticeType(NoticeType.APPROVE)
+                                        .contentId(issueId)
+                                        .senderId(memberId)
+                                        .receiverId(issue.get().getBelong().getMemberId())
+                                        .noticeContent("[" + issue.get().getProject().getProjectTitle() + "] " + "이슈 '" + issue.get().getIssueTitle() +
+                                                "'의 상태가 승인 후 완료로 변경되었습니다.")
+                                        .build());
+                    } else if (patchIssueBoardReqDTO.getBeforeStatus().equals(REVIEW) && patchIssueBoardReqDTO.getAfterStatus().equals(PROGRESS)) {
+                        rabbitProducer.sendNoticeMessage(
+                                NoticeMessage.builder()
+                                        .projectId(issue.get().getProject().getId())
+                                        .noticeType(NoticeType.REJECT)
+                                        .contentId(issueId)
+                                        .senderId(memberId)
+                                        .receiverId(issue.get().getBelong().getMemberId())
+                                        .noticeContent("[" + issue.get().getProject().getProjectTitle() + "] " + "이슈 '" + issue.get().getIssueTitle() +
+                                                "'의 상태가 반려 후 진행으로 변경되었습니다.")
+                                        .build());
+                    }
+
                 }
                 // 이슈 상태, 순서 변경
                 issue.get().updateIssue(preIssueNum + 1, patchIssueBoardReqDTO.getAfterStatus());
@@ -147,13 +190,13 @@ public class IssueService {
                 // 이슈 담당자 이미지를 찾기 위한 통신
                 GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.getBelong().getMemberId());
 
-                if (issue.getIssueStatus().equals(IssueStatus.TODO)) {
+                if (issue.getIssueStatus().equals(TODO)) {
                     todoIssueList.add(GetIssueBoardInfoResDTO.toDTO(issue, getMemberResDTO));
-                } else if (issue.getIssueStatus().equals(IssueStatus.PROGRESS)) {
+                } else if (issue.getIssueStatus().equals(PROGRESS)) {
                     progressIssueList.add(GetIssueBoardInfoResDTO.toDTO(issue, getMemberResDTO));
-                } else if (issue.getIssueStatus().equals(IssueStatus.REVIEW)) {
+                } else if (issue.getIssueStatus().equals(REVIEW)) {
                     reviewIssueList.add(GetIssueBoardInfoResDTO.toDTO(issue, getMemberResDTO));
-                } else if (issue.getIssueStatus().equals(IssueStatus.DONE)) {
+                } else if (issue.getIssueStatus().equals(DONE)) {
                     doneIssueList.add(GetIssueBoardInfoResDTO.toDTO(issue, getMemberResDTO));
                 }
             }
@@ -179,13 +222,13 @@ public class IssueService {
         // 소속 유저 존재 여부 검증
         if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
             for (Issue issue : issueList) {
-                if (issue.getIssueStatus().equals(IssueStatus.TODO)) {
+                if (issue.getIssueStatus().equals(TODO)) {
                     todo = todo + 1;
-                } else if (issue.getIssueStatus().equals(IssueStatus.PROGRESS)) {
+                } else if (issue.getIssueStatus().equals(PROGRESS)) {
                     progress = progress + 1;
-                } else if (issue.getIssueStatus().equals(IssueStatus.REVIEW)) {
+                } else if (issue.getIssueStatus().equals(REVIEW)) {
                     review = review + 1;
-                } else if (issue.getIssueStatus().equals(IssueStatus.DONE)) {
+                } else if (issue.getIssueStatus().equals(DONE)) {
                     done = done + 1;
                 }
             }
@@ -296,7 +339,7 @@ public class IssueService {
      * 이슈 히스토리 목록 조회 API
      */
     public List<GetIssueResDTO> getIssueHistory(Long memberId, Long projectId) {
-        List<Issue> issueList = issueRepository.findByIssueStatus(IssueStatus.RELEASED);
+        List<Issue> issueList = issueRepository.findByIssueStatus(RELEASED);
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
         List<GetIssueResDTO> getIssueResDTOList = new ArrayList<>();
 
@@ -365,7 +408,7 @@ public class IssueService {
      * 완료 이슈 리스트 조회 API
      */
     public List<GetIssueResDTO> getDoneIssue(Long projectId) {
-        List<Issue> doneIssueList = issueRepository.findByProjectIdAndIssueStatusOrderByIssueSeq(projectId, IssueStatus.DONE);
+        List<Issue> doneIssueList = issueRepository.findByProjectIdAndIssueStatusOrderByIssueSeq(projectId, DONE);
         List<GetIssueResDTO> issueList = new ArrayList<>();
 
         for(Issue issue : doneIssueList) {
@@ -375,5 +418,26 @@ public class IssueService {
         }
 
         return issueList;
+    }
+
+    public String postBattonTouch(Long memberId, Long issueId, Long receiverId) {
+        Optional<Issue> issue = issueRepository.findById(issueId);
+
+        if (issue.isPresent()) {
+            rabbitProducer.sendNoticeMessage(
+                    NoticeMessage.builder()
+                            .projectId(issue.get().getProject().getId())
+                            .noticeType(BATTON)
+                            .contentId(issueId)
+                            .senderId(memberId)
+                            .receiverId(receiverId)
+                            .noticeContent("[" + issue.get().getProject().getProjectTitle() + "] " + issue.get().getBelong().getNickname() +
+                                    "님께서 " + issue.get().getIssueTitle() + " 이슈를 완료하고 바톤 터치를 하였습니다.")
+                            .build());
+        } else {
+            throw new BaseException(ISSUE_INVALID_ID);
+        }
+
+        return "이슈 바톤 터치가 완료되었습니다.";
     }
 }

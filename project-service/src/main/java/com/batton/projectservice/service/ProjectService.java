@@ -7,7 +7,10 @@ import com.batton.projectservice.domain.Project;
 import com.batton.projectservice.dto.client.GetMemberResDTO;
 import com.batton.projectservice.dto.project.*;
 import com.batton.projectservice.enums.GradeType;
+import com.batton.projectservice.enums.NoticeType;
 import com.batton.projectservice.enums.Status;
+import com.batton.projectservice.mq.RabbitProducer;
+import com.batton.projectservice.mq.dto.NoticeMessage;
 import com.batton.projectservice.repository.BelongRepository;
 import com.batton.projectservice.repository.ProjectRepository;
 import lombok.Builder;
@@ -23,12 +26,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.batton.projectservice.common.BaseResponseStatus.*;
+import static com.batton.projectservice.enums.NoticeType.*;
 
 @RequiredArgsConstructor
 @Service
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final BelongRepository belongRepository;
+    private final RabbitProducer rabbitProducer;
     private final MemberServiceFeignClient memberServiceFeignClient;
 
 
@@ -90,6 +95,15 @@ public class ProjectService {
                 for (ProjectTeamReqDTO projectTeamReqDTO : teamMemberList) {
                     Belong belong = ProjectTeamReqDTO.toEntity(project.get(), projectTeamReqDTO, Status.ENABLED);
                     belongRepository.save(belong);
+                    rabbitProducer.sendNoticeMessage(
+                            NoticeMessage.builder()
+                                    .projectId(projectId)
+                                    .noticeType(INVITE)
+                                    .contentId(projectId)
+                                    .senderId(memberId)
+                                    .receiverId(projectTeamReqDTO.getMemberId())
+                                    .noticeContent("[" + project.get().getProjectTitle() + "] " + "새로운 프로젝트 '" + project.get().getProjectTitle() + "'에 초대되었습니다.")
+                                    .build());
                 }
             } else {
                 throw new BaseException(MEMBER_NO_AUTHORITY);

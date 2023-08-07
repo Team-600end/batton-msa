@@ -215,4 +215,21 @@ public class IssueController {
 
         return new BaseResponse<>(getIssueResDTOList);
     }
+
+    /**
+     * 이슈 바톤 터치 API
+     * @param memberId 바톤 터치를 수행하는 유저
+     * @param issueId 바톤 터치 이슈
+     * @param receiverId 바톤 터치를 받는 유저
+     * @return String
+     */
+    @PostMapping("/{issueId}/{receiverId}")
+    @Operation(summary = "이슈 바톤 터치")
+    private BaseResponse<String> postBattonTouch(@RequestHeader Long memberId,
+                                                 @PathVariable("issueId") Long issueId,
+                                                 @PathVariable("receiverId") Long receiverId) {
+        String result = issueService.postBattonTouch(memberId, issueId, receiverId);
+
+        return new BaseResponse<>(result);
+    }
 }
