@@ -2,6 +2,7 @@ package com.batton.memberservice.service;
 
 import com.batton.memberservice.common.BaseException;
 import com.batton.memberservice.domain.Member;
+import com.batton.memberservice.dto.PostEmailReqDTO;
 import com.batton.memberservice.dto.PostMemberReqDTO;
 import com.batton.memberservice.enums.Authority;
 import com.batton.memberservice.enums.Status;
@@ -69,16 +70,16 @@ public class AuthService {
     /**
      * 검증을 위한 이메일 발송 API
      */
-    public String emailCheck(String email) {
+    public String emailCheck(PostEmailReqDTO postEmailReqDTO) {
         SimpleMailMessage message = new SimpleMailMessage();
         String authCode = getAuthCode();
 
-        message.setTo(email);
+        message.setTo(postEmailReqDTO.getEmail());
         message.setSubject("batton 서비스 이메일 인증코드");
-        message.setText("인증번호:" + authCode);
+        message.setText("인증번호: " + authCode);
 
         javaMailSender.send(message);
-        redisUtil.setDataExpire(email, authCode, 60 * 5);
+        redisUtil.setDataExpire(postEmailReqDTO.getEmail(), authCode, 60 * 5);
 
         return "인증 메일이 발송되었습니다.";
     }
