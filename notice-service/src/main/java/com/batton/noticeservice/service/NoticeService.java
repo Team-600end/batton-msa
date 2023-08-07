@@ -62,7 +62,7 @@ public class NoticeService {
      * 사용자 프로젝트 알림 목록 조회
      * */
     public List<GetNoticeResDTO> getProjectNoticeList(Long receiverId, int option) {
-        List<NoticeType> typeList = Arrays.asList(INVITE, EXCLUDE, NEW);
+        List<NoticeType> typeList = Arrays.asList(INVITE, EXCLUDE, NEW, GRADE);
         List<Notice> noticeList;
 
         if (option == 0) {

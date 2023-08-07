@@ -9,7 +9,8 @@ package com.batton.projectservice.enums;
  * REJECT - 이슈 반려 알림 (1)
  * BATTON - 이슈 바톤 터치 알림 (1)
  * COMMENT - 댓글 알림 (1)
+ * GRADE - 권한 변경 (1)
  */
 public enum NoticeType {
-    INVITE, EXCLUDE, REVIEW, APPROVE, REJECT, BATTON, NEW, COMMENT
+    INVITE, EXCLUDE, REVIEW, APPROVE, REJECT, BATTON, NEW, COMMENT, GRADE
 }
