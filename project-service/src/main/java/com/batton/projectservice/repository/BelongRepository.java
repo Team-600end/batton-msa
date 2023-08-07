@@ -20,4 +20,6 @@ public interface BelongRepository extends JpaRepository<Belong, Long> {
     Optional<Belong> findById(Long belongId);
 
     List<Belong> findByMemberId(Long memberId);
+
+    List<Belong> findByProjectId(Long projectId);
 }
