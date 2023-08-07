@@ -30,4 +30,16 @@ public class AuthController {
         log.info("signupMember 요청: " + signupMemberRes);
         return new BaseResponse<>(signupMemberRes);
     }
+
+    /**
+     * 메일 발송 API
+     * @param email
+     */
+    @PostMapping("/email")
+    @Operation(summary = "이메일 검증")
+    private BaseResponse<String> emailCheck(@RequestBody String email) {
+        String result = authService.emailCheck(email);
+
+        return new BaseResponse<>(result);
+    }
 }
