@@ -1,6 +1,7 @@
 package com.batton.projectservice.repository;
 
 import com.batton.projectservice.domain.Belong;
+import com.batton.projectservice.enums.GradeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +24,6 @@ public interface BelongRepository extends JpaRepository<Belong, Long> {
 
     @Query("SELECT b FROM Belong b WHERE b.project.id = :projectId")
     List<Belong> findByProjectId(@Param("projectId") Long projectId);
+    @Query("SELECT b FROM Belong b WHERE b.project.id = :projectId AND b.grade = :type")
+    List<Belong> findLeader(@Param("projectId") Long projectId, @Param("type") GradeType type);
 }

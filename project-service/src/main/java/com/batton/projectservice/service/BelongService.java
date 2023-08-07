@@ -51,7 +51,7 @@ public class BelongService {
                                     .noticeType(GRADE)
                                     .contentId(projectId)
                                     .senderId(memberId)
-                                    .receiverId(belongId)
+                                    .receiverId(memberBelong.get().getMemberId())
                                     .noticeContent("[" + memberBelong.get().getProject().getProjectTitle() + "] " + memberBelong.get().getNickname() + "님의 등급이 " + grade + " 등급으로 변경되었습니다.")
                                     .build());
                 } else {
