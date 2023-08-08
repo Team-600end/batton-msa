@@ -141,10 +141,27 @@ public class IssueService {
                                             .senderId(memberId)
                                             .receiverId(b.getMemberId())
                                             .noticeContent("[" + b.getProject().getProjectTitle() + "] " + "이슈 '" + issue.get().getIssueTitle() +
-                                                    "'의 상태가 검토로 변경되었습니다.")
-                                            .build());
+                                                    "'의 상태가 검토로 변경되었습니다.").build());
                         }
                     } else if (patchIssueBoardReqDTO.getAfterStatus().equals(DONE)) { // 이슈 승인
+                        // 바톤 터치 사람들이 존재할 때
+                        if (!issue.get().getTouchList().isEmpty()) {
+                            String touchString = issue.get().getTouchList();
+                            String touchSub = touchString.substring(1, touchString.length() - 1);
+                            String[] touchList = touchSub.split(", ");
+
+                            for (String touch : touchList) {
+                                rabbitProducer.sendNoticeMessage(
+                                        NoticeMessage.builder()
+                                                .projectId(issue.get().getProject().getId())
+                                                .noticeType(BATTON)
+                                                .contentId(issueId)
+                                                .senderId(memberId)
+                                                .receiverId(Long.parseLong(touch))
+                                                .noticeContent("[" + issue.get().getProject().getProjectTitle() + "] " + issue.get().getBelong().getNickname() +
+                                                        "님께서 " + issue.get().getIssueTitle() + " 이슈를 완료하고 바톤 터치를 하였습니다.").build());
+                            }
+                        }
                         rabbitProducer.sendNoticeMessage(
                                 NoticeMessage.builder()
                                         .projectId(issue.get().getProject().getId())
@@ -153,8 +170,7 @@ public class IssueService {
                                         .senderId(memberId)
                                         .receiverId(issue.get().getBelong().getMemberId())
                                         .noticeContent("[" + issue.get().getProject().getProjectTitle() + "] " + "이슈 '" + issue.get().getIssueTitle() +
-                                                "'의 상태가 승인 후 완료로 변경되었습니다.")
-                                        .build());
+                                                "'의 상태가 승인 후 완료로 변경되었습니다.").build());
                     } else if (patchIssueBoardReqDTO.getBeforeStatus().equals(REVIEW) && patchIssueBoardReqDTO.getAfterStatus().equals(PROGRESS)) {
                         rabbitProducer.sendNoticeMessage(
                                 NoticeMessage.builder()
@@ -164,10 +180,8 @@ public class IssueService {
                                         .senderId(memberId)
                                         .receiverId(issue.get().getBelong().getMemberId())
                                         .noticeContent("[" + issue.get().getProject().getProjectTitle() + "] " + "이슈 '" + issue.get().getIssueTitle() +
-                                                "'의 상태가 반려 후 진행으로 변경되었습니다.")
-                                        .build());
+                                                "'의 상태가 반려 후 진행으로 변경되었습니다.").build());
                     }
-
                 }
                 // 이슈 상태, 순서 변경
                 issue.get().updateIssue(preIssueNum + 1, patchIssueBoardReqDTO.getAfterStatus());
@@ -470,20 +484,12 @@ public class IssueService {
         return issueList;
     }
 
-    public String postBattonTouch(Long memberId, Long issueId, Long receiverId) {
+    public String postBattonTouch(Long issueId, PostBattonTouchReqDTO postBattonTouchReqDTO) {
         Optional<Issue> issue = issueRepository.findById(issueId);
 
         if (issue.isPresent()) {
-            rabbitProducer.sendNoticeMessage(
-                    NoticeMessage.builder()
-                            .projectId(issue.get().getProject().getId())
-                            .noticeType(BATTON)
-                            .contentId(issueId)
-                            .senderId(memberId)
-                            .receiverId(receiverId)
-                            .noticeContent("[" + issue.get().getProject().getProjectTitle() + "] " + issue.get().getBelong().getNickname() +
-                                    "님께서 " + issue.get().getIssueTitle() + " 이슈를 완료하고 바톤 터치를 하였습니다.")
-                            .build());
+            issue.get().updateTouchList(postBattonTouchReqDTO.getTouchList());
+            issueRepository.save(issue.get());
         } else {
             throw new BaseException(ISSUE_INVALID_ID);
         }

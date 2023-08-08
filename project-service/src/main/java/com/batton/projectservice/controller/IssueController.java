@@ -234,15 +234,14 @@ public class IssueController {
      * 이슈 바톤 터치 API
      * @param memberId 바톤 터치를 수행하는 유저
      * @param issueId 바톤 터치 이슈
-     * @param receiverId 바톤 터치를 받는 유저
      * @return String
      */
-    @PostMapping("/{issueId}/{receiverId}")
+    @PostMapping("/{issueId}")
     @Operation(summary = "이슈 바톤 터치")
     private BaseResponse<String> postBattonTouch(@RequestHeader Long memberId,
                                                  @PathVariable("issueId") Long issueId,
-                                                 @PathVariable("receiverId") Long receiverId) {
-        String result = issueService.postBattonTouch(memberId, issueId, receiverId);
+                                                 @RequestBody PostBattonTouchReqDTO postBattonTouchReqDTO) {
+        String result = issueService.postBattonTouch(issueId, postBattonTouchReqDTO);
 
         return new BaseResponse<>(result);
     }
