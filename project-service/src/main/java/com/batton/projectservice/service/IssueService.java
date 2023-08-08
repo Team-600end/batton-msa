@@ -2,11 +2,10 @@ package com.batton.projectservice.service;
 
 import com.batton.projectservice.client.MemberServiceFeignClient;
 import com.batton.projectservice.common.BaseException;
-import com.batton.projectservice.domain.Belong;
-import com.batton.projectservice.domain.Issue;
-import com.batton.projectservice.domain.Project;
-import com.batton.projectservice.domain.Report;
+import com.batton.projectservice.common.Chrono;
+import com.batton.projectservice.domain.*;
 import com.batton.projectservice.dto.client.GetMemberResDTO;
+import com.batton.projectservice.dto.comment.GetCommentResDTO;
 import com.batton.projectservice.dto.issue.GetIssueBoardResDTO;
 import com.batton.projectservice.dto.issue.GetIssueResDTO;
 import com.batton.projectservice.dto.issue.GetIssueInfoResDTO;
@@ -15,13 +14,11 @@ import com.batton.projectservice.dto.issue.PatchIssueReqDTO;
 import com.batton.projectservice.dto.issue.PatchIssueBoardReqDTO;
 import com.batton.projectservice.dto.issue.PostIssueReqDTO;
 import com.batton.projectservice.dto.issue.*;
+import com.batton.projectservice.dto.issue.GetIssueReportResDTO;
 import com.batton.projectservice.enums.*;
 import com.batton.projectservice.mq.RabbitProducer;
 import com.batton.projectservice.mq.dto.NoticeMessage;
-import com.batton.projectservice.repository.BelongRepository;
-import com.batton.projectservice.repository.IssueRepository;
-import com.batton.projectservice.repository.ProjectRepository;
-import com.batton.projectservice.repository.ReportRepository;
+import com.batton.projectservice.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -40,6 +37,7 @@ public class IssueService {
     private final ProjectRepository projectRepository;
     private final BelongRepository belongRepository;
     private final ReportRepository reportRepository;
+    private final CommentRepository commentRepository;
     private final MemberServiceFeignClient memberServiceFeignClient;
     private final RabbitProducer rabbitProducer;
 
@@ -72,7 +70,16 @@ public class IssueService {
                     int key = lateIssue.getIssueKey() + 1;
                     issue = postIssueReqDTO.toEntity(project.get(), belong.get(), postIssueReqDTO, TODO, lastIssueSeq + 1, key);
                 }
+                // 이슈 생성
                 Long issueId = issueRepository.save(issue).getId();
+
+                //이슈 레포트 생성
+                Optional<Issue> reportIssue = issueRepository.findById(issueId);
+                Report report = Report.builder()
+                        .issue(reportIssue.get())
+                        .reportContent("")
+                        .build();
+                reportRepository.save(report);
 
                 return issueId;
             } else {
@@ -306,7 +313,7 @@ public class IssueService {
     }
 
     /**
-     * 이슈 상세 조회 API
+     * 이슈 관리 페이지 조회 API
      */
     @Transactional
     public GetIssueInfoResDTO getIssueInfo(Long memberId, Long issueId) {
@@ -319,15 +326,14 @@ public class IssueService {
             // 이슈 존재 여부 확인
             if (issue.isPresent()) {
                 GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.get().getBelong().getMemberId());
-                GetIssueInfoResDTO getIssueInfoResDTO;
 
-                if (report.isEmpty()) {
-                    getIssueInfoResDTO = GetIssueInfoResDTO.toDTO(issue.get(), getMemberResDTO, "");
-
-                } else {
-                    getIssueInfoResDTO = GetIssueInfoResDTO.toDTO(issue.get(), getMemberResDTO, report.get().getReportContent());
-
+                boolean isMine = false;
+                // 조회 유저와 이슈 담당자 비교
+                if (issue.get().getBelong().getMemberId().equals(memberId)) {
+                    isMine = true;
                 }
+                GetIssueInfoResDTO getIssueInfoResDTO = GetIssueInfoResDTO.toDTO(issue.get(), getMemberResDTO, report.get().getReportContent(), isMine);
+
                 return getIssueInfoResDTO;
             } else {
                 throw new BaseException(ISSUE_INVALID_ID);
@@ -335,6 +341,40 @@ public class IssueService {
         } else {
             throw new BaseException(BELONG_INVALID_ID);
         }
+    }
+
+    /**
+     * 이슈 조회 페이지 조회 API
+     */
+    public GetIssueReportResDTO getIssueReport(Long issueId) {
+        Optional<Issue> issue = issueRepository.findById(issueId);
+        Optional<Report> report = reportRepository.findByIssueId(issueId);
+        GetIssueReportResDTO getIssueReportResDTO;
+
+        // 이슈 존재 여부 확인
+        if(issue.isPresent()){
+            List<Comment> comments = commentRepository.findByReportId(report.get().getId());
+            List<GetCommentResDTO> commentList= new ArrayList<>();
+            String updatedDate = report.get().getUpdatedAt().getYear() + ". " + report.get().getUpdatedAt().getMonthValue() + ". " + report.get().getUpdatedAt().getDayOfMonth();
+            GetMemberResDTO getMemberInfoResDTO = memberServiceFeignClient.getMember(issue.get().getBelong().getMemberId());
+
+            if(comments.isEmpty()){
+                commentList = null;
+            } else {
+                for (Comment comment : comments) {
+                    GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(comment.getBelong().getMemberId());
+                    String createdDate = Chrono.timesAgo(report.get().getCreatedAt());
+
+                    commentList.add(GetCommentResDTO.toDTO(comment, getMemberResDTO, createdDate));
+                }
+            }
+
+            getIssueReportResDTO = GetIssueReportResDTO.toDTO(issue.get(), updatedDate, getMemberInfoResDTO, report.get().getReportContent(), commentList);
+        } else {
+            throw new BaseException(ISSUE_INVALID_ID);
+        }
+
+        return getIssueReportResDTO;
     }
 
     /**

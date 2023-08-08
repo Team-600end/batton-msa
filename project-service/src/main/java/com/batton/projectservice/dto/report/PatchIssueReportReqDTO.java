@@ -2,15 +2,15 @@ package com.batton.projectservice.dto.report;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class PatchIssueReportReqDTO {
-    private Long issueId;
     private String reportContent;
 
     @Builder
-    public PatchIssueReportReqDTO(Long issueId, String reportContent) {
-        this.issueId = issueId;
+    public PatchIssueReportReqDTO(String reportContent) {
         this.reportContent = reportContent;
     }
 }
