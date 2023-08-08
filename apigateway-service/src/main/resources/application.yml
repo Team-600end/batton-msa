@@ -84,6 +84,15 @@ spring:
             - RewritePath=/api/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
 
+        - id: project-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/reports/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+
         - id: notice-service
           uri: http://localhost:8083
           predicates:
