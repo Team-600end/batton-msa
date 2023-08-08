@@ -99,13 +99,13 @@ public class ReportController {
 
     /**
      * 이슈 레포트 조회 API
-     * @param reportId 조회할 이슈 레포트 아이디
+     * @param issueId 조회할 이슈 아이디
      */
-    @GetMapping("/{reportId}")
+    @GetMapping("/{issueId}")
     @Operation(summary = "이슈 레포트 조회")
     @ApiResponse(responseCode = "705", description = "이슈 레포트 아이디 값을 확인해주세요.")
-    private BaseResponse<GetIssueReportResDTO> getIssueReport(@PathVariable("reportId") Long reportId) {
-        GetIssueReportResDTO getIssueReportResDTO = reportService.getIssueReport(reportId);
+    private BaseResponse<GetIssueReportResDTO> getIssueReport(@PathVariable("issueId") Long issueId) {
+        GetIssueReportResDTO getIssueReportResDTO = reportService.getIssueReport(issueId);
 
         return new BaseResponse<>(getIssueReportResDTO);
     }

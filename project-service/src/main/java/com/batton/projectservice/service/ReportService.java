@@ -164,12 +164,12 @@ public class ReportService {
     /**
      * 이슈 레포트 조회 API
      */
-    public GetIssueReportResDTO getIssueReport(Long reportId) {
-        Optional<Report> report = reportRepository.findById(reportId);
+    public GetIssueReportResDTO getIssueReport(Long issueId) {
+        Optional<Report> report = reportRepository.findByIssueId(issueId);
         GetIssueReportResDTO getIssueReportResDTO;
 
         if(report.isPresent()){
-            List<Comment> comments = commentRepository.findByReportId(reportId);
+            List<Comment> comments = commentRepository.findByReportId(report.get().getId());
             List<GetCommentResDTO> commentList= new ArrayList<>();
             String updatedDate = report.get().getUpdatedAt().getYear() + ". " + report.get().getUpdatedAt().getMonthValue() + ". " + report.get().getUpdatedAt().getDayOfMonth();
             String nickname = report.get().getIssue().getBelong().getNickname();
