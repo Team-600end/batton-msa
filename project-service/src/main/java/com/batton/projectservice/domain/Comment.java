@@ -1,5 +1,6 @@
 package com.batton.projectservice.domain;
 
+import com.batton.projectservice.enums.CommentType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,8 @@ public class Comment extends BaseEntity {
     @Column(name = "comment_id")
     private Long id;
     private String commentContent;
+    @Enumerated(EnumType.STRING)
+    private CommentType commentType;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "report_id")
     private Report report;
@@ -24,9 +27,10 @@ public class Comment extends BaseEntity {
     private Belong belong;
 
     @Builder
-    public Comment(Long id, String commentContent, Report report, Belong belong) {
+    public Comment(Long id, String commentContent, CommentType commentType, Report report, Belong belong) {
         this.id = id;
         this.commentContent = commentContent;
+        this.commentType = commentType;
         this.report = report;
         this.belong = belong;
     }
