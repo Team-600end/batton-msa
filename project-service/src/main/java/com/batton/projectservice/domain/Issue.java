@@ -30,10 +30,12 @@ public class Issue extends BaseEntity implements Comparable<Issue> {
     private Project project;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "belong_id")
-    private Belong belong;;
+    private Belong belong;
+    private String touchList;
 
     @Builder
-    public Issue(Long id, String issueTitle, String issueContent, IssueStatus issueStatus, IssueTag issueTag, int issueSeq, int issueKey, Project project, Belong belong) {
+    public Issue(Long id, String issueTitle, String issueContent, IssueStatus issueStatus, IssueTag issueTag,
+                 int issueSeq, int issueKey, Project project, Belong belong, String touchList) {
         this.id = id;
         this.issueTitle = issueTitle;
         this.issueContent = issueContent;
@@ -43,6 +45,7 @@ public class Issue extends BaseEntity implements Comparable<Issue> {
         this.issueKey = issueKey;
         this.project = project;
         this.belong = belong;
+        this.touchList = touchList;
     }
 
     public void updateSeq(int issueSeq) {
@@ -59,6 +62,10 @@ public class Issue extends BaseEntity implements Comparable<Issue> {
         this.issueContent = issueContent;
         this.issueTag = issueTag;
         this.belong = belong;
+    }
+
+    public void updateTouchList(String touchList) {
+        this.touchList = touchList;
     }
 
     @Override
