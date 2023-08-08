@@ -358,17 +358,12 @@ public class IssueService {
             String updatedDate = report.get().getUpdatedAt().getYear() + ". " + report.get().getUpdatedAt().getMonthValue() + ". " + report.get().getUpdatedAt().getDayOfMonth();
             GetMemberResDTO getMemberInfoResDTO = memberServiceFeignClient.getMember(issue.get().getBelong().getMemberId());
 
-            if(comments.isEmpty()){
-                commentList = null;
-            } else {
-                for (Comment comment : comments) {
-                    GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(comment.getBelong().getMemberId());
-                    String createdDate = Chrono.timesAgo(report.get().getCreatedAt());
-
-                    commentList.add(GetCommentResDTO.toDTO(comment, getMemberResDTO, createdDate));
-                }
+            // 코멘트 추가
+            for (Comment comment : comments) {
+                GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(comment.getBelong().getMemberId());
+                String createdDate = Chrono.timesAgo(report.get().getCreatedAt());
+                commentList.add(GetCommentResDTO.toDTO(comment, getMemberResDTO, createdDate));
             }
-
             getIssueReportResDTO = GetIssueReportResDTO.toDTO(issue.get(), updatedDate, getMemberInfoResDTO, report.get().getReportContent(), commentList);
         } else {
             throw new BaseException(ISSUE_INVALID_ID);
