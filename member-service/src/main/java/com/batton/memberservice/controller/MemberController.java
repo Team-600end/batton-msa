@@ -1,9 +1,9 @@
 package com.batton.memberservice.controller;
 
 import com.batton.memberservice.common.BaseResponse;
+import com.batton.memberservice.dto.GetMemberIdResDTO;
 import com.batton.memberservice.dto.GetMemberInfoResDTO;
 import com.batton.memberservice.dto.PatchMemberPasswordReqDTO;
-import com.batton.memberservice.dto.PatchMemberReqDTO;
 import com.batton.memberservice.dto.client.GetMemberResDTO;
 import com.batton.memberservice.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -111,5 +111,18 @@ public class MemberController {
         log.info("patchMemberPassword 요청: " + patchMemberPasswordRes);
 
         return new BaseResponse<>(patchMemberPasswordRes);
+    }
+
+    /**
+     * 멤버 아이디 조회 API
+     * @param memberId
+     * @return memberId
+     */
+    @GetMapping("/id/{memberId}")
+    @Operation(summary = "멤버 아이디(memberId) 요청")
+    private BaseResponse<GetMemberIdResDTO> getMemberId(@RequestHeader Long memberId) {
+        GetMemberIdResDTO getMemberIdResDTO = new GetMemberIdResDTO(memberId);
+
+        return new BaseResponse<>(getMemberIdResDTO);
     }
 }
