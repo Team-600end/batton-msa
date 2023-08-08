@@ -306,8 +306,15 @@ public class IssueService {
             // 이슈 존재 여부 확인
             if (issue.isPresent()) {
                 GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.get().getBelong().getMemberId());
-                GetIssueInfoResDTO getIssueInfoResDTO = GetIssueInfoResDTO.toDTO(issue.get(), getMemberResDTO, report.get().getReportContent());
+                GetIssueInfoResDTO getIssueInfoResDTO;
 
+                if (report.isEmpty()) {
+                    getIssueInfoResDTO = GetIssueInfoResDTO.toDTO(issue.get(), getMemberResDTO, "");
+
+                } else {
+                    getIssueInfoResDTO = GetIssueInfoResDTO.toDTO(issue.get(), getMemberResDTO, report.get().getReportContent());
+
+                }
                 return getIssueInfoResDTO;
             } else {
                 throw new BaseException(ISSUE_INVALID_ID);
