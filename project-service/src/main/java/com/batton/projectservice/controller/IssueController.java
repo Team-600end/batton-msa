@@ -2,6 +2,7 @@ package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
 import com.batton.projectservice.dto.issue.*;
+import com.batton.projectservice.dto.issue.GetIssueReportResDTO;
 import com.batton.projectservice.enums.IssueStatus;
 import com.batton.projectservice.service.IssueService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -112,13 +113,13 @@ public class IssueController {
     }
 
     /**
-     * 이슈 상세 조회 API
+     * 이슈 관리 페이지 조회 API
      * @param memberId 조회하는 유저 아이디
      * @param issueId 조회할 이슈 아이디
      * @return GetIssueInfoResDTO
      * */
     @GetMapping("/{issueId}")
-    @Operation(summary = "이슈 상세 조회")
+    @Operation(summary = "이슈 관리 페이지 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
@@ -127,6 +128,19 @@ public class IssueController {
         GetIssueInfoResDTO getIssueInfoResDTO = issueService.getIssueInfo(memberId, issueId);
 
         return new BaseResponse<>(getIssueInfoResDTO);
+    }
+
+    /**
+     * 이슈 조회 페이지 조회 API
+     * @param issueId 조회할 이슈 아이디
+     */
+    @GetMapping("/reports/{issueId}")
+    @Operation(summary = "이슈 조회 페이지 조회")
+    @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
+    private BaseResponse<GetIssueReportResDTO> getIssueReport(@PathVariable("issueId") Long issueId) {
+        GetIssueReportResDTO getIssueReportResDTO = issueService.getIssueReport(issueId);
+
+        return new BaseResponse<>(getIssueReportResDTO);
     }
 
     /**

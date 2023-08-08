@@ -8,5 +8,5 @@ package com.batton.projectservice.enums;
  * RELEASED - 발행됨
  */
 public enum IssueStatus {
-    TODO, PROGRESS, REVIEW, DONE, RELEASED
+    TODO, PROGRESS, REVIEW, DONE, RELEASED,
 }
