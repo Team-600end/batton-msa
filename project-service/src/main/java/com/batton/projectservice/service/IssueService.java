@@ -362,7 +362,7 @@ public class IssueService {
             for (Comment comment : comments) {
                 GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(comment.getBelong().getMemberId());
                 String createdDate = Chrono.timesAgo(report.get().getCreatedAt());
-                commentList.add(GetCommentResDTO.toDTO(comment, getMemberResDTO, createdDate));
+                commentList.add(GetCommentResDTO.toDTO(comment, getMemberResDTO, createdDate, comment.getBelong().getGrade()));
             }
             getIssueReportResDTO = GetIssueReportResDTO.toDTO(issue.get(), updatedDate, getMemberInfoResDTO, report.get().getReportContent(), commentList);
         } else {
