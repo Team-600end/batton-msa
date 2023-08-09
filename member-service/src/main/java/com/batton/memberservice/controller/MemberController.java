@@ -118,7 +118,7 @@ public class MemberController {
      * @param memberId
      * @return memberId
      */
-    @GetMapping("/id/{memberId}")
+    @GetMapping("/id")
     @Operation(summary = "멤버 아이디(memberId) 요청")
     private BaseResponse<GetMemberIdResDTO> getMemberId(@RequestHeader Long memberId) {
         GetMemberIdResDTO getMemberIdResDTO = new GetMemberIdResDTO(memberId);

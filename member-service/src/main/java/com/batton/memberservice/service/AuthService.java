@@ -2,6 +2,7 @@ package com.batton.memberservice.service;
 
 import com.batton.memberservice.common.BaseException;
 import com.batton.memberservice.domain.Member;
+import com.batton.memberservice.dto.PostEmailCheckReqDTO;
 import com.batton.memberservice.dto.PostEmailReqDTO;
 import com.batton.memberservice.dto.PostMemberReqDTO;
 import com.batton.memberservice.enums.Authority;
@@ -41,11 +42,6 @@ public class AuthService {
         if (!isRegexEmail(postMemberReqDTO.getEmail())) {
             throw new BaseException(POST_MEMBERS_INVALID_EMAIL);
         }
-        // 이메일 존재 여부 확인
-        if (memberRepository.existsByEmail(postMemberReqDTO.getEmail())) {
-            log.info("signupMember 예외: " + EXIST_EMAIL_ERROR.getMessage());
-            throw new BaseException(EXIST_EMAIL_ERROR);
-        }
         // 비밀번호 일치 확인
         if (!postMemberReqDTO.getPassword().equals(postMemberReqDTO.getCheckPassword())) {
             log.info("signupMember 예외: " + MEMBER_PASSWORD_CONFLICT.getMessage());
@@ -71,6 +67,12 @@ public class AuthService {
      * 검증을 위한 이메일 발송 API
      */
     public String emailCheck(PostEmailReqDTO postEmailReqDTO) {
+        // 이메일 존재 여부 확인
+        if (memberRepository.existsByEmail(postEmailReqDTO.getEmail())) {
+            log.info("signupMember 예외: " + EXIST_EMAIL_ERROR.getMessage());
+            throw new BaseException(EXIST_EMAIL_ERROR);
+        }
+
         SimpleMailMessage message = new SimpleMailMessage();
         String authCode = getAuthCode();
 
@@ -97,4 +99,18 @@ public class AuthService {
         return buffer.toString();
     }
 
+    /**
+     * 이메일 인증 코드 확인
+     */
+    public String authCodeCheck(PostEmailCheckReqDTO postEmailCheckReqDTO) {
+        if (redisUtil.existData(postEmailCheckReqDTO.getEmail())) {
+            if (!redisUtil.getData(postEmailCheckReqDTO.getEmail()).equals(postEmailCheckReqDTO.getAuthCode())) {
+                throw new BaseException(INVALID_AUTH_CODE);
+            } else {
+                return redisUtil.getData(postEmailCheckReqDTO.getEmail());
+            }
+        } else {
+            throw new BaseException(EXPIRE_AUTH_CODE);
+        }
+    }
 }

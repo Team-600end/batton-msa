@@ -1,6 +1,7 @@
 package com.batton.memberservice.controller;
 
 import com.batton.memberservice.common.BaseResponse;
+import com.batton.memberservice.dto.PostEmailCheckReqDTO;
 import com.batton.memberservice.dto.PostEmailReqDTO;
 import com.batton.memberservice.dto.PostMemberReqDTO;
 import com.batton.memberservice.service.AuthService;
@@ -34,12 +35,26 @@ public class AuthController {
 
     /**
      * 메일 발송 API
-     * @param string
+     * @param postEmailReqDTO
+     * @return String
      */
     @PostMapping("/email")
     @Operation(summary = "이메일 검증")
     private BaseResponse<String> emailCheck(@RequestBody PostEmailReqDTO postEmailReqDTO) {
         String result = authService.emailCheck(postEmailReqDTO);
+
+        return new BaseResponse<>(result);
+    }
+
+    /**
+     * 인증 번호 확인 API
+     * @param postEmailCheckReqDTO
+     * @return String
+     */
+    @PostMapping("/email/check")
+    @Operation(summary = "이메일 검증")
+    private BaseResponse<String> authCodeCheck(@RequestBody PostEmailCheckReqDTO postEmailCheckReqDTO) {
+        String result = authService.authCodeCheck(postEmailCheckReqDTO);
 
         return new BaseResponse<>(result);
     }

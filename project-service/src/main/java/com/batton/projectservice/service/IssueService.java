@@ -479,6 +479,9 @@ public class IssueService {
         return issueList;
     }
 
+    /**
+     * 이슈 바톤 터치
+     */
     public String postBattonTouch(Long issueId, PostBattonTouchReqDTO postBattonTouchReqDTO) {
         Optional<Issue> issue = issueRepository.findById(issueId);
 
