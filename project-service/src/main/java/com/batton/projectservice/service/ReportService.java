@@ -63,11 +63,11 @@ public class ReportService {
     }
 
     /**
-     * 이슈 레포트 코멘트 생성 API
+     * 이슈 코멘트 생성 API
      */
     @Transactional
-    public String postComment(Long reportId, Long memberId, PostCommentReqDTO postCommentReqDTO) {
-        Optional<Report> report = reportRepository.findById(reportId);
+    public String postComment(Long issueId, Long memberId, PostCommentReqDTO postCommentReqDTO) {
+        Optional<Report> report = reportRepository.findByIssueId(issueId);
 
         // 레포트 존재 여부 확인
         if (!report.isPresent()) {

@@ -41,13 +41,11 @@ public class MemberServiceTests {
     private ObjectStorageService objectStorageService;
 
     @Test
-    @DisplayName("회원가입 성공")
     public void testSignupMemberSuccess() {
         // Arrange
-        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("test@example.com", "nika", "password", "password");
-        when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
+        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("test@example.com", "code", "nika", "password", "password");
         when(memberRepository.existsByEmail(any())).thenReturn(false);
-
+        when(passwordEncoder.encode(any())).thenReturn("encoded-password");
         // Act
         String result = authService.signupMember(postMemberReqDTO);
 
@@ -61,7 +59,7 @@ public class MemberServiceTests {
     @DisplayName("이메일 형식 오류 예외")
     public void testSignupMemberInvalidEmail() {
         // Arrange
-        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("tesexample.com", "nika", "password", "password");
+        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("tesexample.com", "code", "nika", "password", "password");
         // ... 이외 필요한 Arrange 작업
 
         // Act & Assert
@@ -73,7 +71,7 @@ public class MemberServiceTests {
     @DisplayName("이미 존재하는 이메일 예외")
     public void testSignupMemberExistingEmail() {
         // Arrange
-        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("test@example.com", "nika", "password", "password");
+        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("test@example.com", "code","nika", "password", "password");
 
         when(memberRepository.existsByEmail(postMemberReqDTO.getEmail())).thenReturn(true);
 
@@ -86,7 +84,7 @@ public class MemberServiceTests {
     @DisplayName("비밀번호 불일치 예외")
     public void testSignupMemberPasswordMismatch() {
         // Arrange
-        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("test@example.com", "nika", "password", "passdword");
+        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("test@example.com", "code","nika", "password", "passdword");
 
         // ... 이외 필요한 Arrange 작업
 
