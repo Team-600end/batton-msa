@@ -186,7 +186,7 @@ public class ReleasesService {
     }
 
     /**
-     * 릴리즈노트에 상세 조회 API
+     * 릴리즈노트 상세 조회 API
      */
     public GetReleasesResDTO getReleases(Long releaseId) {
         Optional<Releases> releases = releasesRepository.findById(releaseId);

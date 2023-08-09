@@ -124,7 +124,7 @@ public class ReleasesController {
 
 
     /**
-     * 프로젝트 릴리 노트 조회 API
+     * 프로젝트 릴리즈 노트 조회 API
      * @param projectId 조회할 프로젝트 아이디
      * @return List<GetProjectReleaseListResDTO>
      */
