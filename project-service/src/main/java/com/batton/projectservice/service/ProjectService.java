@@ -220,7 +220,7 @@ public class ProjectService {
                 Project project = belong.getProject();
 
                 // 최신 릴리즈 노트 버전 조회
-                Optional<Releases> LatestReleases = releasesRepository.findFirstByProjectIdOrderByUpdatedAtDesc(project.getId());
+                Optional<Releases> latestReleases = releasesRepository.findFirstByProjectIdOrderByUpdatedAtDesc(project.getId());
 
                 // 해당 프로젝트의 전체 이슈 리스트 조회
                 List<Issue> projectIssue = issueRepository.findByProjectId(project.getId());
@@ -265,7 +265,11 @@ public class ProjectService {
                     }
                 }
                 GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(projectLeaderId);
-                joinedProjectList.add(GetJoinedProjectListResDTO.toDTO(project, LatestReleases.get(), todo, progress, done, percentage, mine, memberNum, getMemberResDTO));
+                if (latestReleases.isPresent()) {
+                    joinedProjectList.add(GetJoinedProjectListResDTO.toDTO(project, latestReleases.get().getVersionMajor(), latestReleases.get().getVersionMinor(), latestReleases.get().getVersionPatch(), todo, progress, done, percentage, mine, memberNum, getMemberResDTO));
+                } else {
+                    joinedProjectList.add(GetJoinedProjectListResDTO.toDTO(project, 0, 0, 0, todo, progress, done, percentage, mine, memberNum, getMemberResDTO));
+                }
             }
 
             return joinedProjectList;

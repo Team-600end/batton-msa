@@ -43,15 +43,15 @@ public class GetJoinedProjectListResDTO {
         this.leaderProfileImg = leaderProfileImg;
     }
 
-    public static GetJoinedProjectListResDTO toDTO(Project project, Releases releases, int todo, int progress, int done, int percentage, int mine, int memberNum, GetMemberResDTO leader) {
+    public static GetJoinedProjectListResDTO toDTO(Project project, int versionMajor, int versionMinor, int versionPatch, int todo, int progress, int done, int percentage, int mine, int memberNum, GetMemberResDTO leader) {
         return GetJoinedProjectListResDTO.builder()
                 .projectId(project.getId())
                 .projectKey(project.getProjectKey())
                 .projectTitle(project.getProjectTitle())
                 .projectImg(project.getProjectImage())
-                .versionMajor(releases.getVersionMajor())
-                .versionMinor(releases.getVersionMinor())
-                .versionPatch(releases.getVersionPatch())
+                .versionMajor(versionMajor)
+                .versionMinor(versionMinor)
+                .versionPatch(versionPatch)
                 .progress(progress)
                 .todo(todo)
                 .done(done)
