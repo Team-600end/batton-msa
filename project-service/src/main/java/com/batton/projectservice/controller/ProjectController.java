@@ -120,6 +120,23 @@ public class ProjectController {
     }
 
     /**
+     * 참여 중인 프로젝트 리스트 조회 API
+     * @param memberId 프로젝트 조회 작업을하는 유저 아이디
+     * @retur List<GetJoinedProjectListResDTO>
+     */
+    @GetMapping("/joinedList")
+    @Operation(summary = "참여 중인 프로젝트 리스트 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "707", description = "참여한 프로젝트가 없습니다.")
+    })
+    private BaseResponse<List<GetJoinedProjectListResDTO>> getJoinedProjectList(@RequestHeader Long memberId) {
+        List<GetJoinedProjectListResDTO> getJoinedProjectListResDTOList = projectService.getJoinedProjectList(memberId);
+
+        return new BaseResponse<>(getJoinedProjectListResDTOList);
+
+    }
+
+    /**
      * 프로젝트 목록 검색 조회 API
      * @param memberId 프로젝트 조회 작업을하는 유저 아이디
      * @param keyword 조회할 프로젝트 명

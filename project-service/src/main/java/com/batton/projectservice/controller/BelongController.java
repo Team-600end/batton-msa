@@ -1,6 +1,7 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
+import com.batton.projectservice.dto.GetBelongResDTO;
 import com.batton.projectservice.dto.project.ProjectTeamReqDTO;
 import com.batton.projectservice.dto.belong.GetBelongResDTO;
 import com.batton.projectservice.enums.GradeType;

@@ -22,8 +22,12 @@ public interface BelongRepository extends JpaRepository<Belong, Long> {
 
     List<Belong> findByMemberId(Long memberId);
 
-    @Query("SELECT b FROM Belong b WHERE b.project.id = :projectId")
-    List<Belong> findByProjectId(@Param("projectId") Long projectId);
+    List<Belong> findByProjectId(Long projectId);
+
+//    @Query("SELECT b FROM Belong b WHERE b.projectId = :projectId")
+//    List<Belong> findByProjectId(@Param("projectId") Long projectId);
+
     @Query("SELECT b FROM Belong b WHERE b.project.id = :projectId AND b.grade = :type")
     List<Belong> findLeader(@Param("projectId") Long projectId, @Param("type") GradeType type);
+
 }
