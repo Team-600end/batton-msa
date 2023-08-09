@@ -1,0 +1,36 @@
+<<<<<<< HEAD
+[2023-08-01 05:11:19:475] INFO  22408 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-01 05:18:22:639] INFO  24051 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-01 05:18:24:3046] INFO  24051 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 2.909 seconds (JVM running for 3.768)
+=======
+[2023-08-01 04:15:36:514] INFO  13096 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-01 04:15:39:3064] INFO  13096 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 2.946 seconds (JVM running for 3.274)
+>>>>>>> 259d15d322bb48b7abcc1920f0d91702ad702fc6
+[2023-08-01 13:56:16:776] INFO  30126 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-01 13:56:20:4323] INFO  30126 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 4.139 seconds (JVM running for 4.774)
+[2023-08-01 13:56:44:28241] INFO  30126 --- [nio-8081-exec-1] c.b.m.service.AuthService                : signupMember 예외: 이미 존재하는 이메일입니다.
+[2023-08-01 13:58:02:704] INFO  30238 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-01 13:58:05:4284] INFO  30238 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 4.114 seconds (JVM running for 4.69)
+[2023-08-01 14:03:34:332792] INFO  30238 --- [nio-8081-exec-4] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
+[2023-08-01 14:03:44:343152] INFO  30238 --- [nio-8081-exec-5] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
+[2023-08-01 14:03:49:348687] INFO  30238 --- [nio-8081-exec-6] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
+[2023-08-01 14:03:53:352275] INFO  30238 --- [nio-8081-exec-7] c.b.m.service.MemberService              : getMember 예외: 유저 아이디 값을 확인해주세요.
+[2023-08-01 14:03:53:352295] INFO  30238 --- [nio-8081-exec-8] c.b.m.service.MemberService              : getMember 예외: 유저 아이디 값을 확인해주세요.
+[2023-08-01 14:05:46:465384] INFO  30238 --- [nio-8081-exec-1] c.b.m.service.MemberService              : getMember 예외: 유저 아이디 값을 확인해주세요.
+[2023-08-01 14:05:46:465393] INFO  30238 --- [nio-8081-exec-2] c.b.m.service.MemberService              : getMember 예외: 유저 아이디 값을 확인해주세요.
+[2023-08-01 14:06:02:480862] INFO  30238 --- [nio-8081-exec-3] c.b.m.service.MemberService              : getMember 예외: 유저 아이디 값을 확인해주세요.
+[2023-08-01 14:06:02:480876] INFO  30238 --- [nio-8081-exec-4] c.b.m.service.MemberService              : getMember 예외: 유저 아이디 값을 확인해주세요.
+[2023-08-01 14:06:02:480881] INFO  30238 --- [nio-8081-exec-5] c.b.m.service.MemberService              : getMember 예외: 유저 아이디 값을 확인해주세요.
+[2023-08-01 14:06:37:516633] INFO  30238 --- [nio-8081-exec-6] c.b.m.service.MemberService              : getMember 예외: 유저 아이디 값을 확인해주세요.
+[2023-08-01 14:06:37:516649] INFO  30238 --- [nio-8081-exec-7] c.b.m.service.MemberService              : getMember 예외: 유저 아이디 값을 확인해주세요.
+[2023-08-01 14:06:37:516657] INFO  30238 --- [nio-8081-exec-8] c.b.m.service.MemberService              : getMember 예외: 유저 아이디 값을 확인해주세요.
+[2023-08-01 14:08:35:634342] INFO  30238 --- [nio-8081-exec-1] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
+[2023-08-01 14:08:40:639510] INFO  30238 --- [nio-8081-exec-2] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
+[2023-08-01 14:08:46:645256] INFO  30238 --- [nio-8081-exec-3] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
+[2023-08-01 14:09:16:700] INFO  30937 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-01 14:09:19:4194] INFO  30937 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 4.023 seconds (JVM running for 4.654)
+[2023-08-01 14:09:32:16298] INFO  30937 --- [nio-8081-exec-1] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
+[2023-08-01 14:09:36:20798] INFO  30937 --- [nio-8081-exec-3] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
+[2023-08-01 14:09:45:29415] INFO  30937 --- [nio-8081-exec-4] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=서현, profileImage=null)
+[2023-08-01 14:09:45:29428] INFO  30937 --- [nio-8081-exec-5] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=서현, profileImage=null)
+[2023-08-01 14:09:45:29432] INFO  30937 --- [nio-8081-exec-6] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=서현, profileImage=null)

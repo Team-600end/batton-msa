@@ -4,8 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor
 public class GetMemberResDTO {
     private String nickname;
     private String profileImage;

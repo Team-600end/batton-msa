@@ -5,12 +5,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.DateTimeException;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Getter
@@ -21,6 +17,7 @@ public class Notice extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notice_id")
     private Long id;
+    private Long projectId;
     private Long senderId;
     private Long receiverId;
     private Long contentId;
@@ -29,8 +26,9 @@ public class Notice extends BaseEntity {
     private String noticeContent;
 
     @Builder
-    public Notice(Long id, Long senderId, Long receiverId, Long contentId, NoticeType noticeType, String noticeContent) {
+    public Notice(Long id, Long projectId, Long senderId, Long receiverId, Long contentId, NoticeType noticeType, String noticeContent) {
         this.id = id;
+        this.projectId = projectId;
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.contentId = contentId;

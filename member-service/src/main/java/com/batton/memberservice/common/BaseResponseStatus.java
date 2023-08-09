@@ -17,7 +17,9 @@ public enum BaseResponseStatus {
     MEMBER_INVALID_USER_ID(false, 600, "유저 아이디 값을 확인해주세요."),
     EXIST_EMAIL_ERROR(false, 601, "이미 존재하는 이메일입니다."),
     MEMBER_PASSWORD_CONFLICT(false, 602, "두 비밀번호를 같게 입력해주세요."),
-    MEMBER_PASSWORD_DISCORD(false, 603, "비밀번호가 일치하지 않습니다.");
+    MEMBER_PASSWORD_DISCORD(false, 603, "비밀번호가 일치하지 않습니다."),
+    POST_MEMBERS_INVALID_EMAIL(false, 604, "이메일 형식을 확인해주세요."),
+    IMAGE_UPLOAD_ERROR(false, 610, "이미지 업로드에 실패하였습니다.");
 
 
 

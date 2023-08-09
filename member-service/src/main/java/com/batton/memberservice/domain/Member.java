@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "member")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "member")
 public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +24,7 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
     private String profileImage;
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @Builder

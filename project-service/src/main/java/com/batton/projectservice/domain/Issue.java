@@ -26,23 +26,23 @@ public class Issue extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private IssueTag issueTag;
     private int issueSeq;
+    private int issueKey;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "belong_id")
     private Belong belong;;
-    @OneToMany(mappedBy = "issue", cascade = CascadeType.REMOVE)
-    private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Issue(Long id, String issueTitle, String issueContent, IssueStatus issueStatus, IssueTag issueTag, int issueSeq, Project project, Belong belong) {
+    public Issue(Long id, String issueTitle, String issueContent, IssueStatus issueStatus, IssueTag issueTag, int issueSeq, int issueKey, Project project, Belong belong) {
         this.id = id;
         this.issueTitle = issueTitle;
         this.issueContent = issueContent;
         this.issueStatus = issueStatus;
         this.issueTag = issueTag;
         this.issueSeq = issueSeq;
+        this.issueKey = issueKey;
         this.project = project;
         this.belong = belong;
     }
@@ -50,8 +50,16 @@ public class Issue extends BaseEntity {
     public void updateSeq(int issueSeq) {
         this.issueSeq = issueSeq;
     }
+
     public void updateIssue(int issueSeq, IssueStatus issueStatus) {
         this.issueSeq = issueSeq;
         this.issueStatus = issueStatus;
+    }
+
+    public void modifyIssue(String issueTitle, String issueContent, IssueTag issueTag, Belong belong) {
+        this.issueTitle = issueTitle;
+        this.issueContent = issueContent;
+        this.issueTag = issueTag;
+        this.belong = belong;
     }
 }

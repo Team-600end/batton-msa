@@ -1,7 +1,6 @@
 package com.batton.noticeservice.domain;
 
 import javax.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 public class BaseEntity {
-
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;

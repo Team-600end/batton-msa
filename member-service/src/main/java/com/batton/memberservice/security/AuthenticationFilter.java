@@ -35,19 +35,15 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
-
         Authentication authentication;
 
         try {
-
             MemberLoginReqDTO credential = new ObjectMapper().readValue(request.getInputStream(), MemberLoginReqDTO.class);
-
             authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             credential.getEmail(),
                             credential.getPassword())
             );
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -60,31 +56,25 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
-
         User user = (User)authResult.getPrincipal();
-
         List<String> roles = user.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
         String memberId = user.getUsername();
-
         String accessToken = tokenProvider.createAccessToken(memberId, request.getRequestURI(), roles);
         Date expiredTime = tokenProvider.getExpiredTime(accessToken);
         String refreshToken = tokenProvider.createRefreshToken();
 
         refreshTokenService.updateRefreshToken(Long.valueOf(memberId), tokenProvider.getRefreshTokenId(refreshToken));
-
         TokenDTO tokenDTO = TokenDTO.builder()
                         .accessToken(accessToken)
                                 .accessTokenExpiredDate(expiredTime)
                                         .refreshToken(refreshToken)
                                                 .build();
-
         response.setContentType(APPLICATION_JSON_VALUE);
 
-        //TODO: Result 패턴 정해지면 다시 작성필요
         new ObjectMapper().writeValue(response.getOutputStream(), tokenDTO);
     }
 }

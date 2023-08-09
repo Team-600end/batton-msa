@@ -1,15 +1,21 @@
 package com.batton.projectservice.service;
 
+import com.batton.projectservice.client.MemberServiceFeignClient;
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Belong;
+import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Project;
-import com.batton.projectservice.dto.project.PatchProjectReqDTO;
-import com.batton.projectservice.dto.project.PostProjectReqDTO;
-import com.batton.projectservice.dto.project.ProjectTeamReqDTO;
-import com.batton.projectservice.dto.GetProjectListResDTO;
+import com.batton.projectservice.domain.Releases;
+import com.batton.projectservice.dto.client.GetMemberResDTO;
+import com.batton.projectservice.dto.project.*;
 import com.batton.projectservice.enums.GradeType;
+import com.batton.projectservice.enums.IssueStatus;
+import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.repository.BelongRepository;
+import com.batton.projectservice.repository.IssueRepository;
 import com.batton.projectservice.repository.ProjectRepository;
+import com.batton.projectservice.repository.ReleasesRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -25,62 +31,74 @@ import static com.batton.projectservice.common.BaseResponseStatus.*;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final BelongRepository belongRepository;
+    private final ReleasesRepository releasesRepository;
+    private final IssueRepository issueRepository;
+    private final MemberServiceFeignClient memberServiceFeignClient;
 
     /**
      * 프로젝트 생성 API
      * */
     @Transactional
-    public Long addProject(Long memberId, PostProjectReqDTO postProjectReqDTO) {
-        boolean isUnique = false;
-        String projectKey = UUID.randomUUID().toString();
-
-        //프로젝트 키가 중복되지 않을 때까지 반복
-        while(!isUnique) {
-            if(projectRepository.existsByProjectKey(projectKey))
-                projectKey = UUID.randomUUID().toString();
-            else
-                isUnique = true;
-        }
-        Project project = postProjectReqDTO.toEntity(postProjectReqDTO, projectKey);
+    public PostProjectResDTO postProject(Long memberId, PostProjectReqDTO postProjectReqDTO) {
+        Project project = postProjectReqDTO.toEntity(postProjectReqDTO);
         Long newProjectId = projectRepository.save(project).getId();
 
-        //소속 테이블에 팀원들 추가하는 함수 불러오기
-        addTeamMember(memberId, newProjectId, postProjectReqDTO.getTeamMemberList());
+        // 프로젝트 생성한 사람일 경우 LEADER 권한 부여
+        Belong leaderBelong = Belong.builder()
+                .project(project)
+                .memberId(memberId)
+                .nickname(postProjectReqDTO.getNickname())
+                .status(Status.ENABLED)
+                .grade(GradeType.LEADER)
+                .build();
 
-        return newProjectId;
+        belongRepository.save(leaderBelong);
+
+        //소속 테이블에 팀원들 추가하는 함수 불러오기
+        postProjectMember(memberId, newProjectId, postProjectReqDTO.getProjectMemberList());
+        PostProjectResDTO postProjectResDTO = PostProjectResDTO.toDto(newProjectId, postProjectReqDTO.getProjectKey());
+
+        return postProjectResDTO;
+    }
+
+    /**
+     * 프로젝트 고유키 중복 확인 API
+     * */
+    @Transactional
+    public String getCheckKey(String projectKey) {
+        List<Project> projectList = projectRepository.findAll();
+
+        for (Project project : projectList) {
+            if (project.getProjectKey().equals(projectKey)) {
+                throw new BaseException(PROJECT_KEY_EXISTS);
+            }
+        }
+
+        return "프로젝트 키가 유효합니다.";
     }
 
     /**
      * 프로젝트 팀원 추가 API
      * */
     @Transactional
-    public String addTeamMember(Long memberId, Long projectId, List<ProjectTeamReqDTO> teamMemberList) {
-        Optional<Project> newProject = projectRepository.findById(projectId);
+    public String postProjectMember(Long memberId, Long projectId, List<ProjectTeamReqDTO> teamMemberList) {
+        Optional<Project> project = projectRepository.findById(projectId);
+        Optional<Belong> leaderBelong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
 
-        if (newProject.isPresent()) {
-            Project project = newProject.get();
-
-            for (ProjectTeamReqDTO projectTeamReqDTO : teamMemberList) {
-                //프로젝트 생성한 사람일 경우 LEADER 권한 부여
-                if (projectTeamReqDTO.getMemberId() == memberId) {
-                    Belong belong = Belong.builder()
-                            .project(project)
-                            .memberId(projectTeamReqDTO.getMemberId())
-                            .nickname(projectTeamReqDTO.getNickname())
-                            .status(projectTeamReqDTO.getStatus())
-                            .grade(GradeType.LEADER)
-                            .build();
-
-                    belongRepository.save(belong);
-                } else {
-                    //프로젝트 생성한 사람이 아닐 경우 다른 권한 부여
-                    Belong belong = ProjectTeamReqDTO.toEntity(project, projectTeamReqDTO);
-
+        // 프로젝트 존재 여부 확인
+        if (project.isPresent()) {
+            // 리더 권한 확인
+            if (leaderBelong.isPresent() && leaderBelong.get().getGrade() == GradeType.LEADER) {
+                // 팀원 추가
+                for (ProjectTeamReqDTO projectTeamReqDTO : teamMemberList) {
+                    Belong belong = ProjectTeamReqDTO.toEntity(project.get(), projectTeamReqDTO, Status.ENABLED);
                     belongRepository.save(belong);
                 }
+            } else {
+                throw new BaseException(MEMBER_NO_AUTHORITY);
             }
         } else {
-            throw new BaseException(PROJECT_NOT_FOUND);
+            throw new BaseException(PROJECT_INVALID_ID);
         }
 
         return "프로젝트 팀원 추가 성공";
@@ -90,22 +108,26 @@ public class ProjectService {
      * 프로젝트 수정 API
      * */
     @Transactional
-    public String modifyProject(Long projectId, Long memberId, PatchProjectReqDTO patchProjectReqDTO) {
+    public String patchProject(Long projectId, Long memberId, PatchProjectReqDTO patchProjectReqDTO) {
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
 
-        if (belong.isPresent()) {
+        // 소속 유저 확인
+        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED))  {
+            // 수정 권한 확인
+
             if (belong.get().getGrade() == GradeType.MEMBER) {
-                throw new BaseException(USER_NO_AUTHORITY);
+                throw new BaseException(MEMBER_NO_AUTHORITY);
             }
             Optional<Project> project = projectRepository.findById(projectId);
 
+            // 프로젝트 존재 유무 확인
             if (project.isPresent()) {
                 project.get().update(patchProjectReqDTO.getProjectTitle(), patchProjectReqDTO.getProjectContent(), patchProjectReqDTO.getProjectImage());
             } else {
-                throw new BaseException(PROJECT_NOT_FOUND);
+                throw new BaseException(PROJECT_INVALID_ID);
             }
         } else {
-            throw new BaseException(USER_NOT_FOUND);
+            throw new BaseException(BELONG_INVALID_ID);
         }
 
         return "프로젝트 수정 성공";
@@ -115,39 +137,145 @@ public class ProjectService {
      * 프로젝트 삭제 API
      * */
     @Transactional
-    public String removeProject(Long memberId, Long projectId) {
+    public String deleteProject(Long memberId, Long projectId) {
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
 
-        if (belong.isPresent()) {
+        // 소속 유저 확인
+        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+            // 삭제 권한 확인
             if (belong.get().getGrade() == GradeType.MEMBER) {
-                throw new BaseException(USER_NO_AUTHORITY);
+                throw new BaseException(MEMBER_NO_AUTHORITY);
             } else {
                 projectRepository.deleteById(projectId);
             }
         } else {
-            throw new BaseException(PROJECT_NOT_FOUND);
+            throw new BaseException(PROJECT_INVALID_ID);
         }
 
         return "프로젝트 삭제 성공";
     }
 
     /**
+     * 프로젝트 상세 조회 API
+     * */
+    @Transactional
+    public GetProjectInfoResDTO getProject(Long memberId, Long projectId) {
+        Optional<Project> project = projectRepository.findById(projectId);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
+
+        //프로젝트 존재 유뮤 확인
+        if (project.isPresent()) {
+            // 소속 유저 확인
+            if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+                GetProjectInfoResDTO getProjectInfoResDTO = GetProjectInfoResDTO.toDTO(project.get());
+
+                return getProjectInfoResDTO;
+            } else {
+                throw new BaseException(BELONG_INVALID_ID);
+            }
+        } else {
+            throw new BaseException(PROJECT_INVALID_ID);
+        }
+    }
+
+    /**
      * 프로젝트 네비바 리스트 조회 API
      */
-    @Transactional
-    public List<GetProjectListResDTO> getProjectListForNavbar(Long memberId) {
-        List<Optional<Belong>> projectList = belongRepository.findByMemberId(memberId);
+    public List<GetProjectResDTO> getProjectListForNavbar(Long memberId) {
+        List<Belong> belongList = belongRepository.findByMemberId(memberId);
 
-        if (!projectList.isEmpty()) {
-            List<GetProjectListResDTO> getProjectListResDTOList = new ArrayList<>();
+        if (!belongList.isEmpty()) {
+            List<GetProjectResDTO> getProjectResDTOList = new ArrayList<>();
 
-            for (Optional<Belong> belong : projectList) {
-                getProjectListResDTOList.add(GetProjectListResDTO.toDTO(belong.get().getProject()));
+            for (Belong belong : belongList) {
+                if (belong.getStatus().equals(Status.ENABLED)) {
+                    getProjectResDTOList.add(GetProjectResDTO.toDTO(belong.getProject(), belong.getGrade()));
+                }
             }
 
-            return getProjectListResDTOList;
+            return getProjectResDTOList;
         } else {
-            throw new BaseException(PROJECT_NOT_FOUND);
+            throw new BaseException(PROJECT_NOT_EXISTS);
+        }
+    }
+
+    /**
+     * 참여 중인 프로젝트 목록 조회 API
+     */
+    public List<GetJoinedProjectListResDTO> getJoinedProjectList(Long memberId) {
+        List<Belong> belongList = belongRepository.findByMemberId(memberId);
+        List<GetJoinedProjectListResDTO> joinedProjectList = new ArrayList<> ();
+        int todo = 0;
+        int progress = 0;
+        int done = 0;
+        int mine = 0;
+        int percentage = 0;
+        int memberNum = 0;
+
+        // 소속 유저 존재 리스트 여부 검증
+        if(!belongList.isEmpty()) {
+
+            // 참여 중인 프로젝트 목록
+            for(Belong belong : belongList) {
+                Project project = belong.getProject();
+
+                // 최신 릴리즈 노트 버전 조회
+                Optional<Releases> latestReleases = releasesRepository.findFirstByProjectIdOrderByUpdatedAtDesc(project.getId());
+
+                // 해당 프로젝트의 전체 이슈 리스트 조회
+                List<Issue> projectIssue = issueRepository.findByProjectId(project.getId());
+
+                // 해당 멤버에게 할당된 현재 프로젝트의 이슈 리스트 조회
+//                Optional<Belong> memberBelong = belongRepository.findByProjectIdAndMemberId(project.getId(), memberId); ->  belong
+                List<Issue> memberIssue = issueRepository.findByBelongIdOrderByUpdatedAtDesc(belong.getMemberId());
+
+                // 소속 유저 존재 여부 검증
+                if (belong.getStatus().equals(Status.ENABLED)) {
+
+                    // 해당 프로젝트의 대기, 진행, 완료 이슈 개수 조회
+                    for (Issue issue : memberIssue) {
+                        if (issue.getIssueStatus().equals(IssueStatus.TODO)) {
+                            todo = todo + 1;
+                        } else if (issue.getIssueStatus().equals(IssueStatus.PROGRESS)) {
+                            progress = progress + 1;
+                        } else if (issue.getIssueStatus().equals(IssueStatus.DONE)) {
+                            done = done + 1;
+                        }
+                    }
+
+                    // 해당 프로젝트의 진행도 계산
+                    percentage = (done/projectIssue.size())*100;
+
+                    // 해당 프로젝트에서 해당 멤버에게 할당된 이슈 개수 조회
+                    mine = memberIssue.size();
+                } else {
+                    throw new BaseException(BELONG_INVALID_ID);
+                }
+
+                // 프로젝트의 멤버 수 조회
+                List<Belong> projectMemberList = belongRepository.findByProjectId(project.getId());
+                memberNum = projectMemberList.size();
+
+                // 프로젝트 리더 조회
+                Long projectLeaderId = null;
+                for (Belong projectMember : projectMemberList) {
+                    if (projectMember.getGrade().equals(GradeType.LEADER)) {
+                        projectLeaderId = projectMember.getMemberId();
+                        break;
+                    }
+                }
+                GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(projectLeaderId);
+                if (latestReleases.isPresent()) {
+                    joinedProjectList.add(GetJoinedProjectListResDTO.toDTO(project, latestReleases.get().getVersionMajor(), latestReleases.get().getVersionMinor(), latestReleases.get().getVersionPatch(), todo, progress, done, percentage, mine, memberNum, getMemberResDTO));
+                } else {
+                    joinedProjectList.add(GetJoinedProjectListResDTO.toDTO(project, 0, 0, 0, todo, progress, done, percentage, mine, memberNum, getMemberResDTO));
+                }
+            }
+
+            return joinedProjectList;
+
+        } else {
+            throw new BaseException(PROJECT_NOT_EXISTS);
         }
     }
 }
