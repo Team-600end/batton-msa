@@ -19,7 +19,7 @@ public class Report extends BaseEntity {
     private Long id;
     @Column(name = "report_content", columnDefinition = "TEXT")
     private String reportContent;
-    @OneToOne(mappedBy = "report", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
     @JoinColumn(name = "issue_id")
     private Issue issue;
     @OneToMany(mappedBy = "report", cascade = CascadeType.REMOVE)

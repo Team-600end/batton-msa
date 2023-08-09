@@ -33,6 +33,8 @@ public class Issue extends BaseEntity implements Comparable<Issue> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "belong_id")
     private Belong belong;
+    @OneToOne(mappedBy = "issue", cascade = CascadeType.REMOVE)
+    private Report report;
     private String touchList;
 
     @Builder
