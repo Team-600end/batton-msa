@@ -3,6 +3,7 @@ package com.batton.projectservice.controller;
 import com.batton.projectservice.common.BaseResponse;
 import com.batton.projectservice.dto.comment.PostCommentReqDTO;
 import com.batton.projectservice.dto.report.GetAddReportResDTO;
+import com.batton.projectservice.dto.report.GetIssueReportResDTO;
 import com.batton.projectservice.dto.report.PatchIssueReportReqDTO;
 import com.batton.projectservice.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +17,24 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/reports")
 public class ReportController {
     private final ReportService reportService;
+
+    /**
+     * 이슈 레포트 조회 API
+     * @param memberId 조회 작업을 하는 멤버의 아이디
+     * @param issueId 조회할 이슈 레포트의 이슈 아이디
+     * @return
+     * */
+    @GetMapping("/{issueId}")
+    @Operation(summary = "이슈 레포트 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
+            @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요."),
+    })
+    private BaseResponse<GetIssueReportResDTO> getReport(@RequestHeader Long memberId, @PathVariable("issueId") Long issueId) {
+        GetIssueReportResDTO getIssueReportResDTO = reportService.getReport(memberId, issueId);
+
+        return new BaseResponse<>(getIssueReportResDTO);
+    }
 
     /**
      * 이슈 레포트 수정 API

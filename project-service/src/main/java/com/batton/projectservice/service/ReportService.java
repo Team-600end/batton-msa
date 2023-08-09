@@ -7,6 +7,7 @@ import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Report;
 import com.batton.projectservice.dto.comment.PostCommentReqDTO;
 import com.batton.projectservice.dto.report.GetAddReportResDTO;
+import com.batton.projectservice.dto.report.GetIssueReportResDTO;
 import com.batton.projectservice.dto.report.PatchIssueReportReqDTO;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.Status;
@@ -32,6 +33,28 @@ public class ReportService {
     private final IssueRepository issueRepository;
     private final BelongRepository belongRepository;
     private final RabbitProducer rabbitProducer;
+
+    /**
+     * 이슈 레포트 조회 API
+     */
+    public GetIssueReportResDTO getReport(Long memberId, Long issueId) {
+        Optional<Report> report = reportRepository.findByIssueId(issueId);
+
+        // 이슈 레포트 존재 여부
+        if (report.isPresent()) {
+            Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(report.get().getIssue().getProject().getId(), memberId);
+            // 소속 여부
+            if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+                GetIssueReportResDTO getIssueReportResDTO = GetIssueReportResDTO.toDTO(report.get().getReportContent());
+
+                return getIssueReportResDTO;
+            } else {
+                throw new BaseException(BELONG_INVALID_ID);
+            }
+        } else {
+            throw new BaseException(ISSUE_REPORT_INVALID_ID);
+        }
+    }
 
     /**
      * 이슈 레포트 수정 API

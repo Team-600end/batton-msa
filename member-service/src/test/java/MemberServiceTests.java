@@ -9,6 +9,7 @@ import com.batton.memberservice.repository.MemberRepository;
 import com.batton.memberservice.service.AuthService;
 import com.batton.memberservice.service.MemberService;
 import com.batton.memberservice.service.ObjectStorageService;
+import com.batton.memberservice.service.RedisUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,6 +39,8 @@ public class MemberServiceTests {
     @Mock
     private QueueService queueService;
     @Mock
+    private RedisUtil redisUtil;
+    @Mock
     private ObjectStorageService objectStorageService;
 
     @Test
@@ -46,6 +49,9 @@ public class MemberServiceTests {
         PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("test@example.com", "code", "nika", "password", "password");
         when(memberRepository.existsByEmail(any())).thenReturn(false);
         when(passwordEncoder.encode(any())).thenReturn("encoded-password");
+        when(redisUtil.existData(any())).thenReturn(true);
+        when(redisUtil.getData(any())).thenReturn("code");
+
         // Act
         String result = authService.signupMember(postMemberReqDTO);
 
