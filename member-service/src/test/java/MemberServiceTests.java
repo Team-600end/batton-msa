@@ -1,4 +1,5 @@
 import com.batton.memberservice.common.BaseException;
+import com.batton.memberservice.common.ValidationRegex;
 import com.batton.memberservice.domain.Member;
 import com.batton.memberservice.dto.PostMemberReqDTO;
 import com.batton.memberservice.dto.client.GetMemberResDTO;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
+import static com.batton.memberservice.common.ValidationRegex.isRegexEmail;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,59 +46,48 @@ public class MemberServiceTests {
     private ObjectStorageService objectStorageService;
 
     @Test
+    @DisplayName("유저 회원가입 성공")
     public void testSignupMemberSuccess() {
-        // Arrange
-        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("test@example.com", "code", "nika", "password", "password");
+        // given
+        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("testd@example.com", "code", "nika", "password", "password");
+
         when(memberRepository.existsByEmail(any())).thenReturn(false);
         when(passwordEncoder.encode(any())).thenReturn("encoded-password");
         when(redisUtil.existData(any())).thenReturn(true);
         when(redisUtil.getData(any())).thenReturn("code");
 
-        // Act
+        // when
         String result = authService.signupMember(postMemberReqDTO);
 
-        // Assert
+        // then
         assertEquals("회원가입 성공하였습니다.", result);
         verify(memberRepository, times(1)).save(any());
         verify(queueService, times(1)).createQueueForMember(any());
     }
 
     @Test
-    @DisplayName("이메일 형식 오류 예외")
-    public void testSignupMemberInvalidEmail() {
-        // Arrange
-        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("tesexample.com", "code", "nika", "password", "password");
-        // ... 이외 필요한 Arrange 작업
-
-        // Act & Assert
-        assertThrows(BaseException.class, () -> authService.signupMember(postMemberReqDTO));
-        // ... 추가적인 검증
-    }
-
-    @Test
-    @DisplayName("이미 존재하는 이메일 예외")
+    @DisplayName("유저 회원가입 시 이미 존재하는 이메일 예외 처리")
     public void testSignupMemberExistingEmail() {
-        // Arrange
+        // given
         PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("test@example.com", "code","nika", "password", "password");
 
         when(memberRepository.existsByEmail(postMemberReqDTO.getEmail())).thenReturn(true);
 
-        // Act & Assert
+        // when, then
         assertThrows(BaseException.class, () -> authService.signupMember(postMemberReqDTO));
-        // ... 추가적인 검증
     }
 
     @Test
-    @DisplayName("비밀번호 불일치 예외")
-    public void testSignupMemberPasswordMismatch() {
-        // Arrange
-        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("test@example.com", "code","nika", "password", "passdword");
+    @DisplayName("유저 회원가입 시 이메일 미인증 예외 처리")
+    public void testSignupMemberEmailAdmin() {
+        // given
+        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("tes@example.com", "code","nika", "password", "password");
 
-        // ... 이외 필요한 Arrange 작업
+        when(redisUtil.existData(postMemberReqDTO.getEmail())).thenReturn(true);
+        when(redisUtil.getData(postMemberReqDTO.getEmail()).equals(postMemberReqDTO.getAuthCode())).thenReturn(false);
 
-        // Act & Assert
+        // when, then
         assertThrows(BaseException.class, () -> authService.signupMember(postMemberReqDTO));
-        // ... 추가적인 검증
     }
 
 
