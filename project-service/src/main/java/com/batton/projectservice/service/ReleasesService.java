@@ -6,6 +6,12 @@ import com.batton.projectservice.dto.release.*;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.PublishState;
 import com.batton.projectservice.repository.*;
+import com.batton.projectservice.mq.RabbitProducer;
+import com.batton.projectservice.mq.dto.NoticeMessage;
+import com.batton.projectservice.repository.BelongRepository;
+import com.batton.projectservice.repository.IssueRepository;
+import com.batton.projectservice.repository.ProjectRepository;
+import com.batton.projectservice.repository.ReleasesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -14,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.batton.projectservice.common.BaseResponseStatus.*;
+import static com.batton.projectservice.enums.NoticeType.*;
 
 @RequiredArgsConstructor
 @Service
@@ -23,6 +30,7 @@ public class ReleasesService {
     private final BelongRepository belongRepository;
     private final IssueRepository issueRepository;
     private final RegisteredIssueRepository registeredIssueRepository;
+    private final RabbitProducer rabbitProducer;
 
     /**
      * 릴리즈 생성 API
@@ -65,14 +73,30 @@ public class ReleasesService {
 
         if (releases.isPresent()) {
             Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(releases.get().getProject().getId(), memberId);
+            List<Belong> belongs = belongRepository.findByProjectId(releases.get().getProject().getId());
+            Releases release = releases.get();
 
             if (belong.isEmpty()) {
                 throw new BaseException(BELONG_INVALID_ID);
             } else if (belong.get().getGrade() == GradeType.MEMBER) {
                 throw new BaseException(MEMBER_NO_AUTHORITY);
             }
-
             releases.get().setPublishState(PublishState.PUBLISH);
+
+            // 프로젝트에 속한 모든 구성원에게 알림 전송
+            for (Belong b : belongs) {
+                rabbitProducer.sendNoticeMessage(
+                        NoticeMessage.builder()
+                                .projectId(releases.get().getProject().getId())
+                                .noticeType(NEW)
+                                .contentId(releaseId)
+                                .senderId(memberId)
+                                .receiverId(b.getMemberId())
+                                .noticeContent("[" +b.getProject().getProjectTitle() + "] " + "릴리즈노트 v" +
+                                        release.getVersionMajor() + "." + release.getVersionMinor() + "." + release.getVersionPatch() +
+                                        " 버전이 새로 발행되었습니다.")
+                                .build());
+            }
         } else {
             throw new BaseException(RELEASE_NOTE_INVALID_ID);
         }
@@ -129,7 +153,6 @@ public class ReleasesService {
             } else if (belong.get().getGrade() == GradeType.MEMBER) {
                 throw new BaseException(MEMBER_NO_AUTHORITY);
             }
-
             releasesRepository.deleteById(releaseId);
         } else {
             throw new BaseException(RELEASE_NOTE_INVALID_ID);
@@ -214,19 +237,6 @@ public class ReleasesService {
 
                     // 이슈 태그 리스트
                     List<GetReleasesIssueResDTO> issueList = getReleasesIssues(release.getId());
-
-//                    GetReleasesResDTO getReleasesResDTO = GetReleasesResDTO.toDTO(releases.get(), publishedDate, issueList);
-//
-//
-//
-//                    List<ReleaseIssueListResDTO> issueList = new ArrayList<>();
-//                    for (Long issueId : release.getIssueList()) {
-//                        Optional<Issue> issue = issueRepository.findById(issueId);
-//                        // 이슈 존재 여부 검증
-//                        if (issue.isPresent()) {
-//                            issueList.add(ReleaseIssueListResDTO.toDTO(issueId, issue.get()));
-//                        }
-//                    }
 
                     createdDate = release.getCreatedAt().getYear() + ". " + release.getCreatedAt().getMonthValue() + ". " + release.getCreatedAt().getDayOfMonth();
                     GetProjectReleasesListResDTO getProjectReleasesListResDTO = GetProjectReleasesListResDTO.toDTO(versionChanged, release.getVersionMajor(), release.getVersionMinor(), release.getVersionPatch(), createdDate, issueList);

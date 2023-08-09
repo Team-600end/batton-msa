@@ -133,5 +133,23 @@ public class ProjectController {
         List<GetJoinedProjectListResDTO> getJoinedProjectListResDTOList = projectService.getJoinedProjectList(memberId);
 
         return new BaseResponse<>(getJoinedProjectListResDTOList);
+
+    }
+
+    /**
+     * 프로젝트 목록 검색 조회 API
+     * @param memberId 프로젝트 조회 작업을하는 유저 아이디
+     * @param keyword 조회할 프로젝트 명
+     * @return List<GetProjectListResDTO>
+     */
+    @GetMapping("/list")
+    @Operation(summary = "프로젝트 목록 검색 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
+    })
+    private BaseResponse<List<GetProjectListResDTO>> getProjectList(@RequestHeader Long memberId,  @RequestParam(value = "keyword", required = false) String keyword) {
+        List<GetProjectListResDTO> getProjectListResDTOList = projectService.getProjectList(memberId, keyword);
+
+        return new BaseResponse<>(getProjectListResDTOList);
     }
 }

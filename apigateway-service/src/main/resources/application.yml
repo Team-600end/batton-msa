@@ -33,6 +33,15 @@ spring:
         - id: member-service
           uri: http://localhost:8081
           predicates:
+            - Path=/api/auth/email
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+
+        - id: member-service
+          uri: http://localhost:8081
+          predicates:
             - Path=/api/auth/login
             - Method=POST
           filters:
@@ -70,6 +79,15 @@ spring:
           uri: http://localhost:8082
           predicates:
             - Path=/api/issues/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+
+        - id: project-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/reports/**
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/(?<segment>.*), /$\{segment}

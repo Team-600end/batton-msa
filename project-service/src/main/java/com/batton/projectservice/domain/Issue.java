@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "issue")
-public class Issue extends BaseEntity {
+public class Issue extends BaseEntity implements Comparable<Issue> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "issue_id")
@@ -32,10 +32,12 @@ public class Issue extends BaseEntity {
     private Project project;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "belong_id")
-    private Belong belong;;
+    private Belong belong;
+    private String touchList;
 
     @Builder
-    public Issue(Long id, String issueTitle, String issueContent, IssueStatus issueStatus, IssueTag issueTag, int issueSeq, int issueKey, Project project, Belong belong) {
+    public Issue(Long id, String issueTitle, String issueContent, IssueStatus issueStatus, IssueTag issueTag,
+                 int issueSeq, int issueKey, Project project, Belong belong, String touchList) {
         this.id = id;
         this.issueTitle = issueTitle;
         this.issueContent = issueContent;
@@ -45,6 +47,7 @@ public class Issue extends BaseEntity {
         this.issueKey = issueKey;
         this.project = project;
         this.belong = belong;
+        this.touchList = touchList;
     }
 
     public void updateSeq(int issueSeq) {
@@ -61,5 +64,14 @@ public class Issue extends BaseEntity {
         this.issueContent = issueContent;
         this.issueTag = issueTag;
         this.belong = belong;
+    }
+
+    public void updateTouchList(String touchList) {
+        this.touchList = touchList;
+    }
+
+    @Override
+    public int compareTo(Issue issue) {
+        return this.getUpdatedAt().compareTo(issue.getUpdatedAt());
     }
 }

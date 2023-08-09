@@ -2,6 +2,8 @@ package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
 import com.batton.projectservice.dto.issue.*;
+import com.batton.projectservice.dto.issue.GetIssueReportResDTO;
+import com.batton.projectservice.enums.IssueStatus;
 import com.batton.projectservice.service.IssueService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -93,29 +95,31 @@ public class IssueController {
     /**
      * 개인 이슈 목록 조회 API
      * @param memberId 조회하는 유저 아이디
-     * @param projectId 프로젝트 아이디
+     * @param issueStatus 조회할 이슈 상태
+     * @param keyword 조회할 이슈 제목
      * @return List<GetMyIssueResDTO>
+     *
      * */
-    @GetMapping("/list/{projectId}")
+    @GetMapping("/list")
     @Operation(summary = "개인 이슈 목록 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<List<GetMyIssueResDTO>> getMyIssue(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId) {
-        List<GetMyIssueResDTO> getMyIssueResDTOList = issueService.getMyIssue(memberId, projectId);
+    private BaseResponse<List<GetMyIssueResDTO>> getMyIssue(@RequestHeader Long memberId, @RequestParam(value = "status", required = false) IssueStatus issueStatus, @RequestParam(value = "keyword", required = false) String keyword) {
+        List<GetMyIssueResDTO> getMyIssueResDTOList = issueService.getMyIssue(memberId, issueStatus, keyword);
 
         return new BaseResponse<>(getMyIssueResDTOList);
     }
 
     /**
-     * 이슈 상세 조회 API
+     * 이슈 관리 페이지 조회 API
      * @param memberId 조회하는 유저 아이디
      * @param issueId 조회할 이슈 아이디
      * @return GetIssueInfoResDTO
      * */
     @GetMapping("/{issueId}")
-    @Operation(summary = "이슈 상세 조회")
+    @Operation(summary = "이슈 관리 페이지 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
@@ -124,6 +128,19 @@ public class IssueController {
         GetIssueInfoResDTO getIssueInfoResDTO = issueService.getIssueInfo(memberId, issueId);
 
         return new BaseResponse<>(getIssueInfoResDTO);
+    }
+
+    /**
+     * 이슈 조회 페이지 조회 API
+     * @param issueId 조회할 이슈 아이디
+     */
+    @GetMapping("/reports/{issueId}")
+    @Operation(summary = "이슈 조회 페이지 조회")
+    @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
+    private BaseResponse<GetIssueReportResDTO> getIssueReport(@PathVariable("issueId") Long issueId) {
+        GetIssueReportResDTO getIssueReportResDTO = issueService.getIssueReport(issueId);
+
+        return new BaseResponse<>(getIssueReportResDTO);
     }
 
     /**
@@ -211,5 +228,21 @@ public class IssueController {
         List<GetIssueResDTO> getIssueResDTOList = issueService.getDoneIssue(projectId);
 
         return new BaseResponse<>(getIssueResDTOList);
+    }
+
+    /**
+     * 이슈 바톤 터치 API
+     * @param memberId 바톤 터치를 수행하는 유저
+     * @param issueId 바톤 터치 이슈
+     * @return String
+     */
+    @PostMapping("/{issueId}")
+    @Operation(summary = "이슈 바톤 터치")
+    private BaseResponse<String> postBattonTouch(@RequestHeader Long memberId,
+                                                 @PathVariable("issueId") Long issueId,
+                                                 @RequestBody PostBattonTouchReqDTO postBattonTouchReqDTO) {
+        String result = issueService.postBattonTouch(issueId, postBattonTouchReqDTO);
+
+        return new BaseResponse<>(result);
     }
 }

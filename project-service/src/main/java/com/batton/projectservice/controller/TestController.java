@@ -21,7 +21,7 @@ public class TestController {
     @Operation(summary = "알림 객체 메세지 전송")
     private BaseResponse<String> sendNoticeMessage() {
         NoticeMessage noticeMessage = NoticeMessage.builder()
-                .noticeContent("이승희님이 알림을 보냈습니다.")
+                .noticeContent("test")
                 .noticeType(NEW)
                 .projectId(1L)
                 .senderId(1L)

@@ -10,7 +10,13 @@ import com.batton.projectservice.dto.client.GetMemberResDTO;
 import com.batton.projectservice.dto.project.*;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.IssueStatus;
+import com.batton.projectservice.dto.client.GetMemberResDTO;
+import com.batton.projectservice.dto.project.*;
+import com.batton.projectservice.enums.GradeType;
+import com.batton.projectservice.enums.NoticeType;
 import com.batton.projectservice.enums.Status;
+import com.batton.projectservice.mq.RabbitProducer;
+import com.batton.projectservice.mq.dto.NoticeMessage;
 import com.batton.projectservice.repository.BelongRepository;
 import com.batton.projectservice.repository.IssueRepository;
 import com.batton.projectservice.repository.ProjectRepository;
@@ -18,13 +24,17 @@ import com.batton.projectservice.repository.ReleasesRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
 import javax.transaction.Transactional;
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static com.batton.projectservice.common.BaseResponseStatus.*;
+import static com.batton.projectservice.enums.NoticeType.*;
 
 @RequiredArgsConstructor
 @Service
@@ -33,6 +43,8 @@ public class ProjectService {
     private final BelongRepository belongRepository;
     private final ReleasesRepository releasesRepository;
     private final IssueRepository issueRepository;
+    private final MemberServiceFeignClient memberServiceFeignClient;
+    private final RabbitProducer rabbitProducer;
     private final MemberServiceFeignClient memberServiceFeignClient;
 
     /**
@@ -93,6 +105,15 @@ public class ProjectService {
                 for (ProjectTeamReqDTO projectTeamReqDTO : teamMemberList) {
                     Belong belong = ProjectTeamReqDTO.toEntity(project.get(), projectTeamReqDTO, Status.ENABLED);
                     belongRepository.save(belong);
+                    rabbitProducer.sendNoticeMessage(
+                            NoticeMessage.builder()
+                                    .projectId(projectId)
+                                    .noticeType(INVITE)
+                                    .contentId(projectId)
+                                    .senderId(memberId)
+                                    .receiverId(projectTeamReqDTO.getMemberId())
+                                    .noticeContent("[" + project.get().getProjectTitle() + "] " + "새로운 프로젝트 '" + project.get().getProjectTitle() + "'에 초대되었습니다.")
+                                    .build());
                 }
             } else {
                 throw new BaseException(MEMBER_NO_AUTHORITY);
@@ -204,7 +225,7 @@ public class ProjectService {
      */
     public List<GetJoinedProjectListResDTO> getJoinedProjectList(Long memberId) {
         List<Belong> belongList = belongRepository.findByMemberId(memberId);
-        List<GetJoinedProjectListResDTO> joinedProjectList = new ArrayList<> ();
+        List<GetJoinedProjectListResDTO> joinedProjectList = new ArrayList<>();
         int todo = 0;
         int progress = 0;
         int done = 0;
@@ -213,10 +234,10 @@ public class ProjectService {
         int memberNum = 0;
 
         // 소속 유저 존재 리스트 여부 검증
-        if(!belongList.isEmpty()) {
+        if (!belongList.isEmpty()) {
 
             // 참여 중인 프로젝트 목록
-            for(Belong belong : belongList) {
+            for (Belong belong : belongList) {
                 Project project = belong.getProject();
 
                 // 최신 릴리즈 노트 버전 조회
@@ -226,7 +247,6 @@ public class ProjectService {
                 List<Issue> projectIssue = issueRepository.findByProjectId(project.getId());
 
                 // 해당 멤버에게 할당된 현재 프로젝트의 이슈 리스트 조회
-//                Optional<Belong> memberBelong = belongRepository.findByProjectIdAndMemberId(project.getId(), memberId); ->  belong
                 List<Issue> memberIssue = issueRepository.findByBelongIdOrderByUpdatedAtDesc(belong.getMemberId());
 
                 // 소속 유저 존재 여부 검증
@@ -244,7 +264,7 @@ public class ProjectService {
                     }
 
                     // 해당 프로젝트의 진행도 계산
-                    percentage = (done/projectIssue.size())*100;
+                    percentage = (done / projectIssue.size()) * 100;
 
                     // 해당 프로젝트에서 해당 멤버에게 할당된 이슈 개수 조회
                     mine = memberIssue.size();
@@ -277,6 +297,30 @@ public class ProjectService {
         } else {
             throw new BaseException(PROJECT_NOT_EXISTS);
         }
+    }
+
+    /**
+     * 프로젝트 목록 검색 조회 API
+     */
+    public List<GetProjectListResDTO> getProjectList(Long memberId, String keyword) {
+        GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(memberId);
+        List<GetProjectListResDTO> getProjectListResDTOSList = new ArrayList<>();
+        List<Project> projectList = new ArrayList<>();
+
+        if (StringUtils.isEmpty(keyword)) {
+            // 전체 조회
+            projectList = projectRepository.findAll();
+
+        } else {
+            // 특정 키워드 조회
+            projectList = projectRepository.findByProjectTitleContaining(keyword);
+        }
+
+        for (Project project : projectList) {
+            getProjectListResDTOSList.add(GetProjectListResDTO.toDTO(project));
+        }
+
+        return  getProjectListResDTOSList;
     }
 }
 

@@ -1,21 +1,3 @@
-[2023-08-09 17:51:27:743] INFO  28191 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
-[2023-08-09 17:51:30:3801] INFO  28191 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 3.657 seconds (JVM running for 4.271)
-[2023-08-09 18:04:36:582] INFO  28490 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
-[2023-08-09 18:04:39:3579] INFO  28490 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 3.439 seconds (JVM running for 3.824)
-[2023-08-09 18:28:18:3852] INFO  20656 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
-[2023-08-09 18:28:29:14999] INFO  20656 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 14.74 seconds (JVM running for 15.767)
-[2023-08-09 18:29:57:103009] INFO  20656 --- [nio-8081-exec-6] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
-[2023-08-09 18:31:22:187605] INFO  20656 --- [nio-8081-exec-4] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
-[2023-08-09 18:33:52:338337] INFO  20656 --- [nio-8081-exec-8] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=string, profileImage=null)
-[2023-08-09 18:38:59:645129] INFO  20656 --- [nio-8081-exec-3] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=string, profileImage=null)
-[2023-08-09 18:44:48:994484] INFO  20656 --- [nio-8081-exec-1] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=string, profileImage=null)
-[2023-08-09 18:44:49:994544] INFO  20656 --- [nio-8081-exec-2] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=ㅈrdsf, profileImage=null)
-[2023-08-04 15:11:24:4069] INFO  20468 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
-[2023-08-04 15:11:37:17171] INFO  20468 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 16.83 seconds (JVM running for 18.305)
-[2023-08-04 15:31:00:3927] INFO  20916 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
-[2023-08-04 15:31:11:14941] INFO  20916 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 14.695 seconds (JVM running for 15.796)
-[2023-08-04 23:05:41:4036] INFO  27372 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
-[2023-08-04 23:05:51:14144] INFO  27372 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 13.814 seconds (JVM running for 15.03)
 [2023-08-02 17:16:17:97621557] INFO  30937 --- [nio-8081-exec-9] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=서현, profileImage=null)
 [2023-08-02 17:16:17:97621602] INFO  30937 --- [io-8081-exec-10] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=서현, profileImage=null)
 [2023-08-03 09:41:38:11542] INFO  45652 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
@@ -712,23 +694,8 @@
 [2023-08-05 20:28:40:9689] INFO  23284 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
 [2023-08-05 20:29:17:47395] INFO  23284 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 46.834 seconds (JVM running for 55.814)
 [2023-08-05 20:29:47:77142] INFO  23284 --- [nio-8081-exec-2] c.b.m.controller.MemberController        : getMember 요청: GetMemberInfoResDTO(memberId=2, nickname=해리234, profileImage=https://objectstorage.kr-gov-central-1.kakaoicloud-kr-gov.com/v1/72a1e5bc92824b1e85f86463b972eb74/batton/IMAGE/233f8465-566d-40c2-a034-a4bf3ec3fdb3-승희2.jpg, email=lsh929500@gmail.com)
-[2023-08-05 20:35:29:418803] INFO  23284 --- [nio-8081-exec-4] c.b.m.controller.MemberController        : patchMember 요청: https://objectstorage.kr-gov-central-1.kakaoicloud-kr-gov.com/v1/72a1e5bc92824b1e85f86463b972eb74/batton/IMAGE/7283e6c1-fec0-4dd2-be95-99ee54033d1a-portfolio_spare.png[2023-08-07 15:42:05:3663] INFO  31040 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
-[2023-08-07 15:43:23:3797] INFO  2200 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
-[2023-08-07 15:46:34:3655] INFO  24500 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
-[2023-08-07 15:49:31:3584] INFO  33408 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
-[2023-08-07 15:49:40:13068] INFO  33408 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 12.814 seconds (JVM running for 13.812)
-[2023-08-07 16:18:28:3680] INFO  5636 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
-[2023-08-07 16:18:38:13221] INFO  5636 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 12.988 seconds (JVM running for 14.076)
-[2023-08-07 16:20:12:107744] INFO  5636 --- [io-8081-exec-10] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
-[2023-08-07 16:34:52:987575] INFO  5636 --- [nio-8081-exec-1] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=string, profileImage=null)
-[2023-08-07 16:34:52:987597] INFO  5636 --- [nio-8081-exec-8] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=string, profileImage=null)
-[2023-08-07 16:34:52:987614] INFO  5636 --- [nio-8081-exec-4] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=string, profileImage=null)
-[2023-08-07 16:34:52:987622] INFO  5636 --- [nio-8081-exec-5] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=string, profileImage=null)
-[2023-08-07 16:34:52:987638] INFO  5636 --- [nio-8081-exec-6] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=string, profileImage=null)
-[2023-08-07 16:38:23:1198759] INFO  5636 --- [io-8081-exec-10] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=string, profileImage=null)
-[2023-08-07 16:38:23:1198776] INFO  5636 --- [nio-8081-exec-7] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=string, profileImage=null)
-[2023-08-07 16:38:23:1198792] INFO  5636 --- [nio-8081-exec-2] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=string, profileImage=null)
-[2023-08-07 16:38:23:1198792] INFO  5636 --- [nio-8081-exec-3] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=string, profileImage=null)
-[2023-08-07 16:38:23:1198813] INFO  5636 --- [nio-8081-exec-1] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=string, profileImage=null)
-[2023-08-07 16:44:32:3609] INFO  18364 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
-[2023-08-07 16:44:42:13225] INFO  18364 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 12.976 seconds (JVM running for 14.001)
+[2023-08-05 20:35:29:418803] INFO  23284 --- [nio-8081-exec-4] c.b.m.controller.MemberController        : patchMember 요청: https://objectstorage.kr-gov-central-1.kakaoicloud-kr-gov.com/v1/72a1e5bc92824b1e85f86463b972eb74/batton/IMAGE/7283e6c1-fec0-4dd2-be95-99ee54033d1a-portfolio_spare.png
+[2023-08-05 21:49:11:14295] INFO  23304 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-05 21:49:47:50226] INFO  23304 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 49.422 seconds (JVM running for 54.331)
+[2023-08-05 21:52:26:208769] INFO  23304 --- [nio-8081-exec-5] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
+[2023-08-05 21:52:34:217396] INFO  23304 --- [nio-8081-exec-4] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.

@@ -1,21 +1,18 @@
 package com.batton.projectservice.service;
 
-import com.batton.projectservice.client.MemberServiceFeignClient;
 import com.batton.projectservice.common.BaseException;
-import com.batton.projectservice.common.Chrono;
 import com.batton.projectservice.domain.Belong;
 import com.batton.projectservice.domain.Comment;
 import com.batton.projectservice.domain.Issue;
 import com.batton.projectservice.domain.Report;
-import com.batton.projectservice.dto.client.GetMemberResDTO;
-import com.batton.projectservice.dto.comment.GetCommentResDTO;
 import com.batton.projectservice.dto.comment.PostCommentReqDTO;
 import com.batton.projectservice.dto.report.GetAddReportResDTO;
 import com.batton.projectservice.dto.report.GetIssueReportResDTO;
 import com.batton.projectservice.dto.report.PatchIssueReportReqDTO;
-import com.batton.projectservice.dto.report.PostIssueReportReqDTO;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.Status;
+import com.batton.projectservice.mq.RabbitProducer;
+import com.batton.projectservice.mq.dto.NoticeMessage;
 import com.batton.projectservice.repository.BelongRepository;
 import com.batton.projectservice.repository.CommentRepository;
 import com.batton.projectservice.repository.IssueRepository;
@@ -23,11 +20,10 @@ import com.batton.projectservice.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static com.batton.projectservice.common.BaseResponseStatus.*;
+import static com.batton.projectservice.enums.NoticeType.COMMENT;
 
 @RequiredArgsConstructor
 @Service
@@ -36,33 +32,27 @@ public class ReportService {
     private final CommentRepository commentRepository;
     private final IssueRepository issueRepository;
     private final BelongRepository belongRepository;
-    private final MemberServiceFeignClient memberServiceFeignClient;
+    private final RabbitProducer rabbitProducer;
 
     /**
-     * 이슈 레포트 생성 API
-     * */
-    @Transactional
-    public Long postReport(Long memberId, PostIssueReportReqDTO postIssueReportReqDTO) {
-        Optional<Issue> issue = issueRepository.findById(postIssueReportReqDTO.getIssueId());
-        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(issue.get().getProject().getId(), memberId);
+     * 이슈 레포트 조회 API
+     */
+    public GetIssueReportResDTO getReport(Long memberId, Long issueId) {
+        Optional<Report> report = reportRepository.findByIssueId(issueId);
 
-        // 소속 유저 확인
-        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
-            Long newReport;
-            // 이슈 존재 여부 확인
-            if (issue.isPresent()) {
-                if (reportRepository.findByIssueId(issue.get().getId()).isPresent()) {
-                    throw new BaseException(ISSUE_REPORT_EXISTS);
-                }
-                Report report = postIssueReportReqDTO.toEntity(postIssueReportReqDTO, issue.get());
-                newReport = reportRepository.save(report).getId();
+        // 이슈 레포트 존재 여부
+        if (report.isPresent()) {
+            Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(report.get().getIssue().getProject().getId(), memberId);
+            // 소속 여부
+            if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+                GetIssueReportResDTO getIssueReportResDTO = GetIssueReportResDTO.toDTO(report.get().getReportContent());
+
+                return getIssueReportResDTO;
             } else {
-                throw new BaseException(ISSUE_INVALID_ID);
+                throw new BaseException(BELONG_INVALID_ID);
             }
-
-            return newReport;
         } else {
-            throw new BaseException(BELONG_INVALID_ID);
+            throw new BaseException(ISSUE_REPORT_INVALID_ID);
         }
     }
 
@@ -70,9 +60,9 @@ public class ReportService {
      * 이슈 레포트 수정 API
      * */
     @Transactional
-    public String patchReport(Long memberId, Long reportId, PatchIssueReportReqDTO patchIssueReportReqDTO) {
-        Optional<Issue> issue = issueRepository.findById(patchIssueReportReqDTO.getIssueId());
-        Optional<Report> report = reportRepository.findById(reportId);
+    public String patchReport(Long memberId, Long issueId, PatchIssueReportReqDTO patchIssueReportReqDTO) {
+        Optional<Issue> issue = issueRepository.findById(issueId);
+        Optional<Report> report = reportRepository.findByIssueId(issue.get().getId());
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(issue.get().getProject().getId(), memberId);
 
         // 소속 유저 확인
@@ -96,34 +86,11 @@ public class ReportService {
     }
 
     /**
-     * 이슈 레포트 삭제 API
-     * */
-    @Transactional
-    public String deleteReport(Long memberId, Long reportId) {
-        Optional<Report> report = reportRepository.findById(reportId);
-        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(report.get().getIssue().getProject().getId(), memberId);
-
-        // 소속 유저 확인
-        if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
-            // 이슈 레포트 존재 여부 확인
-            if (report.isPresent()) {
-                reportRepository.deleteById(reportId);
-            } else {
-                throw new BaseException(ISSUE_REPORT_INVALID_ID);
-            }
-        } else {
-            throw new BaseException(BELONG_INVALID_ID);
-        }
-
-        return "프로젝트 삭제 성공";
-    }
-
-    /**
-     * 이슈 레포트 코멘트 생성 API
+     * 이슈 코멘트 생성 API
      */
     @Transactional
-    public String postComment(Long reportId, Long memberId, PostCommentReqDTO postCommentReqDTO) {
-        Optional<Report> report = reportRepository.findById(reportId);
+    public String postComment(Long issueId, Long memberId, PostCommentReqDTO postCommentReqDTO) {
+        Optional<Report> report = reportRepository.findByIssueId(issueId);
 
         // 레포트 존재 여부 확인
         if (!report.isPresent()) {
@@ -139,43 +106,21 @@ public class ReportService {
             }
             Comment comment = postCommentReqDTO.toEntity(postCommentReqDTO, belong.get(), report.get());
             commentRepository.save(comment);
+            rabbitProducer.sendNoticeMessage(
+                    NoticeMessage.builder()
+                            .projectId(belong.get().getProject().getId())
+                            .noticeType(COMMENT)
+                            .contentId(comment.getId())
+                            .senderId(memberId)
+                            .receiverId(report.get().getIssue().getBelong().getMemberId())
+                            .noticeContent("[" + report.get().getIssue().getProject().getProjectTitle() + "] " + report.get().getIssue().getIssueTitle() +
+                                    " 이슈 레포트에 새로운 댓글이 달렸습니다.")
+                            .build());
 
             return "코멘트 등록되었습니다";
         } else {
             throw new BaseException(BELONG_INVALID_ID);
         }
-    }
-
-    /**
-     * 이슈 레포트 조회 API
-     */
-    public GetIssueReportResDTO getIssueReport(Long reportId) {
-        Optional<Report> report = reportRepository.findById(reportId);
-        GetIssueReportResDTO getIssueReportResDTO;
-
-        if(report.isPresent()){
-            List<Comment> comments = commentRepository.findByReportId(reportId);
-            List<GetCommentResDTO> commentList= new ArrayList<>();
-            String updatedDate = report.get().getUpdatedAt().getYear() + ". " + report.get().getUpdatedAt().getMonthValue() + ". " + report.get().getUpdatedAt().getDayOfMonth();
-            String nickname = report.get().getIssue().getBelong().getNickname();
-
-            if(comments.isEmpty()){
-                commentList = null;
-            } else {
-                for (Comment comment : comments) {
-                    GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(comment.getBelong().getMemberId());
-                    String createdDate = Chrono.timesAgo(report.get().getCreatedAt());
-
-                    commentList.add(GetCommentResDTO.toDTO(comment, getMemberResDTO, createdDate));
-                }
-            }
-
-            getIssueReportResDTO = GetIssueReportResDTO.toDTO(report.get(), updatedDate, nickname, commentList);
-        } else {
-            throw new BaseException(ISSUE_REPORT_INVALID_ID);
-        }
-
-        return getIssueReportResDTO;
     }
 
     /**
