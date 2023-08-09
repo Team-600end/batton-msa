@@ -12,10 +12,10 @@ public class PatchReleasesReqDTO {
     private int versionMinor;
     private int versionPatch;
     private String releaseContent;
-    private List<Long> issueList;
+    private List<PostRegisteredIssueReqDTO> issueList;
 
     @Builder
-    public PatchReleasesReqDTO(int versionMajor, int versionMinor, int versionPatch, String releaseContent, List<Long> issueList) {
+    public PatchReleasesReqDTO(int versionMajor, int versionMinor, int versionPatch, String releaseContent, List<PostRegisteredIssueReqDTO> issueList) {
         this.versionMajor = versionMajor;
         this.versionMinor = versionMinor;
         this.versionPatch = versionPatch;

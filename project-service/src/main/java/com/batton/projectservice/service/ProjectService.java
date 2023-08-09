@@ -202,77 +202,77 @@ public class ProjectService {
     /**
      * 참여 중인 프로젝트 목록 조회 API
      */
-//    public List<GetJoinedProjectListResDTO> getJoinedProjectList(Long memberId) {
-//        List<Belong> belongList = belongRepository.findByMemberId(memberId);
-//        List<GetJoinedProjectListResDTO> joinedProjectList = new ArrayList<> ();
-//        int todo = 0;
-//        int progress = 0;
-//        int done = 0;
-//        int mine = 0;
-//        int percentage = 0;
-//        int memberNum = 0;
-//
-//        // 소속 유저 존재 리스트 여부 검증
-//        if(!belongList.isEmpty()) {
-//
-//            // 참여 중인 프로젝트 목록
-//            for(Belong belong : belongList) {
-//                Project project = belong.getProject();
-//
-//                // 최신 릴리즈 노트 버전 조회
-//                List<Releases> LatestReleases = releasesRepository.findFirstByProjectIdOrderByUpdatedAtDescIdDesc(project.getId());
-//
-//                // 해당 프로젝트의 전체 이슈 리스트 조회
-//                List<Issue> projectIssue = issueRepository.findByProjectId(project.getId());
-//
-//                // 해당 멤버에게 할당된 현재 프로젝트의 이슈 리스트 조회
-////                Optional<Belong> memberBelong = belongRepository.findByProjectIdAndMemberId(project.getId(), memberId); ->  belong
-//                List<Issue> memberIssue = issueRepository.findByBelongIdOrderByUpdatedAtDesc(belong.getMemberId());
-//
-//                // 소속 유저 존재 여부 검증
-//                if (belong.getStatus().equals(Status.ENABLED)) {
-//
-//                    // 해당 프로젝트의 대기, 진행, 완료 이슈 개수 조회
-//                    for (Issue issue : memberIssue) {
-//                        if (issue.getIssueStatus().equals(IssueStatus.TODO)) {
-//                            todo = todo + 1;
-//                        } else if (issue.getIssueStatus().equals(IssueStatus.PROGRESS)) {
-//                            progress = progress + 1;
-//                        } else if (issue.getIssueStatus().equals(IssueStatus.DONE)) {
-//                            done = done + 1;
-//                        }
-//                    }
-//
-//                    // 해당 프로젝트의 진행도 계산
-//                    percentage = (done/projectIssue.size())*100;
-//
-//                    // 해당 프로젝트에서 해당 멤버에게 할당된 이슈 개수 조회
-//                    mine = memberIssue.size();
-//                } else {
-//                    throw new BaseException(BELONG_INVALID_ID);
-//                }
-//
-//                // 프로젝트의 멤버 수 조회
-//                List<Belong> projectMemberList = belongRepository.findByProjectId(project.getId());
-//                memberNum = projectMemberList.size();
-//
-//                // 프로젝트 리더 조회
-//                Long projectLeaderId = null;
-//                for (Belong projectMember : projectMemberList) {
-//                    if (projectMember.getGrade().equals(GradeType.LEADER)) {
-//                        projectLeaderId = projectMember.getMemberId();
-//                        break;
-//                    }
-//                }
-//                GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(projectLeaderId);
-//                joinedProjectList.add(GetJoinedProjectListResDTO.toDTO(project, LatestReleases.get(), todo, progress, done, percentage, mine, memberNum, getMemberResDTO));
-//            }
-//
-//            return joinedProjectList;
-//
-//        } else {
-//            throw new BaseException(PROJECT_NOT_EXISTS);
-//        }
-//    }
+    public List<GetJoinedProjectListResDTO> getJoinedProjectList(Long memberId) {
+        List<Belong> belongList = belongRepository.findByMemberId(memberId);
+        List<GetJoinedProjectListResDTO> joinedProjectList = new ArrayList<> ();
+        int todo = 0;
+        int progress = 0;
+        int done = 0;
+        int mine = 0;
+        int percentage = 0;
+        int memberNum = 0;
+
+        // 소속 유저 존재 리스트 여부 검증
+        if(!belongList.isEmpty()) {
+
+            // 참여 중인 프로젝트 목록
+            for(Belong belong : belongList) {
+                Project project = belong.getProject();
+
+                // 최신 릴리즈 노트 버전 조회
+                Optional<Releases> LatestReleases = releasesRepository.findFirstByProjectIdOrderByUpdatedAtDesc(project.getId());
+
+                // 해당 프로젝트의 전체 이슈 리스트 조회
+                List<Issue> projectIssue = issueRepository.findByProjectId(project.getId());
+
+                // 해당 멤버에게 할당된 현재 프로젝트의 이슈 리스트 조회
+//                Optional<Belong> memberBelong = belongRepository.findByProjectIdAndMemberId(project.getId(), memberId); ->  belong
+                List<Issue> memberIssue = issueRepository.findByBelongIdOrderByUpdatedAtDesc(belong.getMemberId());
+
+                // 소속 유저 존재 여부 검증
+                if (belong.getStatus().equals(Status.ENABLED)) {
+
+                    // 해당 프로젝트의 대기, 진행, 완료 이슈 개수 조회
+                    for (Issue issue : memberIssue) {
+                        if (issue.getIssueStatus().equals(IssueStatus.TODO)) {
+                            todo = todo + 1;
+                        } else if (issue.getIssueStatus().equals(IssueStatus.PROGRESS)) {
+                            progress = progress + 1;
+                        } else if (issue.getIssueStatus().equals(IssueStatus.DONE)) {
+                            done = done + 1;
+                        }
+                    }
+
+                    // 해당 프로젝트의 진행도 계산
+                    percentage = (done/projectIssue.size())*100;
+
+                    // 해당 프로젝트에서 해당 멤버에게 할당된 이슈 개수 조회
+                    mine = memberIssue.size();
+                } else {
+                    throw new BaseException(BELONG_INVALID_ID);
+                }
+
+                // 프로젝트의 멤버 수 조회
+                List<Belong> projectMemberList = belongRepository.findByProjectId(project.getId());
+                memberNum = projectMemberList.size();
+
+                // 프로젝트 리더 조회
+                Long projectLeaderId = null;
+                for (Belong projectMember : projectMemberList) {
+                    if (projectMember.getGrade().equals(GradeType.LEADER)) {
+                        projectLeaderId = projectMember.getMemberId();
+                        break;
+                    }
+                }
+                GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(projectLeaderId);
+                joinedProjectList.add(GetJoinedProjectListResDTO.toDTO(project, LatestReleases.get(), todo, progress, done, percentage, mine, memberNum, getMemberResDTO));
+            }
+
+            return joinedProjectList;
+
+        } else {
+            throw new BaseException(PROJECT_NOT_EXISTS);
+        }
+    }
 }
 

@@ -33,4 +33,11 @@ public class RegisteredIssue extends BaseEntity {
         this.releases = releases;
         this.issue = issue;
     }
+
+    public void update(int startPosition, int endPosition, Releases releases, Issue issue) {
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
+        this.releases = releases;
+        this.issue = issue;
+    }
 }

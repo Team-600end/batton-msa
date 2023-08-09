@@ -1,22 +1,11 @@
 package com.batton.projectservice.service;
 
 import com.batton.projectservice.common.BaseException;
-import com.batton.projectservice.domain.Belong;
-import com.batton.projectservice.domain.Issue;
-import com.batton.projectservice.domain.Project;
-import com.batton.projectservice.domain.Releases;
-import com.batton.projectservice.dto.release.GetReleasesIssueResDTO;
-import com.batton.projectservice.dto.release.GetReleasesResDTO;
-import com.batton.projectservice.dto.release.GetProjectReleasesListResDTO;
-import com.batton.projectservice.dto.release.PatchReleasesReqDTO;
-import com.batton.projectservice.dto.release.PostReleasesReqDTO;
-import com.batton.projectservice.dto.release.ReleaseIssueListResDTO;
+import com.batton.projectservice.domain.*;
+import com.batton.projectservice.dto.release.*;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.PublishState;
-import com.batton.projectservice.repository.BelongRepository;
-import com.batton.projectservice.repository.IssueRepository;
-import com.batton.projectservice.repository.ProjectRepository;
-import com.batton.projectservice.repository.ReleasesRepository;
+import com.batton.projectservice.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -33,6 +22,7 @@ public class ReleasesService {
     private final ProjectRepository projectRepository;
     private final BelongRepository belongRepository;
     private final IssueRepository issueRepository;
+    private final RegisteredIssueRepository registeredIssueRepository;
 
     /**
      * 릴리즈 생성 API
@@ -46,9 +36,18 @@ public class ReleasesService {
         if (project.isPresent()) {
             // 프로젝트에 소속된 리더인지 검증
             if (belong.get().getGrade() == GradeType.LEADER) {
+
                 Releases releases = postReleasesReqDTO.toEntity(project.get(), postReleasesReqDTO, PublishState.UNPUBLISH);
                 Long releaseId = releasesRepository.save(releases).getId();
 
+                // 이슈 리스트가 존재할 경우 이슈 리스트에 릴리즈 아이디를 저장
+                if (postReleasesReqDTO.getIssueList() != null) {
+                    for (PostRegisteredIssueReqDTO postRegisteredIssueReqDTO : postReleasesReqDTO.getIssueList()) {
+                        Optional<Issue> issue = issueRepository.findById(postRegisteredIssueReqDTO.getIssueId());
+                        RegisteredIssue registeredIssue = postRegisteredIssueReqDTO.toDTO(postRegisteredIssueReqDTO, releases, issue.get());
+                        registeredIssueRepository.save(registeredIssue);
+                    }
+                }
                 return releaseId;
             } else {
                 throw new BaseException(BELONG_INVALID_ID);
@@ -93,7 +92,16 @@ public class ReleasesService {
             // 릴리즈 노트 존재 여부 검증
             if (releases.isPresent()) {
                 // 릴리즈 노트 수정
-                releases.get().update(patchReleasesReqDTO.getVersionMajor(), patchReleasesReqDTO.getVersionMinor(), patchReleasesReqDTO.getVersionPatch(), patchReleasesReqDTO.getReleaseContent(), patchReleasesReqDTO.getIssueList(), PublishState.UNPUBLISH);
+                releases.get().update(patchReleasesReqDTO.getVersionMajor(), patchReleasesReqDTO.getVersionMinor(), patchReleasesReqDTO.getVersionPatch(), patchReleasesReqDTO.getReleaseContent(), PublishState.UNPUBLISH);
+
+                // 이슈 리스트가 존재할 경우 이슈 리스트에 릴리즈 아이디를 저장
+                if (patchReleasesReqDTO.getIssueList() != null) {
+                    for (PostRegisteredIssueReqDTO postRegisteredIssueReqDTO : patchReleasesReqDTO.getIssueList()) {
+                        Optional<Issue> issue = issueRepository.findById(postRegisteredIssueReqDTO.getIssueId());
+                        RegisteredIssue registeredIssue = postRegisteredIssueReqDTO.toDTO(postRegisteredIssueReqDTO, releases.get(), issue.get());
+                        registeredIssueRepository.save(registeredIssue);
+                    }
+                }
             } else {
                 throw new BaseException(RELEASE_NOTE_INVALID_ID);
             }
@@ -134,14 +142,12 @@ public class ReleasesService {
      * 릴리즈노트에 포함된 이슈 목록 조회 API
      */
     public List<GetReleasesIssueResDTO> getReleasesIssues(Long releaseId) {
-        Optional<Releases> releases = releasesRepository.findById(releaseId);
+        Optional<List<RegisteredIssue>> registeredIssueList = registeredIssueRepository.findByReleasesId(releaseId);
         List<GetReleasesIssueResDTO> getReleasesIssueResDTO = new ArrayList<>();
 
-        if (releases.isPresent()) {
-            List<Long> issueList = releases.get().getIssueList();
-
-            for(Long issueId : issueList) {
-                Optional<Issue> issue = issueRepository.findById(issueId);
+        if (registeredIssueList.isPresent()) {
+            for(RegisteredIssue registeredIssue : registeredIssueList.get()) {
+                Optional<Issue> issue = issueRepository.findById(registeredIssue.getId());
 
                 if(issue.isPresent()){
                     getReleasesIssueResDTO.add(GetReleasesIssueResDTO.toDTO(issue.get()));
@@ -207,14 +213,20 @@ public class ReleasesService {
                     }
 
                     // 이슈 태그 리스트
-                    List<ReleaseIssueListResDTO> issueList = new ArrayList<>();
-                    for (Long issueId : release.getIssueList()) {
-                        Optional<Issue> issue = issueRepository.findById(issueId);
-                        // 이슈 존재 여부 검증
-                        if (issue.isPresent()) {
-                            issueList.add(ReleaseIssueListResDTO.toDTO(issueId, issue.get()));
-                        }
-                    }
+                    List<GetReleasesIssueResDTO> issueList = getReleasesIssues(release.getId());
+
+//                    GetReleasesResDTO getReleasesResDTO = GetReleasesResDTO.toDTO(releases.get(), publishedDate, issueList);
+//
+//
+//
+//                    List<ReleaseIssueListResDTO> issueList = new ArrayList<>();
+//                    for (Long issueId : release.getIssueList()) {
+//                        Optional<Issue> issue = issueRepository.findById(issueId);
+//                        // 이슈 존재 여부 검증
+//                        if (issue.isPresent()) {
+//                            issueList.add(ReleaseIssueListResDTO.toDTO(issueId, issue.get()));
+//                        }
+//                    }
 
                     createdDate = release.getCreatedAt().getYear() + ". " + release.getCreatedAt().getMonthValue() + ". " + release.getCreatedAt().getDayOfMonth();
                     GetProjectReleasesListResDTO getProjectReleasesListResDTO = GetProjectReleasesListResDTO.toDTO(versionChanged, release.getVersionMajor(), release.getVersionMinor(), release.getVersionPatch(), createdDate, issueList);
