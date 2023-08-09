@@ -731,4 +731,9 @@
 [2023-08-07 16:38:23:1198792] INFO  5636 --- [nio-8081-exec-3] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=string, profileImage=null)
 [2023-08-07 16:38:23:1198813] INFO  5636 --- [nio-8081-exec-1] c.b.m.controller.MemberController        : getMember 요청: GetMemberResDTO(nickname=string, profileImage=null)
 [2023-08-07 16:44:32:3609] INFO  18364 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
-[2023-08-07 16:44:42:13225] INFO  18364 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 12.976 seconds (JVM running for 14.001)
+[2023-08-07 16:44:42:13225] INFO  18364 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 12.976 seconds (JVM running for 14.001)[2023-08-09 23:13:19:4374] INFO  24240 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-09 23:13:32:17712] INFO  24240 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 17.452 seconds (JVM running for 18.643)
+[2023-08-09 23:26:58:3692] INFO  14360 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-09 23:27:08:13732] INFO  14360 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 13.459 seconds (JVM running for 14.767)
+[2023-08-09 23:28:33:3753] INFO  28440 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-09 23:28:48:18638] INFO  28440 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 18.335 seconds (JVM running for 19.739)

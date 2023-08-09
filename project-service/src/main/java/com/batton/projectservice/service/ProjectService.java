@@ -10,10 +10,6 @@ import com.batton.projectservice.dto.client.GetMemberResDTO;
 import com.batton.projectservice.dto.project.*;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.IssueStatus;
-import com.batton.projectservice.dto.client.GetMemberResDTO;
-import com.batton.projectservice.dto.project.*;
-import com.batton.projectservice.enums.GradeType;
-import com.batton.projectservice.enums.NoticeType;
 import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.mq.RabbitProducer;
 import com.batton.projectservice.mq.dto.NoticeMessage;
@@ -21,17 +17,14 @@ import com.batton.projectservice.repository.BelongRepository;
 import com.batton.projectservice.repository.IssueRepository;
 import com.batton.projectservice.repository.ProjectRepository;
 import com.batton.projectservice.repository.ReleasesRepository;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
-import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static com.batton.projectservice.common.BaseResponseStatus.*;
 import static com.batton.projectservice.enums.NoticeType.*;
@@ -45,7 +38,6 @@ public class ProjectService {
     private final IssueRepository issueRepository;
     private final MemberServiceFeignClient memberServiceFeignClient;
     private final RabbitProducer rabbitProducer;
-    private final MemberServiceFeignClient memberServiceFeignClient;
 
     /**
      * 프로젝트 생성 API
