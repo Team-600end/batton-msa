@@ -145,7 +145,7 @@ public class IssueService {
                         }
                     } else if (patchIssueBoardReqDTO.getAfterStatus().equals(DONE)) { // 이슈 승인
                         // 바톤 터치 사람들이 존재할 때
-                        if (!issue.get().getTouchList().isEmpty()) {
+                        if (issue.get().getTouchList() != null) {
                             String touchString = issue.get().getTouchList();
                             String touchSub = touchString.substring(1, touchString.length() - 1);
                             String[] touchList = touchSub.split(", ");

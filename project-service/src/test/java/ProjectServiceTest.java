@@ -1,5 +1,6 @@
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.Belong;
+import com.batton.projectservice.dto.project.PatchProjectReqDTO;
 import com.batton.projectservice.dto.project.PostProjectReqDTO;
 import com.batton.projectservice.dto.project.PostProjectResDTO;
 import com.batton.projectservice.dto.project.ProjectTeamReqDTO;
@@ -18,7 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -87,6 +87,52 @@ public class ProjectServiceTest {
 
         // when, then
         assertThrows(BaseException.class, () -> projectService.getCheckKey("kea"));
+    }
+
+    @Test
+    @DisplayName("프로젝트 수정 성공")
+    public void testPatchProjectSuccess() {
+        // given
+        PatchProjectReqDTO patchProjectReqDTO = new PatchProjectReqDTO("project","test project","image","kea");
+        Project project = new Project(1L,"project","test project", "image", "kea");
+        Belong belong = new Belong(1L, GradeType.LEADER,1L,"harry",Status.ENABLED,project);
+        when(belongRepository.findByProjectIdAndMemberId(project.getId(), belong.getMemberId())).thenReturn(Optional.of(belong));
+        when(projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
+
+        // when
+        String result = projectService.patchProject(project.getId(), belong.getMemberId(), patchProjectReqDTO);
+
+        // then
+        assertEquals("프로젝트 수정 성공", result);
+    }
+
+    @Test
+    @DisplayName("프로젝트 수정 시 권한 없음 예외 처리")
+    public void testPatchProjectNoAuthority() {
+        // given
+        PatchProjectReqDTO patchProjectReqDTO = new PatchProjectReqDTO("project","test project","image","kea");
+        Project project = new Project(1L,"project","test project", "image", "kea");
+        Belong belong = new Belong(1L, GradeType.MEMBER,1L,"harry",Status.ENABLED,project);
+        when(belongRepository.findByProjectIdAndMemberId(project.getId(), belong.getMemberId())).thenReturn(Optional.of(belong));
+        when(projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
+
+        // when, then
+        assertThrows(BaseException.class, () -> projectService.patchProject(project.getId(), belong.getMemberId(), patchProjectReqDTO));
+    }
+
+    @Test
+    @DisplayName("프로젝트 수정 시 프로젝트 아이디 예외 처리")
+    public void testPatchProjectInvalidProject() {
+        // given
+        PatchProjectReqDTO patchProjectReqDTO = new PatchProjectReqDTO("project","test project","image","kea");
+        Project project = new Project(1L,"project","test project", "image", "kea");
+        Belong belong = new Belong(1L, GradeType.LEADER,1L,"harry",Status.ENABLED,project);
+
+        when(belongRepository.findByProjectIdAndMemberId(project.getId(), belong.getMemberId())).thenReturn(Optional.of(belong));
+        when(projectRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        // when, then
+        assertThrows(BaseException.class, () -> projectService.patchProject(project.getId(), belong.getMemberId(), patchProjectReqDTO));
     }
 }
 
