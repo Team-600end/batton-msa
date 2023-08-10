@@ -205,7 +205,7 @@ public class IssueController {
      * @param issueId 수정할 이슈 아이디
      * @return String
      */
-    @PatchMapping("/{issueId}/fetch")
+    @GetMapping("/{issueId}/fetch")
     @Operation(summary = "이슈 수정 정보 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),
