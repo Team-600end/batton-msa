@@ -441,6 +441,33 @@ public class IssueService {
     }
 
     /**
+     * 이슈 수정 정보 조회 API
+     */
+    @Transactional
+    public GetModifyIssueResDTO getModifyIssue(Long memberId, Long issueId) {
+        Optional<Issue> issue = issueRepository.findById(issueId);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(issue.get().getProject().getId(), memberId);
+        GetModifyIssueResDTO getModifyIssueResDTO;
+
+        if (issue.isPresent()) {
+            Issue issues = issue.get();
+            Belong belongs = belong.get();
+            GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(belongs.getMemberId());
+            getModifyIssueResDTO = GetModifyIssueResDTO.builder()
+                    .issueTitle(issues.getIssueTitle())
+                    .issueContent(issues.getIssueContent())
+                    .issueTag(issues.getIssueTag())
+                    .managerId(belongs.getMemberId())
+                    .nickname(belongs.getNickname())
+                    .profileImage(getMemberResDTO.getProfileImage())
+                    .isMine(issues.getBelong().getMemberId().equals(memberId)).build();
+        } else {
+            throw new BaseException(ISSUE_INVALID_ID);
+        }
+        return getModifyIssueResDTO;
+    }
+
+    /**
      * 이슈 삭제 API
      */
     @Transactional

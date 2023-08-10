@@ -200,6 +200,25 @@ public class IssueController {
     }
 
     /**
+     * 이슈 수정 정보 조회 API
+     * @param memberId 이슈 수정하는 유저 아이디
+     * @param issueId 수정할 이슈 아이디
+     * @return String
+     */
+    @GetMapping("/{issueId}/fetch")
+    @Operation(summary = "이슈 수정 정보 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "700", description = "유저에게 해당 권한이 없습니다."),
+            @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
+            @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
+    })
+    private BaseResponse<GetModifyIssueResDTO> getModifyIssue(@RequestHeader Long memberId, @PathVariable("issueId") Long issueId) {
+        GetModifyIssueResDTO getModifyIssueResDTO = issueService.getModifyIssue(memberId, issueId);
+
+        return new BaseResponse<>(getModifyIssueResDTO);
+    }
+
+    /**
      * 이슈 삭제 API
      * @param memberId 이슈 삭제하는 유저 아이디
      * @param issueId 삭제할 이슈 아이디
