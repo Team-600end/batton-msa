@@ -31,4 +31,6 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
     List<Issue> findByBelongIdAndIssueStatusAndIssueTitleContaining(Long id, IssueStatus issueStatus, String keyword);
     //해당 프로젝트에서 이슈 상태에 따른 이슈 목록 조회
     List<Issue> findByProjectIdAndIssueStatusOrderByIssueSeq(Long projectId, IssueStatus status);
+    // 해당 belongId가 할당된 이슈 목록 조회
+    List<Issue> findByBelongId(Long belongId);
 }

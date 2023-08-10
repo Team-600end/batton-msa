@@ -240,7 +240,8 @@ public class ProjectService {
                 List<Issue> projectIssue = issueRepository.findByProjectId(project.getId());
 
                 // 해당 멤버에게 할당된 현재 프로젝트의 이슈 리스트 조회
-                List<Issue> memberIssue = issueRepository.findByBelongIdOrderByUpdatedAtDesc(belong.getMemberId());
+//                List<Issue> memberIssue = issueRepository.findByBelongIdOrderByUpdatedAtDesc(belong.getMemberId());
+                List<Issue> memberIssue = issueRepository.findByBelongId(belong.getId());
 
                 // 소속 유저 존재 여부 검증
                 if (belong.getStatus().equals(Status.ENABLED)) {
