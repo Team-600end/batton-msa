@@ -1,16 +1,11 @@
 import com.batton.projectservice.common.BaseException;
-import com.batton.projectservice.domain.Belong;
-import com.batton.projectservice.dto.project.PatchProjectReqDTO;
-import com.batton.projectservice.dto.project.PostProjectReqDTO;
-import com.batton.projectservice.dto.project.PostProjectResDTO;
-import com.batton.projectservice.dto.project.ProjectTeamReqDTO;
-import com.batton.projectservice.enums.GradeType;
-import com.batton.projectservice.enums.Status;
+import com.batton.projectservice.domain.*;
+import com.batton.projectservice.dto.project.*;
+import com.batton.projectservice.enums.*;
 import com.batton.projectservice.mq.RabbitProducer;
 import com.batton.projectservice.repository.BelongRepository;
 import com.batton.projectservice.repository.ProjectRepository;
 import com.batton.projectservice.service.ProjectService;
-import com.batton.projectservice.domain.Project;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -114,7 +109,6 @@ public class ProjectServiceTest {
         Project project = new Project(1L,"project","test project", "image", "kea");
         Belong belong = new Belong(1L, GradeType.MEMBER,1L,"harry",Status.ENABLED,project);
         when(belongRepository.findByProjectIdAndMemberId(project.getId(), belong.getMemberId())).thenReturn(Optional.of(belong));
-        when(projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
 
         // when, then
         assertThrows(BaseException.class, () -> projectService.patchProject(project.getId(), belong.getMemberId(), patchProjectReqDTO));
@@ -133,6 +127,84 @@ public class ProjectServiceTest {
 
         // when, then
         assertThrows(BaseException.class, () -> projectService.patchProject(project.getId(), belong.getMemberId(), patchProjectReqDTO));
+    }
+
+    @Test
+    @DisplayName("프로젝트 상세 조회 성공")
+    public void testGetProjectSuccess() {
+        // given
+        Project project = new Project(1L,"project","test project", "image", "kea");
+        Belong belong = new Belong(1L, GradeType.LEADER,1L,"harry",Status.ENABLED,project);
+        when(projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
+        when(belongRepository.findByProjectIdAndMemberId(project.getId(), belong.getMemberId())).thenReturn(Optional.of(belong));
+
+        // when
+        GetProjectInfoResDTO result = projectService.getProject(belong.getMemberId(), project.getId());
+
+        // then
+        assertNotNull(result);
+        assertEquals(project.getProjectTitle(), result.getProjectTitle());
+    }
+
+    @Test
+    @DisplayName("프로젝트 조회 시 소속 예외 처리")
+    public void testGetProjectInvalidBelong() {
+        // given
+        Project project = new Project(1L,"project","test project", "image", "kea");
+        when(projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
+        when(belongRepository.findByProjectIdAndMemberId(anyLong(), anyLong())).thenReturn(Optional.empty());
+
+        // when, then
+        assertThrows(BaseException.class, () -> projectService.getProject(anyLong(), project.getId()));
+    }
+
+    @Test
+    @DisplayName("프로젝트 목록 전체 검색 성공")
+    public void testGetProjectListAll() {
+        // given
+        Project project1 = new Project(1L,"project","test project", "image", "kea");
+        Project project2 = new Project(2L,"project2","test project2", "image", "dk");
+        List<Project> projectList = new ArrayList<>();
+        projectList.add(project1);
+        projectList.add(project2);
+        when(projectRepository.findAll()).thenReturn(projectList);
+
+        // when
+        List<GetProjectListResDTO> result = projectService.getProjectList(null);
+
+        // given
+        assertEquals(projectList.size(), result.size());
+    }
+
+    @Test
+    @DisplayName("프로젝트 목록 키워드 검색 성공")
+    public void testGetProjectListByKeyword() {
+        // given
+        Project project1 = new Project(1L,"project","test project", "image", "kea");
+        Project project2 = new Project(2L,"project2","test project2", "image", "dk");
+        List<Project> projectList = new ArrayList<>();
+        projectList.add(project1);
+        projectList.add(project2);
+        when(projectRepository.findByProjectTitleContaining("pro")).thenReturn(projectList);
+
+        // when
+        List<GetProjectListResDTO> result = projectService.getProjectList("pro");
+
+        // then
+        assertEquals(projectList.size(), result.size());
+    }
+
+    @Test
+    @DisplayName("프로젝트 목록 검색 결과 없음 성공")
+    public void testGetProjectListNoResults() {
+        // given
+        when(projectRepository.findByProjectTitleContaining("noproject")).thenReturn(new ArrayList<>());
+
+        // when
+        List<GetProjectListResDTO> result = projectService.getProjectList("noproject");
+
+        //then
+        assertEquals(0, result.size());
     }
 }
 

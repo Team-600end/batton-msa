@@ -1,7 +1,6 @@
 import com.batton.memberservice.common.BaseException;
 import com.batton.memberservice.domain.Member;
 import com.batton.memberservice.dto.GetMemberInfoResDTO;
-import com.batton.memberservice.dto.PostEmailCheckReqDTO;
 import com.batton.memberservice.dto.PostEmailReqDTO;
 import com.batton.memberservice.dto.PostMemberReqDTO;
 import com.batton.memberservice.dto.client.GetMemberResDTO;
@@ -12,7 +11,6 @@ import com.batton.memberservice.repository.MemberRepository;
 import com.batton.memberservice.service.AuthService;
 import com.batton.memberservice.service.MemberService;
 import com.batton.memberservice.service.ObjectStorageService;
-import com.batton.memberservice.service.RedisUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,8 +42,6 @@ public class MemberServiceTests {
     @Mock
     private MultipartFile profileImage;
     @Mock
-    private RedisUtil redisUtil;
-    @Mock
     private ObjectStorageService objectStorageService;
 
     @Test
@@ -53,6 +49,7 @@ public class MemberServiceTests {
     public void testSignupMemberSuccess() {
         // given
         PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("test@example.com", "code", "nika", "password", "password");
+        when(passwordEncoder.encode(postMemberReqDTO.getPassword())).thenReturn("encoded-password");
 
         // when
         String result = authService.signupMember(postMemberReqDTO);
@@ -83,20 +80,6 @@ public class MemberServiceTests {
         assertThrows(BaseException.class, () -> authService.signupMember(postMemberReqDTO));
     }
 
-//    @Test
-//    @DisplayName("이메일 검증 성공")
-//    public void testEmailCheckSuccess() {
-//        // given
-//        PostEmailReqDTO postEmailReqDTO = new PostEmailReqDTO("test@email.com");
-//        when(memberRepository.existsByEmail(postEmailReqDTO.getEmail())).thenReturn(false);
-//
-//        // when
-//        String result = authService.emailCheck(postEmailReqDTO);
-//
-//        // then
-//        assertEquals("인증 메일이 발송되었습니다.", result);
-//    }
-
     @Test
     @DisplayName("이메일 검증 시 이미 존재하는 이메일 예외 처리")
     public void testEmailCheckExistingEmail() {
@@ -107,33 +90,6 @@ public class MemberServiceTests {
         // when, then
         assertThrows(BaseException.class, () -> authService.emailCheck(postEmailReqDTO));
     }
-
-//    @Test
-//    @DisplayName("인증번호 검증 성공")
-//    public void testAuthCodeCheckSuccess() {
-//        // given
-//        PostEmailCheckReqDTO postEmailCheckReqDTO = new PostEmailCheckReqDTO("test@example.com", "code");
-//
-//        when(redisUtil.existData(postEmailCheckReqDTO.getEmail())).thenReturn(true);
-//        when(redisUtil.getData(postEmailCheckReqDTO.getEmail()).equals(postEmailCheckReqDTO.getAuthCode())).thenReturn(true);
-//
-//        // when
-//        String result = authService.authCodeCheck(postEmailCheckReqDTO);
-//
-//        // then
-//        assertEquals("code", result);
-//    }
-
-    @Test
-    @DisplayName("인증번호 검증 시 불일치 예외 처리")
-    public void testAuthCodeCheckConflict() {
-        // given
-        PostEmailCheckReqDTO postEmailCheckReqDTO = new PostEmailCheckReqDTO("test@example.com", "code");
-
-        // when, then
-        assertThrows(BaseException.class, () -> authService.authCodeCheck(postEmailCheckReqDTO));
-    }
-
 
     @Test
     @DisplayName("유저 정보 조회 성공")
