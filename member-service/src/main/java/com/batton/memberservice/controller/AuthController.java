@@ -52,7 +52,7 @@ public class AuthController {
      * @return String
      */
     @PostMapping("/email/check")
-    @Operation(summary = "이메일 검증")
+    @Operation(summary = "인증번호 검증")
     private BaseResponse<String> authCodeCheck(@RequestBody PostEmailCheckReqDTO postEmailCheckReqDTO) {
         String result = authService.authCodeCheck(postEmailCheckReqDTO);
 

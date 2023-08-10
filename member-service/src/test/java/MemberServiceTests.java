@@ -1,6 +1,8 @@
 import com.batton.memberservice.common.BaseException;
-import com.batton.memberservice.common.ValidationRegex;
 import com.batton.memberservice.domain.Member;
+import com.batton.memberservice.dto.GetMemberInfoResDTO;
+import com.batton.memberservice.dto.PostEmailCheckReqDTO;
+import com.batton.memberservice.dto.PostEmailReqDTO;
 import com.batton.memberservice.dto.PostMemberReqDTO;
 import com.batton.memberservice.dto.client.GetMemberResDTO;
 import com.batton.memberservice.enums.Authority;
@@ -22,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
-import static com.batton.memberservice.common.ValidationRegex.isRegexEmail;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,6 +42,8 @@ public class MemberServiceTests {
     @Mock
     private QueueService queueService;
     @Mock
+    private MultipartFile profileImage;
+    @Mock
     private RedisUtil redisUtil;
     @Mock
     private ObjectStorageService objectStorageService;
@@ -49,12 +52,7 @@ public class MemberServiceTests {
     @DisplayName("유저 회원가입 성공")
     public void testSignupMemberSuccess() {
         // given
-        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("testd@example.com", "code", "nika", "password", "password");
-
-        when(memberRepository.existsByEmail(any())).thenReturn(false);
-        when(passwordEncoder.encode(any())).thenReturn("encoded-password");
-        when(redisUtil.existData(any())).thenReturn(true);
-        when(redisUtil.getData(any())).thenReturn("code");
+        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("test@example.com", "code", "nika", "password", "password");
 
         // when
         String result = authService.signupMember(postMemberReqDTO);
@@ -66,127 +64,165 @@ public class MemberServiceTests {
     }
 
     @Test
-    @DisplayName("유저 회원가입 시 이미 존재하는 이메일 예외 처리")
-    public void testSignupMemberExistingEmail() {
+    @DisplayName("유저 회원가입 시 이메일 정규표현 예외 처리")
+    public void testSignupMemberRegexEmail() {
         // given
-        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("test@example.com", "code","nika", "password", "password");
-
-        when(memberRepository.existsByEmail(postMemberReqDTO.getEmail())).thenReturn(true);
+        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("testexamplecom", "code","nika", "password", "password");
 
         // when, then
         assertThrows(BaseException.class, () -> authService.signupMember(postMemberReqDTO));
     }
 
     @Test
-    @DisplayName("유저 회원가입 시 이메일 미인증 예외 처리")
-    public void testSignupMemberEmailAdmin() {
+    @DisplayName("유저 회원가입 시 비밀번호 일치 예외 처리")
+    public void testSignupMemberPasswordConflict() {
         // given
-        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("tes@example.com", "code","nika", "password", "password");
-
-        when(redisUtil.existData(postMemberReqDTO.getEmail())).thenReturn(true);
-        when(redisUtil.getData(postMemberReqDTO.getEmail()).equals(postMemberReqDTO.getAuthCode())).thenReturn(false);
+        PostMemberReqDTO postMemberReqDTO = new PostMemberReqDTO("test@example.com", "code","nika", "password", "drowssap");
 
         // when, then
         assertThrows(BaseException.class, () -> authService.signupMember(postMemberReqDTO));
+    }
+
+//    @Test
+//    @DisplayName("이메일 검증 성공")
+//    public void testEmailCheckSuccess() {
+//        // given
+//        PostEmailReqDTO postEmailReqDTO = new PostEmailReqDTO("test@email.com");
+//        when(memberRepository.existsByEmail(postEmailReqDTO.getEmail())).thenReturn(false);
+//
+//        // when
+//        String result = authService.emailCheck(postEmailReqDTO);
+//
+//        // then
+//        assertEquals("인증 메일이 발송되었습니다.", result);
+//    }
+
+    @Test
+    @DisplayName("이메일 검증 시 이미 존재하는 이메일 예외 처리")
+    public void testEmailCheckExistingEmail() {
+        // given
+        PostEmailReqDTO postEmailReqDTO = new PostEmailReqDTO("test@email.com");
+        when(memberRepository.existsByEmail(postEmailReqDTO.getEmail())).thenReturn(true);
+
+        // when, then
+        assertThrows(BaseException.class, () -> authService.emailCheck(postEmailReqDTO));
+    }
+
+//    @Test
+//    @DisplayName("인증번호 검증 성공")
+//    public void testAuthCodeCheckSuccess() {
+//        // given
+//        PostEmailCheckReqDTO postEmailCheckReqDTO = new PostEmailCheckReqDTO("test@example.com", "code");
+//
+//        when(redisUtil.existData(postEmailCheckReqDTO.getEmail())).thenReturn(true);
+//        when(redisUtil.getData(postEmailCheckReqDTO.getEmail()).equals(postEmailCheckReqDTO.getAuthCode())).thenReturn(true);
+//
+//        // when
+//        String result = authService.authCodeCheck(postEmailCheckReqDTO);
+//
+//        // then
+//        assertEquals("code", result);
+//    }
+
+    @Test
+    @DisplayName("인증번호 검증 시 불일치 예외 처리")
+    public void testAuthCodeCheckConflict() {
+        // given
+        PostEmailCheckReqDTO postEmailCheckReqDTO = new PostEmailCheckReqDTO("test@example.com", "code");
+
+        // when, then
+        assertThrows(BaseException.class, () -> authService.authCodeCheck(postEmailCheckReqDTO));
     }
 
 
     @Test
     @DisplayName("유저 정보 조회 성공")
-    public void testGetMemberValidUser() {
+    public void testGetMemberSuccess() {
         // given
-        Long memberId = 1L;
-        Member validMember = new Member(memberId, "cjsdkfn", "sdfndsf", "ssdfdsf", Authority.ROLE_USER, "ssdfsdfsdf", Status.ENABLED);
-        when(memberRepository.findById(memberId)).thenReturn(Optional.of(validMember));
+        Member validMember = new Member(1L, "test@email.com", "nika", "password", Authority.ROLE_USER, "image", Status.ENABLED);
+        when(memberRepository.findById(validMember.getId())).thenReturn(Optional.of(validMember));
 
         // when
-        GetMemberResDTO result = memberService.getMember(memberId);
+        GetMemberResDTO result = memberService.getMember(validMember.getId());
 
         // then
         assertNotNull(result);
         assertEquals(validMember.getNickname(), result.getNickname());
-        // 여기에 추가적인 필드 검증을 수행할 수 있습니다.
     }
 
     @Test
-    @DisplayName("유저 잘못된 아이디 예외처리")
+    @DisplayName("유저 정보 조회 시 잘못된 아이디 예외 처리")
     public void testGetMemberInvalidUser() {
-        // Arrange
-        Long memberId = 2L;
+        // given
+        when(memberRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        when(memberRepository.findById(memberId)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(BaseException.class, () -> memberService.getMember(memberId));
+        // when, then
+        assertThrows(BaseException.class, () -> memberService.getMember(anyLong()));
     }
 
-    //
     @Test
-    @DisplayName("유저가 탈퇴한 상태 예외처리")
+    @DisplayName("유저 정보 조회 시 탈퇴한 상태 예외 처리")
     public void testGetMemberDisabledUser() {
-        // Arrange
-        Long memberId = 3L;
-        Member disabledMember = new Member(memberId, "cjsdkfn", "sdfndsf", "ssdfdsf", Authority.ROLE_USER, "ssdfsdfsdf", Status.DISABLED);
-        when(memberRepository.findById(memberId)).thenReturn(Optional.of(disabledMember));
+        // given
+        Member disabledMember = new Member(1L, "test@email.com", "nika", "password", Authority.ROLE_USER, "image", Status.DISABLED);
+        when(memberRepository.findById(disabledMember.getId())).thenReturn(Optional.of(disabledMember));
 
-        // Act & Assert
-        assertThrows(BaseException.class, () -> memberService.getMember(memberId));
+        // when, then
+        assertThrows(BaseException.class, () -> memberService.getMember(disabledMember.getId()));
     }
 
     @Test
-    @DisplayName("유저 정보 수정")
+    @DisplayName("유저 정보 수정 성공")
     public void testPatchMemberSuccess() {
-        // Arrange
-        Long memberId = 1L;
-        String nickname = "newNickname";
-        MultipartFile profileImage = mock(MultipartFile.class);
+        // given
         String imageUrl = "https://example.com/image.jpg";
+        Member member = new Member(1L, "test@email.com", "nika", "password", Authority.ROLE_USER, imageUrl, Status.ENABLED);
+        when(memberRepository.findById(member.getId())).thenReturn(Optional.of(member));
+        when(objectStorageService.uploadFile(profileImage)).thenReturn(imageUrl);
 
-        Member existingMember = new Member(memberId, "cjsdkfn", nickname, "ssdfdsf", Authority.ROLE_USER, imageUrl, Status.ENABLED);
+        // when
+        String result = memberService.patchMember(member.getId(), profileImage, member.getNickname());
 
-        when(memberRepository.findById(anyLong())).thenReturn(Optional.of(existingMember));
-        when(objectStorageService.uploadFile(any(MultipartFile.class))).thenReturn(imageUrl);
-
-        // Act
-        String result = memberService.patchMember(memberId, profileImage, nickname);
-
-        // Assert
+        // then
         assertEquals(imageUrl, result);
-        assertEquals(nickname, existingMember.getNickname());
-        verify(memberRepository, times(1)).findById(memberId);
+        verify(memberRepository, times(1)).findById(member.getId());
         verify(objectStorageService, times(1)).uploadFile(profileImage);
     }
 
     @Test
-    @DisplayName("유저 아이디 확인")
-    public void testPatchMemberInvalidUser() {
-        // Arrange
-        Long memberId = 2L;
-        MultipartFile profileImage = mock(MultipartFile.class);
-        String nickname = "newNickname";
+    @DisplayName("유저 정보 수정 시 유저 아이디 예외 처리")
+    public void testPatchMemberDisabledUser() {
+        // given
+        Member disabledMember = new Member(1L, "test@email.com", "nika", "password", Authority.ROLE_USER, "image", Status.DISABLED);
+        when(memberRepository.findById(disabledMember.getId())).thenReturn(Optional.of(disabledMember));
 
-        when(memberRepository.findById(anyLong())).thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(BaseException.class, () -> memberService.patchMember(memberId, profileImage, nickname));
+        // when, then
+        assertThrows(BaseException.class, () -> memberService.patchMember(disabledMember.getId(), profileImage, disabledMember.getNickname()));
     }
 
     @Test
-    @DisplayName("잘못된 유저")
-    public void testPatchMemberDisabledUser() {
-        // Arrange
-        Long memberId = 3L;
-        MultipartFile profileImage = mock(MultipartFile.class);
-        String nickname = "newNickname";
-        String imageUrl = "https://example.com/image.jpg";
+    @DisplayName("추가할 유저 정보 조회 성공")
+    public void testGetCheckMemberSuccess() {
+        // given
+        Member member = new Member(1L, "test@email.com", "nika", "password", Authority.ROLE_USER, "image", Status.ENABLED);
+        when(memberRepository.findByEmail(member.getEmail())).thenReturn(Optional.of(member));
 
+        // when
+        GetMemberInfoResDTO result = memberService.getCheckMember(member.getEmail());
 
-        Member disabledMember = new Member(memberId, "cjsdkfn", nickname, "ssdfdsf", Authority.ROLE_USER, imageUrl, Status.DISABLED);
+        // then
+        assertNotNull(result);
+        assertEquals(member.getNickname(), result.getNickname());
+    }
 
-        when(memberRepository.findById(anyLong())).thenReturn(Optional.of(disabledMember));
+    @Test
+    @DisplayName("추가할 유저 정보 조회 시 잘못된 이메일 예외 처리")
+    public void testGetCheckMemberInvalidEmail() {
+        // given
+        when(memberRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        // Act & Assert
-        assertThrows(BaseException.class, () -> memberService.patchMember(memberId, profileImage, nickname));
+        // when, then
+        assertThrows(BaseException.class, () -> memberService.getCheckMember(anyString()));
     }
 }
 

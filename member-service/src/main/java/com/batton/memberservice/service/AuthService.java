@@ -11,7 +11,6 @@ import com.batton.memberservice.mq.QueueService;
 import com.batton.memberservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.message.SimpleMessage;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,21 +43,13 @@ public class AuthService {
         }
         // 비밀번호 일치 확인
         if (!postMemberReqDTO.getPassword().equals(postMemberReqDTO.getCheckPassword())) {
-            log.info("signupMember 예외: " + MEMBER_PASSWORD_CONFLICT.getMessage());
             throw new BaseException(MEMBER_PASSWORD_CONFLICT);
-        }
-        // 이메일 인증번호 확인
-        if (redisUtil.existData(postMemberReqDTO.getEmail())) {
-            if (!redisUtil.getData(postMemberReqDTO.getEmail()).equals(postMemberReqDTO.getAuthCode())) {
-                throw new BaseException(INVALID_EMAIL_AUTH_CODE);
-            }
-        } else {
-            throw new BaseException(INVALID_EMAIL_AUTH_CODE);
         }
         Member member = postMemberReqDTO.toEntity(postMemberReqDTO, passwordEncoder.encode(postMemberReqDTO.getPassword()), Authority.ROLE_USER, Status.ENABLED);
 
         memberRepository.save(member);
-        queueService.createQueueForMember(member.getId()); // 유저 Queue 생성
+        // 유저 Queue 생성
+        queueService.createQueueForMember(member.getId());
 
         return "회원가입 성공하였습니다.";
     }
@@ -69,7 +60,6 @@ public class AuthService {
     public String emailCheck(PostEmailReqDTO postEmailReqDTO) {
         // 이메일 존재 여부 확인
         if (memberRepository.existsByEmail(postEmailReqDTO.getEmail())) {
-            log.info("signupMember 예외: " + EXIST_EMAIL_ERROR.getMessage());
             throw new BaseException(EXIST_EMAIL_ERROR);
         }
 
@@ -85,6 +75,7 @@ public class AuthService {
 
         return "인증 메일이 발송되었습니다.";
     }
+
     //인증코드 난수 발생
     private String getAuthCode() {
         Random random = new Random();
