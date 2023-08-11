@@ -148,7 +148,7 @@ public class ProjectController {
             @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
     })
     private BaseResponse<List<GetProjectListResDTO>> getProjectList(@RequestHeader Long memberId,  @RequestParam(value = "keyword", required = false) String keyword) {
-        List<GetProjectListResDTO> getProjectListResDTOList = projectService.getProjectList(memberId, keyword);
+        List<GetProjectListResDTO> getProjectListResDTOList = projectService.getProjectList(keyword);
 
         return new BaseResponse<>(getProjectListResDTOList);
     }

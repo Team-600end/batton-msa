@@ -193,12 +193,12 @@ public class ProjectService {
     /**
      * 프로젝트 네비바 리스트 조회 API
      */
+    @Transactional
     public List<GetProjectResDTO> getProjectListForNavbar(Long memberId) {
         List<Belong> belongList = belongRepository.findByMemberId(memberId);
 
         if (!belongList.isEmpty()) {
             List<GetProjectResDTO> getProjectResDTOList = new ArrayList<>();
-
             for (Belong belong : belongList) {
                 if (belong.getStatus().equals(Status.ENABLED)) {
                     getProjectResDTOList.add(GetProjectResDTO.toDTO(belong.getProject(), belong.getGrade()));
@@ -214,13 +214,13 @@ public class ProjectService {
     /**
      * 참여 중인 프로젝트 목록 조회 API
      */
+    @Transactional
     public List<GetJoinedProjectListResDTO> getJoinedProjectList(Long memberId) {
         List<Belong> belongList = belongRepository.findByMemberId(memberId);
         List<GetJoinedProjectListResDTO> joinedProjectList = new ArrayList<>();
 
         // 소속 유저 존재 리스트 여부 검증
         if (!belongList.isEmpty()) {
-
             // 참여 중인 프로젝트 목록
             for (Belong belong : belongList) {
                 Project project = belong.getProject();
@@ -230,21 +230,14 @@ public class ProjectService {
                 int done = 0;
                 int mine = 0;
                 int percentage = 0;
-                int memberNum = 0;
 
                 // 최신 릴리즈 노트 버전 조회
                 Optional<Releases> latestReleases = releasesRepository.findFirstByProjectIdOrderByUpdatedAtDesc(project.getId());
-
-                // 해당 프로젝트의 전체 이슈 리스트 조회
-                List<Issue> projectIssue = issueRepository.findByProjectId(project.getId());
-
                 // 해당 멤버에게 할당된 현재 프로젝트의 이슈 리스트 조회
-//                List<Issue> memberIssue = issueRepository.findByBelongIdOrderByUpdatedAtDesc(belong.getMemberId());
                 List<Issue> memberIssue = issueRepository.findByBelongId(belong.getId());
 
                 // 소속 유저 존재 여부 검증
                 if (belong.getStatus().equals(Status.ENABLED)) {
-
                     // 해당 프로젝트의 대기, 진행, 완료 이슈 개수 조회
                     for (Issue issue : memberIssue) {
                         if (issue.getIssueStatus().equals(IssueStatus.TODO)) {
@@ -256,11 +249,12 @@ public class ProjectService {
                         }
                     }
 
+                    // 해당 프로젝트의 전체 이슈 리스트 조회
+                    List<Issue> projectIssue = issueRepository.findByProjectId(project.getId());
                     // 해당 프로젝트의 진행도 계산
                     if (!projectIssue.isEmpty()) {
                         percentage = (done / projectIssue.size()) * 100;
                     }
-
                     // 해당 프로젝트에서 해당 멤버에게 할당된 이슈 개수 조회
                     mine = memberIssue.size();
                 } else {
@@ -269,6 +263,7 @@ public class ProjectService {
 
                 // 프로젝트의 멤버 수 조회
                 List<Belong> projectMemberList = belongRepository.findByProjectId(project.getId());
+                int memberNum = 0;
                 memberNum = projectMemberList.size();
 
                 // 프로젝트 리더 조회
@@ -297,8 +292,8 @@ public class ProjectService {
     /**
      * 프로젝트 목록 검색 조회 API
      */
-    public List<GetProjectListResDTO> getProjectList(Long memberId, String keyword) {
-        GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(memberId);
+    @Transactional
+    public List<GetProjectListResDTO> getProjectList(String keyword) {
         List<GetProjectListResDTO> getProjectListResDTOSList = new ArrayList<>();
         List<Project> projectList = new ArrayList<>();
 
@@ -310,7 +305,6 @@ public class ProjectService {
             // 특정 키워드 조회
             projectList = projectRepository.findByProjectTitleContaining(keyword);
         }
-
         for (Project project : projectList) {
             getProjectListResDTOSList.add(GetProjectListResDTO.toDTO(project));
         }
