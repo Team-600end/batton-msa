@@ -46,7 +46,6 @@ public class ReleasesService {
         if (project.isPresent()) {
             // 프로젝트에 소속된 리더인지 검증
             if (belong.get().getGrade() == GradeType.LEADER) {
-
                 Releases releases = postReleasesReqDTO.toEntity(project.get(), postReleasesReqDTO, PublishState.UNPUBLISH);
                 Long releaseId = releasesRepository.save(releases).getId();
 

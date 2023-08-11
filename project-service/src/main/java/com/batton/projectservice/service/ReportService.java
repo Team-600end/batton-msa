@@ -37,6 +37,7 @@ public class ReportService {
     /**
      * 이슈 레포트 조회 API
      */
+    @Transactional
     public GetIssueReportResDTO getReport(Long memberId, Long issueId) {
         Optional<Report> report = reportRepository.findByIssueId(issueId);
 
@@ -126,6 +127,7 @@ public class ReportService {
     /**
      * 추가할 이슈 레포트 조회 API
      */
+    @Transactional
     public GetAddReportResDTO getAddReport(Long issueId) {
         Optional<Report> report = reportRepository.findByIssueId(issueId);
 
