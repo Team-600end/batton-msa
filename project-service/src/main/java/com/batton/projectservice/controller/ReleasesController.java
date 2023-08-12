@@ -1,7 +1,9 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
+import com.batton.projectservice.dto.issue.GetMyIssueResDTO;
 import com.batton.projectservice.dto.release.*;
+import com.batton.projectservice.enums.IssueStatus;
 import com.batton.projectservice.service.ReleasesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -148,5 +150,20 @@ public class ReleasesController {
         List<GetProjectReleasesListResDTO> getProjectReleaseListRes = releasesService.getProjectReleasesList(projectId);
 
         return new BaseResponse<>(getProjectReleaseListRes);
+    }
+
+    /**
+     * 게시판 조회 API
+     * @param memberId 조회하는 유저 아이디
+     * @param projectId 조회할 프로젝트 아이디
+     * @param keyword 조회할 내용
+     * @return List<GetMyIssueResDTO>
+     * */
+    @GetMapping
+    @Operation(summary = "게시판 조회")
+    private BaseResponse<List<GetReleasesBoardResDTO>> getReleases(@RequestHeader Long memberId, @RequestParam(value = "projectId", required = false) Long projectId, @RequestParam(value = "keyword", required = false) String keyword) {
+        List<GetReleasesBoardResDTO> getReleasesBoardResDTOList = releasesService.getRelease(projectId, keyword);
+
+        return new BaseResponse<>(getReleasesBoardResDTOList);
     }
 }
