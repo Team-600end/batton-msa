@@ -240,7 +240,7 @@ public class ReleasesService {
                     List<GetReleasesIssueResDTO> issueList = getReleasesIssues(release.getId());
 
                     createdDate = release.getCreatedAt().getYear() + ". " + release.getCreatedAt().getMonthValue() + ". " + release.getCreatedAt().getDayOfMonth();
-                    GetProjectReleasesListResDTO getProjectReleasesListResDTO = GetProjectReleasesListResDTO.toDTO(versionChanged, release.getVersionMajor(), release.getVersionMinor(), release.getVersionPatch(), createdDate, issueList);
+                    GetProjectReleasesListResDTO getProjectReleasesListResDTO = GetProjectReleasesListResDTO.toDTO(release.getId(), versionChanged, release.getVersionMajor(), release.getVersionMinor(), release.getVersionPatch(), createdDate, issueList);
                     getProjectReleasesListResDTOList.add(getProjectReleasesListResDTO);
                 }
                 return getProjectReleasesListResDTOList;
