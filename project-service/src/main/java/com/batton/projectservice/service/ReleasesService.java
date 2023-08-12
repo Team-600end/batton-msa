@@ -172,7 +172,7 @@ public class ReleasesService {
 
         if (registeredIssueList.isPresent()) {
             for(RegisteredIssue registeredIssue : registeredIssueList.get()) {
-                Optional<Issue> issue = issueRepository.findById(registeredIssue.getId());
+                Optional<Issue> issue = issueRepository.findById(registeredIssue.getIssue().getId());
 
                 if(issue.isPresent()){
                     getReleasesIssueResDTO.add(GetReleasesIssueResDTO.toDTO(issue.get()));
