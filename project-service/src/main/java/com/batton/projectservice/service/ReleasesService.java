@@ -122,6 +122,7 @@ public class ReleasesService {
             if (releases.isPresent()) {
                 // 릴리즈 노트 수정
                 releases.get().update(patchReleasesReqDTO.getVersionMajor(), patchReleasesReqDTO.getVersionMinor(), patchReleasesReqDTO.getVersionPatch(), patchReleasesReqDTO.getReleaseContent(), PublishState.UNPUBLISH);
+                registeredIssueRepository.deleteRegisteredIssueByReleasesId(releaseId);
 
                 // 이슈 리스트가 존재할 경우 이슈 리스트에 릴리즈 아이디를 저장
                 if (patchReleasesReqDTO.getIssueList() != null) {

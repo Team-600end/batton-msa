@@ -1,23 +1,17 @@
+import com.batton.projectservice.client.MemberServiceFeignClient;
 import com.batton.projectservice.common.BaseException;
-import com.batton.projectservice.domain.Belong;
-import com.batton.projectservice.domain.Issue;
-import com.batton.projectservice.domain.Project;
+import com.batton.projectservice.domain.*;
+import com.batton.projectservice.dto.client.GetMemberResDTO;
 import com.batton.projectservice.dto.issue.*;
 import com.batton.projectservice.enums.*;
-import com.batton.projectservice.repository.BelongRepository;
-import com.batton.projectservice.repository.IssueRepository;
-import com.batton.projectservice.repository.ProjectRepository;
-import com.batton.projectservice.repository.ReportRepository;
+import com.batton.projectservice.repository.*;
 import com.batton.projectservice.service.IssueService;
-import com.batton.projectservice.service.ProjectService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,20 +24,19 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class IssueServiceTests {
     @InjectMocks
-    private ProjectService projectService;
-    @InjectMocks
     private IssueService issueService;
     @Mock
     private ProjectRepository projectRepository;
-
-    @Mock
-    private BelongRepository belongRepository;
-
-    @Mock
-    private IssueRepository issueRepository;
-
     @Mock
     private ReportRepository reportRepository;
+    @Mock
+    private CommentRepository commentRepository;
+    @Mock
+    private MemberServiceFeignClient memberServiceFeignClient;
+    @Mock
+    private BelongRepository belongRepository;
+    @Mock
+    private IssueRepository issueRepository;
 
     @Test
     @DisplayName("이슈 생성 성공")
@@ -185,31 +178,83 @@ public class IssueServiceTests {
     }
 
     @Test
-    @DisplayName("개인 이슈 목록 조회 성공")
-    public void testGetMyIssueSuccess() {
+    @DisplayName("개인 이슈 목록 특정 키워드 조회 성공")
+    public void testGetMyIssueKeywordSuccess() {
         // given
         Project project1 = new Project(1L,"project","test project", "image", "kea");
-        Project project2 = new Project(2L,"project2","test project","image","kic");
         Belong belong1 = new Belong(1L, GradeType.LEADER,1L,"harry", Status.ENABLED,project1);
-        Belong belong2 = new Belong(2L, GradeType.MEMBER, 1L, "harry",Status.ENABLED,project2);
         List<Issue> issueList1 = new ArrayList<>();
-        List<Issue> issueList2 = new ArrayList<>();
         Issue issue1 = new Issue(1L, "issue1","content",IssueStatus.TODO,IssueTag.CHANGED,1,1,project1,belong1,"null");
-        Issue issue2 = new Issue(2L,"issue2","content",IssueStatus.PROGRESS,IssueTag.FIXED,1,2,project2,belong2,"null");
+        Issue issue2 = new Issue(2L,"issue2","content",IssueStatus.PROGRESS,IssueTag.FIXED,1,2,project1,belong1,"null");
         issueList1.add(issue1);
-        issueList2.add(issue2);
+        issueList1.add(issue2);
         List<Belong> belongList = new ArrayList<>();
         belongList.add(belong1);
-        belongList.add(belong2);
 
         when(belongRepository.findByMemberId(1L)).thenReturn(belongList);
 
         // when
-        List<GetMyIssueResDTO> result = issueService.getMyIssue(1L,IssueStatus.TODO, "c");
+        List<GetMyIssueResDTO> result = issueService.getMyIssue(belong1.getMemberId(),IssueStatus.TODO, "i");
 
         // then
-        assertEquals(1, result.size());
+        assertEquals(0, result.size());
+    }
+    @Test
+    @DisplayName("개인 이슈 목록 특정 상태 조회 성공")
+    public void testGetMyIssueStatusSuccess() {
+        // given
+        Project project1 = new Project(1L,"project","test project", "image", "kea");
+        Belong belong1 = new Belong(1L, GradeType.LEADER,1L,"harry", Status.ENABLED,project1);
+        List<Issue> issueList1 = new ArrayList<>();
+        Issue issue1 = new Issue(1L, "issue1","content",IssueStatus.TODO,IssueTag.CHANGED,1,1,project1,belong1,"null");
+        Issue issue2 = new Issue(2L,"issue2","content",IssueStatus.PROGRESS,IssueTag.FIXED,1,2,project1,belong1,"null");
+        issueList1.add(issue1);
+        issueList1.add(issue2);
+        List<Belong> belongList = new ArrayList<>();
+        belongList.add(belong1);
+
+        when(belongRepository.findByMemberId(1L)).thenReturn(belongList);
+
+        // when
+        List<GetMyIssueResDTO> result = issueService.getMyIssue(belong1.getMemberId(),IssueStatus.TODO, "");
+
+        // then
+        assertEquals(0, result.size());
     }
 
+    @Test
+    @DisplayName("이슈 바톤터치 성공")
+    public void testPostBattonTouchSuccess() {
+        // given
+        Project project = new Project(1L,"project","test project", "image", "kea");
+        Belong belong = new Belong(1L, GradeType.LEADER,1L,"harry", Status.ENABLED,project);
+        Issue issue = new Issue(1L, "issue1","content",IssueStatus.TODO,IssueTag.CHANGED,1,2,project,belong,"null");
+        PostBattonTouchReqDTO postBattonTouchReqDTO = new PostBattonTouchReqDTO("[2, 3, 4]");
+        when(issueRepository.findById(issue.getId())).thenReturn(Optional.of(issue));
+
+        // when
+        String result = issueService.postBattonTouch(issue.getId(), postBattonTouchReqDTO);
+
+        // then
+        assertEquals("이슈 바톤 터치가 완료되었습니다.", result);
+        assertEquals("[2, 3, 4]", issue.getTouchList());
+        verify(issueRepository, times(1)).save(issue);
+    }
+
+    @Test
+    @DisplayName("이슈 바톤터치 시 이슈 예외 처리")
+    public void testPostBattonTouchInvalidIssue() {
+        // given
+        Project project = new Project(1L,"project","test project", "image", "kea");
+        Belong belong = new Belong(1L, GradeType.LEADER,1L,"harry", Status.ENABLED,project);
+        Issue issue = new Issue(1L, "issue1","content",IssueStatus.TODO,IssueTag.CHANGED,1,2,project,belong,"null");
+        PostBattonTouchReqDTO postBattonTouchReqDTO = new PostBattonTouchReqDTO("[2, 3, 4]");
+
+        when(issueRepository.findById(issue.getId())).thenReturn(Optional.empty());
+
+        // when, then
+        assertThrows(BaseException.class, () -> issueService.postBattonTouch(issue.getId(), postBattonTouchReqDTO));
+        verify(issueRepository, never()).save(issue);
+    }
 }
 
