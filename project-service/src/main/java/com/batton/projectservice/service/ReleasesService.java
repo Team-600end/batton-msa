@@ -4,9 +4,12 @@ import com.batton.projectservice.client.MemberServiceFeignClient;
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.*;
 import com.batton.projectservice.dto.client.GetMemberResDTO;
+import com.batton.projectservice.dto.issue.GetMyIssueResDTO;
 import com.batton.projectservice.dto.release.*;
 import com.batton.projectservice.enums.GradeType;
+import com.batton.projectservice.enums.IssueStatus;
 import com.batton.projectservice.enums.PublishState;
+import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.repository.*;
 import com.batton.projectservice.mq.RabbitProducer;
 import com.batton.projectservice.mq.dto.NoticeMessage;
@@ -16,10 +19,13 @@ import com.batton.projectservice.repository.ProjectRepository;
 import com.batton.projectservice.repository.ReleasesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
 import javax.transaction.Transactional;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -307,5 +313,46 @@ public class ReleasesService {
         } else {
             throw new BaseException(PROJECT_INVALID_ID);
         }
+    }
+
+    /**
+     * 게시판 조회 API
+     */
+    @Transactional
+    public List<GetReleasesBoardResDTO> getRelease(Long projectId, String keyword) {
+        List<Releases> releasesList;
+        List<GetReleasesBoardResDTO> getReleasesBoardResDTOList = new ArrayList<>();
+
+        if (StringUtils.isEmpty(projectId) && StringUtils.isEmpty(keyword)) {
+            System.out.println("전체 조회");
+            releasesList = releasesRepository.findByPublishStateOrderByUpdatedAtDesc(PublishState.PUBLISH);
+        } else if (StringUtils.isEmpty(projectId) && !StringUtils.isEmpty(keyword)) {
+            System.out.println("특정 릴리즈 내용 키워드");
+            releasesList = releasesRepository.findByReleaseContentContainingOrderByUpdatedAtDesc(keyword);
+        } else if (!StringUtils.isEmpty(projectId) && StringUtils.isEmpty(keyword)) {
+            System.out.println("특정 프로젝트");
+            releasesList = releasesRepository.findByPublishStateAndProjectIdOrderByUpdatedAtDesc(PublishState.PUBLISH, projectId);
+        } else {
+            System.out.println("특정 프로젝트와 내용 키워드");
+            releasesList = releasesRepository.findByProjectIdAndReleaseContentContainingOrderByUpdatedAtDesc(projectId, keyword);
+        }
+
+        for (Releases releases : releasesList) {
+            String updatedDate = releases.getUpdatedAt().getYear() + ". " + releases.getUpdatedAt().getMonthValue() + ". " + releases.getUpdatedAt().getDayOfMonth();
+            String version = "v."+releases.getVersionMajor() + "." + releases.getVersionMinor() + "." + releases.getVersionPatch();
+            Optional<List<RegisteredIssue>> registeredIssueList = registeredIssueRepository.findByReleasesId(releases.getId());
+
+            List<GetReleasesIssueResDTO> issueList = new ArrayList<>();
+            if (registeredIssueList.isPresent()) {
+                for (RegisteredIssue registeredIssue : registeredIssueList.get()) {
+                    GetReleasesIssueResDTO getReleasesIssueResDTO = GetReleasesIssueResDTO.toDTO(registeredIssue.getIssue());
+                    issueList.add(getReleasesIssueResDTO);
+                }
+            }
+            GetReleasesBoardResDTO getReleasesBoardResDTO = GetReleasesBoardResDTO.toDTO(releases, version, updatedDate, issueList);
+            getReleasesBoardResDTOList.add(getReleasesBoardResDTO);
+        }
+
+        return getReleasesBoardResDTOList;
     }
 }
