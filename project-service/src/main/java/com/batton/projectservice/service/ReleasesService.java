@@ -73,6 +73,7 @@ public class ReleasesService {
     /**
      * 릴리즈노트 발행(상태변경) API
      */
+    @Transactional
     public String patchPublish(Long memberId, Long releaseId) {
         Optional<Releases> releases = releasesRepository.findById(releaseId);
 
@@ -112,6 +113,7 @@ public class ReleasesService {
     /**
      * 릴리즈 노트 수정 API
      */
+    @Transactional
     public String patchReleases(Long memberId, Long releaseId, PatchReleasesReqDTO patchReleasesReqDTO) {
         Optional<Releases> releases = releasesRepository.findById(releaseId);
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(releases.get().getProject().getId(), memberId);
@@ -122,7 +124,7 @@ public class ReleasesService {
             if (releases.isPresent()) {
                 // 릴리즈 노트 수정
                 releases.get().update(patchReleasesReqDTO.getVersionMajor(), patchReleasesReqDTO.getVersionMinor(), patchReleasesReqDTO.getVersionPatch(), patchReleasesReqDTO.getReleaseContent(), PublishState.UNPUBLISH);
-                registeredIssueRepository.deleteRegisteredIssueByReleasesId(releaseId);
+                registeredIssueRepository.deleteAllByReleasesId(releaseId);
 
                 // 이슈 리스트가 존재할 경우 이슈 리스트에 릴리즈 아이디를 저장
                 if (patchReleasesReqDTO.getIssueList() != null) {
@@ -147,6 +149,7 @@ public class ReleasesService {
     /**
      * 릴리즈노트 삭제 API
      */
+    @Transactional
     public String deleteReleases(Long memberId, Long releaseId) {
         Optional<Releases> releases = releasesRepository.findById(releaseId);
 
@@ -170,6 +173,7 @@ public class ReleasesService {
     /**
      * 릴리즈노트에 포함된 이슈 목록 조회 API
      */
+    @Transactional
     public List<GetReleasesIssueResDTO> getReleasesIssues(Long releaseId) {
         Optional<List<RegisteredIssue>> registeredIssueList = registeredIssueRepository.findByReleasesId(releaseId);
         List<GetReleasesIssueResDTO> getReleasesIssueResDTO = new ArrayList<>();
@@ -194,6 +198,7 @@ public class ReleasesService {
     /**
      * 릴리즈 수정용 릴리즈노트에 포함된 이슈 목록 조회 API
      */
+    @Transactional
     public List<GetReleasesIssueEditResDTO> getReleasesIssuesEdit(Long releaseId) {
         Optional<List<RegisteredIssue>> registeredIssueList = registeredIssueRepository.findByReleasesId(releaseId);
         List<GetReleasesIssueEditResDTO> getReleasesIssueEditResDTO = new ArrayList<>();
@@ -219,6 +224,7 @@ public class ReleasesService {
     /**
      * 릴리즈노트 상세 조회 API
      */
+    @Transactional
     public GetReleasesResDTO getReleases(Long releaseId) {
         Optional<Releases> releases = releasesRepository.findById(releaseId);
 
@@ -237,6 +243,7 @@ public class ReleasesService {
     /**
      * 릴리즈노트 수정용 상세 조회 API
      */
+    @Transactional
     public GetReleasesEditResDTO getReleasesEdit(Long releaseId) {
         Optional<Releases> releases = releasesRepository.findById(releaseId);
 
@@ -255,6 +262,7 @@ public class ReleasesService {
     /**
      * 프로젝트 릴리즈 노트 조회 API (+ 릴리즈 블록)
      */
+    @Transactional
     public List<GetProjectReleasesListResDTO> getProjectReleasesList(Long projectId) {
         Optional<Project> project = projectRepository.findById(projectId);
         Optional<List<Releases>> releases = releasesRepository.findByProjectIdOrderByCreatedAtAsc(projectId);

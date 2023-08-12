@@ -12,5 +12,5 @@ public interface RegisteredIssueRepository extends JpaRepository<RegisteredIssue
 
     Optional<List<RegisteredIssue>> findByReleasesId(Long releaseId);
 
-    void deleteRegisteredIssueByReleasesId(Long releaseId);
+    void deleteAllByReleasesId(Long releaseId);
 }
