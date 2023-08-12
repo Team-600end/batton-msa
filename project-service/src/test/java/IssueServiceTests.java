@@ -203,11 +203,9 @@ public class IssueServiceTests {
         belongList.add(belong2);
 
         when(belongRepository.findByMemberId(1L)).thenReturn(belongList);
-        when(issueRepository.findByBelongIdOrderByUpdatedAtDesc(belong1.getId())).thenReturn(issueList1);
-        when(issueRepository.findByBelongIdOrderByUpdatedAtDesc(belong2.getId())).thenReturn(issueList2);
 
         // when
-        List<GetMyIssueResDTO> result = issueService.getMyIssue(1L,IssueStatus.TODO, "cg");
+        List<GetMyIssueResDTO> result = issueService.getMyIssue(1L,IssueStatus.TODO, "c");
 
         // then
         assertEquals(1, result.size());

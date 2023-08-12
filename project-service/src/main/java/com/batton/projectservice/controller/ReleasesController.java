@@ -1,11 +1,7 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
-import com.batton.projectservice.dto.release.GetReleasesIssueResDTO;
-import com.batton.projectservice.dto.release.GetReleasesResDTO;
-import com.batton.projectservice.dto.release.GetProjectReleasesListResDTO;
-import com.batton.projectservice.dto.release.PatchReleasesReqDTO;
-import com.batton.projectservice.dto.release.PostReleasesReqDTO;
+import com.batton.projectservice.dto.release.*;
 import com.batton.projectservice.service.ReleasesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -109,7 +105,7 @@ public class ReleasesController {
 
     /**
      * 릴리즈 노트 상세 조회 API
-     * @param releaseId 이슈 추가할 릴리즈 노트 아이디
+     * @param releaseId 조회할 릴리즈 노트 아이디
      */
     @GetMapping("/{releaseId}")
     @Operation(summary = "릴리즈노트 상세 조회 요청")
@@ -122,6 +118,20 @@ public class ReleasesController {
         return new BaseResponse<>(getReleasesRes);
     }
 
+    /**
+     * 릴리즈 노트 수정용 상세 조회 API
+     * @param releaseId 조회할 릴리즈 노트 아이디
+     */
+    @GetMapping("/edit/{releaseId}")
+    @Operation(summary = "릴리즈노트 수정용 상세 조회 요청")
+    @ApiResponses({
+            @ApiResponse(responseCode = "708", description = "릴리즈 노트 아이디 값을 확인해주세요.")
+    })
+    private BaseResponse<GetReleasesEditResDTO> getReleasesEdit(@PathVariable("releaseId") Long releaseId) {
+        GetReleasesEditResDTO getReleasesEditRes = releasesService.getReleasesEdit(releaseId);
+
+        return new BaseResponse<>(getReleasesEditRes);
+    }
 
     /**
      * 프로젝트 릴리즈 노트 조회 API

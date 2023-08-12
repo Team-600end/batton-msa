@@ -1,7 +1,9 @@
 package com.batton.projectservice.service;
 
+import com.batton.projectservice.client.MemberServiceFeignClient;
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.*;
+import com.batton.projectservice.dto.client.GetMemberResDTO;
 import com.batton.projectservice.dto.release.*;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.PublishState;
@@ -33,6 +35,8 @@ public class ReleasesService {
     private final IssueRepository issueRepository;
     private final RegisteredIssueRepository registeredIssueRepository;
     private final RabbitProducer rabbitProducer;
+    private final MemberServiceFeignClient memberServiceFeignClient;
+
 
     /**
      * 릴리즈 생성 API
@@ -187,6 +191,31 @@ public class ReleasesService {
     }
 
     /**
+     * 릴리즈 수정용 릴리즈노트에 포함된 이슈 목록 조회 API
+     */
+    public List<GetReleasesIssueEditResDTO> getReleasesIssuesEdit(Long releaseId) {
+        Optional<List<RegisteredIssue>> registeredIssueList = registeredIssueRepository.findByReleasesId(releaseId);
+        List<GetReleasesIssueEditResDTO> getReleasesIssueEditResDTO = new ArrayList<>();
+
+        if (registeredIssueList.isPresent()) {
+            for(RegisteredIssue registeredIssue : registeredIssueList.get()) {
+                Optional<Issue> issue = issueRepository.findById(registeredIssue.getIssue().getId());
+
+                if(issue.isPresent()){
+                    GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.get().getBelong().getMemberId());
+                    getReleasesIssueEditResDTO.add(GetReleasesIssueEditResDTO.toDTO(registeredIssue,issue.get(), getMemberResDTO));
+                } else {
+                    throw new BaseException(ISSUE_INVALID_ID);
+                }
+            }
+        } else {
+            throw new BaseException(RELEASE_NOTE_INVALID_ID);
+        }
+
+        return getReleasesIssueEditResDTO;
+    }
+
+    /**
      * 릴리즈노트 상세 조회 API
      */
     public GetReleasesResDTO getReleases(Long releaseId) {
@@ -199,6 +228,24 @@ public class ReleasesService {
             GetReleasesResDTO getReleasesResDTO = GetReleasesResDTO.toDTO(releases.get(), publishedDate, issueList);
 
             return getReleasesResDTO;
+        } else {
+            throw new BaseException(RELEASE_NOTE_INVALID_ID);
+        }
+    }
+
+    /**
+     * 릴리즈노트 수정용 상세 조회 API
+     */
+    public GetReleasesEditResDTO getReleasesEdit(Long releaseId) {
+        Optional<Releases> releases = releasesRepository.findById(releaseId);
+
+        if (releases.isPresent()) {
+            String publishedDate = releases.get().getUpdatedAt().getYear() + ". " + releases.get().getUpdatedAt().getMonthValue() + ". " + releases.get().getUpdatedAt().getDayOfMonth();
+            List<GetReleasesIssueEditResDTO> issueList = getReleasesIssuesEdit(releaseId);
+
+            GetReleasesEditResDTO getReleasesEditResDTO = GetReleasesEditResDTO.toDTO(releases.get(), publishedDate, issueList);
+
+            return getReleasesEditResDTO;
         } else {
             throw new BaseException(RELEASE_NOTE_INVALID_ID);
         }
