@@ -29,7 +29,7 @@ public class AuthController {
     @Operation(summary = "회원가입 요청")
     public BaseResponse<String> signupMember(@RequestBody PostMemberReqDTO postMemberReqDTO) {
         String signupMemberRes = authService.signupMember(postMemberReqDTO);
-        log.info("signupMember 요청: " + signupMemberRes);
+
         return new BaseResponse<>(signupMemberRes);
     }
 
