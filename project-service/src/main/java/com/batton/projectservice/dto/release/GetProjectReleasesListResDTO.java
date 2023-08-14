@@ -1,10 +1,7 @@
 package com.batton.projectservice.dto.release;
 
-import com.batton.projectservice.domain.Issue;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter

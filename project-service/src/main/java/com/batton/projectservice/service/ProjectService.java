@@ -20,7 +20,6 @@ import com.batton.projectservice.repository.ReleasesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,6 @@ public class ProjectService {
                 .status(Status.ENABLED)
                 .grade(GradeType.LEADER)
                 .build();
-
         belongRepository.save(leaderBelong);
 
         //소속 테이블에 팀원들 추가하는 함수 불러오기
@@ -96,7 +94,9 @@ public class ProjectService {
                 // 팀원 추가
                 for (ProjectTeamReqDTO projectTeamReqDTO : teamMemberList) {
                     Belong belong = ProjectTeamReqDTO.toEntity(project.get(), projectTeamReqDTO, Status.ENABLED);
+
                     belongRepository.save(belong);
+
                     rabbitProducer.sendNoticeMessage(
                             NoticeMessage.builder()
                                     .projectId(projectId)
@@ -199,6 +199,7 @@ public class ProjectService {
 
         if (!belongList.isEmpty()) {
             List<GetProjectResDTO> getProjectResDTOList = new ArrayList<>();
+
             for (Belong belong : belongList) {
                 if (belong.getStatus().equals(Status.ENABLED)) {
                     getProjectResDTOList.add(GetProjectResDTO.toDTO(belong.getProject(), belong.getGrade()));
@@ -224,7 +225,6 @@ public class ProjectService {
             // 참여 중인 프로젝트 목록
             for (Belong belong : belongList) {
                 Project project = belong.getProject();
-
                 int todo = 0;
                 int progress = 0;
                 int done = 0;
@@ -233,6 +233,7 @@ public class ProjectService {
 
                 // 최신 릴리즈 노트 버전 조회
                 Optional<Releases> latestReleases = releasesRepository.findFirstByProjectIdOrderByUpdatedAtDesc(project.getId());
+
                 // 해당 멤버에게 할당된 현재 프로젝트의 이슈 리스트 조회
                 List<Issue> memberIssue = issueRepository.findByBelongId(belong.getId());
 
@@ -251,10 +252,12 @@ public class ProjectService {
 
                     // 해당 프로젝트의 전체 이슈 리스트 조회
                     List<Issue> projectIssue = issueRepository.findByProjectId(project.getId());
+
                     // 해당 프로젝트의 진행도 계산
                     if (!projectIssue.isEmpty()) {
                         percentage = (done / projectIssue.size()) * 100;
                     }
+
                     // 해당 프로젝트에서 해당 멤버에게 할당된 이슈 개수 조회
                     mine = memberIssue.size();
                 } else {
@@ -300,7 +303,6 @@ public class ProjectService {
         if (StringUtils.isEmpty(keyword)) {
             // 전체 조회
             projectList = projectRepository.findAll();
-
         } else {
             // 특정 키워드 조회
             projectList = projectRepository.findByProjectTitleContaining(keyword);

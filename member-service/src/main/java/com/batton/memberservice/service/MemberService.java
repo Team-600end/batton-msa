@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -84,6 +83,7 @@ public class MemberService {
     public String patchMember(Long memberId, MultipartFile profileImage, String nickname) {
         Optional<Member> member = memberRepository.findById(memberId);
         String url;
+
         // 유저 존재 여부 확인
         if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
             url = objectStorageService.uploadFile(profileImage);
@@ -107,6 +107,7 @@ public class MemberService {
             if (!passwordEncoder.matches(patchMemberPasswordReqDTO.getCurrentPassword(), member.get().getPassword())) {
                 throw new BaseException(MEMBER_PASSWORD_DISCORD);
             }
+
             // 비밀번호 2차 확인
             if (!patchMemberPasswordReqDTO.getChangedPassword().equals(patchMemberPasswordReqDTO.getCheckChangedPassword())) {
                 throw new BaseException(MEMBER_PASSWORD_CONFLICT);
