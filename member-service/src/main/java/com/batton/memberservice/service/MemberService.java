@@ -86,8 +86,13 @@ public class MemberService {
         String url;
         // 유저 존재 여부 확인
         if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
-            url = objectStorageService.uploadFile(profileImage);
-            member.get().update(nickname, url);
+            if (profileImage.isEmpty()) {
+                url = "닉네임 수정 되었습니다.";
+                member.get().updateNickname(nickname);
+            } else {
+                url = objectStorageService.uploadFile(profileImage);
+                member.get().update(nickname, url);
+            }
         } else {
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
