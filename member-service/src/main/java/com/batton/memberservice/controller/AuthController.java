@@ -1,11 +1,11 @@
 package com.batton.memberservice.controller;
 
 import com.batton.memberservice.common.BaseResponse;
+import com.batton.memberservice.dto.GetKakaoKeyResDTO;
 import com.batton.memberservice.dto.PostEmailCheckReqDTO;
 import com.batton.memberservice.dto.PostEmailReqDTO;
 import com.batton.memberservice.dto.PostMemberReqDTO;
 import com.batton.memberservice.security.TokenDTO;
-import com.batton.memberservice.security.TokenProvider;
 import com.batton.memberservice.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -77,5 +77,17 @@ public class AuthController {
         String result = authService.authCodeCheck(postEmailCheckReqDTO);
 
         return new BaseResponse<>(result);
+    }
+
+    /**
+     * 카카오 키 조회
+     * @return GetKakaoKeyResDTO
+     * */
+    @GetMapping("/kakao/key")
+    @Operation(summary = "카카오 키 조회")
+    private GetKakaoKeyResDTO getKakaoKey() {
+        GetKakaoKeyResDTO getKakaoKeyResDTO = authService.getKakaoKey();
+
+        return getKakaoKeyResDTO;
     }
 }

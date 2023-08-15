@@ -2,6 +2,7 @@ package com.batton.memberservice.service;
 
 import com.batton.memberservice.common.BaseException;
 import com.batton.memberservice.domain.Member;
+import com.batton.memberservice.dto.GetKakaoKeyResDTO;
 import com.batton.memberservice.dto.PostEmailCheckReqDTO;
 import com.batton.memberservice.dto.PostEmailReqDTO;
 import com.batton.memberservice.dto.PostMemberReqDTO;
@@ -15,12 +16,14 @@ import com.batton.memberservice.security.TokenProvider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Random;
 
 import java.io.BufferedReader;
@@ -44,6 +47,10 @@ public class AuthService {
     private final RedisUtil redisUtil;
     private final TokenProvider tokenProvider;
     private final RefreshTokenService refreshTokenService;
+    @Value("${social-key.vite-kakao-key}")
+    private String KEY;
+    @Value("${social-key.vite-kakao-redirect}")
+    private String REDIRECT;
 
     /**
      * 회원가입 API
@@ -228,5 +235,14 @@ public class AuthService {
         } else {
             throw new BaseException(EXPIRE_AUTH_CODE);
         }
+    }
+
+    /**
+     * 카카오 키 조회
+     * */
+    public GetKakaoKeyResDTO getKakaoKey() {
+        GetKakaoKeyResDTO getKakaoKeyResDTO = GetKakaoKeyResDTO.toDTO(KEY, REDIRECT);
+
+        return getKakaoKeyResDTO;
     }
 }

@@ -297,20 +297,16 @@ public class ProjectService {
     }
 
     /**
-     * 프로젝트 목록 검색 조회 API
+     * 프로젝트 목록 조회 API
      */
     @Transactional
-    public List<GetProjectListResDTO> getProjectList(String keyword) {
+    public List<GetProjectListResDTO> getProjectList() {
         List<GetProjectListResDTO> getProjectListResDTOSList = new ArrayList<>();
         List<Project> projectList = new ArrayList<>();
 
-        if (StringUtils.isEmpty(keyword)) {
-            // 전체 조회
-            projectList = projectRepository.findAll();
-        } else {
-            // 특정 키워드 조회
-            projectList = projectRepository.findByProjectTitleContaining(keyword);
-        }
+        // 전체 조회
+        projectList = projectRepository.findAll();
+
         for (Project project : projectList) {
             getProjectListResDTOSList.add(GetProjectListResDTO.toDTO(project));
         }

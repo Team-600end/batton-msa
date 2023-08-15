@@ -140,17 +140,16 @@ public class ProjectController {
     }
 
     /**
-     * 프로젝트 목록 검색 조회 API
-     * @param keyword 조회할 프로젝트 명
+     * 프로젝트 목록  조회 API
      * @return List<GetProjectListResDTO>
      */
     @GetMapping("/list")
-    @Operation(summary = "프로젝트 목록 검색 조회")
+    @Operation(summary = "프로젝트 목록 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "600", description = "유저 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<List<GetProjectListResDTO>> getProjectList(@RequestParam(value = "keyword", required = false) String keyword) {
-        List<GetProjectListResDTO> getProjectListResDTOList = projectService.getProjectList(keyword);
+    private BaseResponse<List<GetProjectListResDTO>> getProjectList() {
+        List<GetProjectListResDTO> getProjectListResDTOList = projectService.getProjectList();
 
         return new BaseResponse<>(getProjectListResDTOList);
     }
