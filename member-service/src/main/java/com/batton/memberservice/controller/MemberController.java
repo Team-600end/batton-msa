@@ -120,4 +120,10 @@ public class MemberController {
 
         return new BaseResponse<>(getMemberIdResDTO);
     }
+
+    /**
+     * 멤버 탈퇴하기 API
+     * @param memberId 탈퇴할 멤버 아이디
+     * @return String
+     */
 }

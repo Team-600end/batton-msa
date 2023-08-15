@@ -265,7 +265,7 @@ public class ReleasesService {
      * 프로젝트 릴리즈 노트 조회 API (+ 릴리즈 블록)
      */
     @Transactional
-    public List<GetProjectReleasesListResDTO> getProjectReleasesList(Long projectId) {
+    public GetReleasesAllResDTO getProjectReleasesList(Long projectId) {
         Optional<Project> project = projectRepository.findById(projectId);
         Optional<List<Releases>> releases = releasesRepository.findByProjectIdOrderByCreatedAtAsc(projectId);
         List<GetProjectReleasesListResDTO> getProjectReleasesListResDTOList = new ArrayList<>();
@@ -302,8 +302,16 @@ public class ReleasesService {
                     GetProjectReleasesListResDTO getProjectReleasesListResDTO = GetProjectReleasesListResDTO.toDTO(release.getId(), versionChanged, release.getVersionMajor(), release.getVersionMinor(), release.getVersionPatch(), createdDate, publishState, issueList);
                     getProjectReleasesListResDTOList.add(getProjectReleasesListResDTO);
                 }
+                Optional<Releases> latestRelease = releasesRepository.findFirstByPublishStateOrderByUpdatedAtDesc(PublishState.PUBLISH);
+                GetReleasesAllResDTO getReleasesAllResDTO;
 
-                return getProjectReleasesListResDTOList;
+                if(latestRelease.isPresent()) {
+                    getReleasesAllResDTO = GetReleasesAllResDTO.toDTO(latestRelease.get(), getProjectReleasesListResDTOList);
+                } else {
+                    getReleasesAllResDTO = GetReleasesAllResDTO.toDTO(0, 0, 0, getProjectReleasesListResDTOList);
+                }
+                return getReleasesAllResDTO;
+
             } else {
                 throw new BaseException(RELEASE_NOTE_INVALID_ID);
             }

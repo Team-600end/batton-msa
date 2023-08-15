@@ -15,6 +15,8 @@ public interface ReleasesRepository extends JpaRepository<Releases, Long> {
 
     Optional<Releases> findFirstByProjectIdOrderByUpdatedAtDesc(Long projectId);
 
+    Optional<Releases> findFirstByPublishStateOrderByUpdatedAtDesc(PublishState state);
+
     List<Releases> findByPublishStateOrderByUpdatedAtDesc(PublishState state);
 
     List<Releases> findByPublishStateAndProjectIdOrderByUpdatedAtDesc(PublishState state, Long projectId);

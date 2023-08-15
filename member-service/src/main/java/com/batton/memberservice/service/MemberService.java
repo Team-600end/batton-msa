@@ -124,4 +124,8 @@ public class MemberService {
 
         return "회원 비밀번호 수정되었습니다.";
     }
+
+    /**
+     * 유저 탈퇴 API
+     * */
 }

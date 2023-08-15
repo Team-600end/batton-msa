@@ -1,0 +1,11 @@
+[2023-08-16 00:02:55:18011577] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:07:55:18311644] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:12:55:18611654] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:17:55:18911664] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:22:55:19211650] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:31:13:19709949] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:36:13:20009949] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:41:13:20309948] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:46:13:20609951] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:51:13:20909950] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:56:13:21209953] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
