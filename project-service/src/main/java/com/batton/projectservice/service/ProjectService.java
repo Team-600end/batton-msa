@@ -45,7 +45,7 @@ public class ProjectService {
      * */
     @Transactional
     public PostProjectResDTO postProject(Long memberId, PostProjectReqDTO postProjectReqDTO) {
-        Project project = PostProjectReqDTO.toEntity(postProjectReqDTO);
+        Project project = postProjectReqDTO.toEntity(postProjectReqDTO);
         Long newProjectId = projectRepository.save(project).getId();
 
         // 프로젝트 생성한 사람일 경우 LEADER 권한 부여
@@ -234,6 +234,7 @@ public class ProjectService {
                 int done = 0;
                 int mine = 0;
                 int percentage = 0;
+                double answer = 0;
 
                 // 최신 릴리즈 노트 버전 조회
                 Optional<Releases> latestReleases = releasesRepository.findFirstByProjectIdOrderByUpdatedAtDesc(project.getId());
@@ -254,12 +255,11 @@ public class ProjectService {
                         }
                     }
 
-                    // 해당 프로젝트의 전체 이슈 리스트 조회
-                    List<Issue> projectIssue = issueRepository.findByProjectId(project.getId());
-
                     // 해당 프로젝트의 진행도 계산
-                    if (!projectIssue.isEmpty()) {
-                        percentage = (done / projectIssue.size()) * 100;
+                    int issueNum = belong.getProject().getIssues().size();
+                    if (issueNum != 0) {
+                        answer = done / (double)issueNum;
+                        percentage = (int)(answer * 100);
                     }
 
                     // 해당 프로젝트에서 해당 멤버에게 할당된 이슈 개수 조회
