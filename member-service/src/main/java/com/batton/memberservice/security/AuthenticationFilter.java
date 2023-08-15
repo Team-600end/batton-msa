@@ -59,10 +59,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
+
         String memberId = user.getUsername();
         String accessToken = tokenProvider.createAccessToken(memberId, request.getRequestURI(), roles);
         Date expiredTime = tokenProvider.getExpiredTime(accessToken);
         String refreshToken = tokenProvider.createRefreshToken();
+
         refreshTokenService.updateRefreshToken(Long.valueOf(memberId), tokenProvider.getRefreshTokenId(refreshToken));
         TokenDTO tokenDTO = TokenDTO.builder()
                         .accessToken(accessToken)

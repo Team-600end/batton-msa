@@ -1,3 +1,15 @@
+[2023-08-16 00:03:00:5113501] INFO  9296 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:04:24:5196998] INFO  9296 --- [ionShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application MEMBER-SERVICE with eureka with status DOWN
+[2023-08-16 00:04:24:5196999] INFO  9296 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Saw local status change event StatusChangeEvent [timestamp=1692111864273, current=DOWN, previous=UP]
+[2023-08-16 00:04:24:5196999] INFO  9296 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:c8dc471701e71c6e86c317fc0cf7d93b: registering service...
+[2023-08-16 00:04:24:5197013] INFO  9296 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:c8dc471701e71c6e86c317fc0cf7d93b - registration status: 204
+[2023-08-16 00:04:24:5197398] INFO  9296 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+[2023-08-16 00:04:24:5197416] INFO  9296 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+[2023-08-16 00:04:24:5197424] INFO  9296 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+[2023-08-16 00:04:24:5197425] INFO  9296 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Shutting down DiscoveryClient ...
+[2023-08-16 00:04:27:5200433] INFO  9296 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Unregistering ...
+[2023-08-16 00:04:27:5200471] INFO  9296 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:c8dc471701e71c6e86c317fc0cf7d93b - deregister  status: 200
+[2023-08-16 00:04:27:5200475] INFO  9296 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Completed shut down of DiscoveryClient
 [2023-08-16 00:02:55:18011577] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
 [2023-08-16 00:07:55:18311644] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
 [2023-08-16 00:12:55:18611654] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
