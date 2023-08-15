@@ -306,7 +306,6 @@ public class IssueService {
                     throw new BaseException(BELONG_INVALID_ID);
                 }
             }
-
             // 이슈 날짜 내림차순 정렬
             Collections.sort(issueList);
 
@@ -353,11 +352,15 @@ public class IssueService {
     /**
      * 이슈 조회 페이지 조회 API
      */
-    public GetIssueReportResDTO getIssueReport(Long issueId) {
+    public GetIssueReportResDTO getIssueReport(Long memberId, Long issueId) {
         Optional<Issue> issue = issueRepository.findById(issueId);
         Optional<Report> report = reportRepository.findByIssueId(issueId);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(issue.get().getProject().getId(), memberId);
         GetIssueReportResDTO getIssueReportResDTO;
 
+        if(belong.isEmpty() || belong.get().getStatus().equals(Status.DISABLED)) {
+            throw new BaseException(BELONG_INVALID_ID);
+        }
         // 이슈 존재 여부 확인
         if(issue.isPresent()){
             List<Comment> comments = commentRepository.findByReportId(report.get().getId());
@@ -456,6 +459,9 @@ public class IssueService {
         Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(issue.get().getProject().getId(), memberId);
         GetModifyIssueResDTO getModifyIssueResDTO;
 
+        if(belong.isEmpty() || belong.get().getStatus().equals(Status.DISABLED)) {
+            throw new BaseException(BELONG_INVALID_ID);
+        }
         if (issue.isPresent()) {
             Issue issues = issue.get();
             Belong belongs = belong.get();
@@ -500,9 +506,14 @@ public class IssueService {
     /**
      * 완료 이슈 리스트 조회 API
      */
-    public List<GetIssueResDTO> getDoneIssue(Long projectId) {
+    public List<GetIssueResDTO> getDoneIssue(Long memberId, Long projectId) {
         List<Issue> doneIssueList = issueRepository.findByProjectIdAndIssueStatusOrderByIssueSeq(projectId, DONE);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
         List<GetIssueResDTO> issueList = new ArrayList<>();
+
+        if(belong.isEmpty()&& belong.get().getStatus().equals(Status.DISABLED)) {
+            throw new BaseException(BELONG_INVALID_ID);
+        }
 
         for(Issue issue : doneIssueList) {
             GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(issue.getBelong().getMemberId());

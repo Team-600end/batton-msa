@@ -254,20 +254,17 @@ public class ProjectService {
                             done = done + 1;
                         }
                     }
-
                     // 해당 프로젝트의 진행도 계산
                     int issueNum = belong.getProject().getIssues().size();
                     if (issueNum != 0) {
                         answer = done / (double)issueNum;
                         percentage = (int)(answer * 100);
                     }
-
                     // 해당 프로젝트에서 해당 멤버에게 할당된 이슈 개수 조회
                     mine = memberIssue.size();
                 } else {
                     throw new BaseException(BELONG_INVALID_ID);
                 }
-
                 // 프로젝트의 멤버 수 조회
                 List<Belong> projectMemberList = belongRepository.findByProjectId(project.getId());
                 int memberNum = 0;
@@ -290,7 +287,6 @@ public class ProjectService {
             }
 
             return joinedProjectList;
-
         } else {
             throw new BaseException(PROJECT_NOT_EXISTS);
         }

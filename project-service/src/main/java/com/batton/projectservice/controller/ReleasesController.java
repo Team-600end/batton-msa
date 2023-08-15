@@ -119,14 +119,16 @@ public class ReleasesController {
     @ApiResponses({
             @ApiResponse(responseCode = "708", description = "릴리즈 노트 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<GetReleasesResDTO> getReleases(@PathVariable("releaseId") Long releaseId) {
-        GetReleasesResDTO getReleasesRes = releasesService.getReleases(releaseId);
+    private BaseResponse<GetReleasesResDTO> getReleases(@RequestHeader Long memberId,
+                                                        @PathVariable("releaseId") Long releaseId) {
+        GetReleasesResDTO getReleasesRes = releasesService.getReleases(memberId, releaseId);
 
         return new BaseResponse<>(getReleasesRes);
     }
 
     /**
      * 릴리즈 노트 수정용 상세 조회 API
+     * @param memberId 릴리즈 노트 수정하는 유저 아이디
      * @param releaseId 조회할 릴리즈 노트 아이디
      */
     @GetMapping("/edit/{releaseId}")
@@ -134,8 +136,9 @@ public class ReleasesController {
     @ApiResponses({
             @ApiResponse(responseCode = "708", description = "릴리즈 노트 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<GetReleasesEditResDTO> getReleasesEdit(@PathVariable("releaseId") Long releaseId) {
-        GetReleasesEditResDTO getReleasesEditRes = releasesService.getReleasesEdit(releaseId);
+    private BaseResponse<GetReleasesEditResDTO> getReleasesEdit(@RequestHeader Long memberId,
+                                                                @PathVariable("releaseId") Long releaseId) {
+        GetReleasesEditResDTO getReleasesEditRes = releasesService.getReleasesEdit(memberId, releaseId);
 
         return new BaseResponse<>(getReleasesEditRes);
     }
@@ -151,8 +154,9 @@ public class ReleasesController {
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "709", description = "프로젝트 아이디 값을 확인해주세요.")
     })
-    public BaseResponse<GetReleasesAllResDTO> getProjectReleaseList(@PathVariable Long projectId) {
-        GetReleasesAllResDTO getReleasesAllResDTO = releasesService.getProjectReleasesList(projectId);
+    public BaseResponse<GetReleasesAllResDTO> getProjectReleaseList(@RequestHeader Long memberId,
+                                                                    @PathVariable Long projectId) {
+        GetReleasesAllResDTO getReleasesAllResDTO = releasesService.getProjectReleasesList(memberId, projectId);
 
         return new BaseResponse<>(getReleasesAllResDTO);
     }
@@ -180,7 +184,8 @@ public class ReleasesController {
      * */
     @PostMapping("/images/upload")
     @Operation(summary = "이미지 업로드")
-    private BaseResponse<String> postImage(@RequestHeader Long memberId, @RequestPart(value = "profileImg", required = false) MultipartFile profileImage) {
+    private BaseResponse<String> postImage(@RequestHeader Long memberId,
+                                           @RequestPart(value = "profileImg", required = false) MultipartFile profileImage) {
         String url = releasesService.postImage(memberId, profileImage);
 
         return new BaseResponse<>(url);
