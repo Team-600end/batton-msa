@@ -72,7 +72,7 @@ public class AuthService {
     /**
      * 카카오 회원가입
      */
-    public TokenDTO kakaoSignup(String token) {
+    public TokenDTO.TokenData kakaoSignup(String token) {
         // token으로 사용자 정보 가져오기
         PostMemberReqDTO info = getKakaoInfo(token);
 
@@ -92,14 +92,8 @@ public class AuthService {
                     .accessTokenExpiredDate(expiredTime)
                     .refreshToken(refreshToken)
                     .build();
-            TokenDTO tokenDTO = TokenDTO.builder()
-                    .isSuccess(true)
-                    .code(200)
-                    .message("로그인 성공하셨습니다.")
-                    .result(tokenData)
-                    .build();
 
-            return tokenDTO;
+            return tokenData;
         } else {
             // 존재하는 이메일이면 로그인 진행
             // jwt 생성 후 반환
@@ -114,14 +108,8 @@ public class AuthService {
                     .accessTokenExpiredDate(expiredTime)
                     .refreshToken(refreshToken)
                     .build();
-            TokenDTO tokenDTO = TokenDTO.builder()
-                    .isSuccess(true)
-                    .code(200)
-                    .message("로그인 성공하셨습니다.")
-                    .result(tokenData)
-                    .build();
 
-            return tokenDTO;
+            return tokenData;
         }
     }
 

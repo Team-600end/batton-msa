@@ -47,10 +47,10 @@ public class AuthController {
     @ApiResponses({
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다.")
     })
-    private BaseResponse<TokenDTO> kakaoSignup(@PathVariable("access-token") String token) {
-        TokenDTO tokenDTO = authService.kakaoSignup(token);
+    private BaseResponse<TokenDTO.TokenData> kakaoSignup(@PathVariable("access-token") String token) {
+        TokenDTO.TokenData tokenData = authService.kakaoSignup(token);
 
-        return new BaseResponse<>(tokenDTO);
+        return new BaseResponse<>(tokenData);
     }
 
     /**
