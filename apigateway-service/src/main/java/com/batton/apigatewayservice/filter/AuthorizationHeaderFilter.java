@@ -34,13 +34,20 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             HttpHeaders headers = request.getHeaders();
 
             if (!headers.containsKey(HttpHeaders.AUTHORIZATION)) {
-                return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
+                return onError(exchange, "No authorization header", HttpStatus.FORBIDDEN);
             }
             String authorizationHeader = headers.get(HttpHeaders.AUTHORIZATION).get(0);
 
             // JWT 토큰 판별
             String token = authorizationHeader.replace("Bearer", "");
-            tokenProvider.validateToken(token);
+
+            int authCode = tokenProvider.validateToken(token);
+
+            if (authCode == 401) {
+                return onError(exchange, "Expired Token", HttpStatus.UNAUTHORIZED);
+            } else if (authCode == 403) {
+                return onError(exchange, "No authorization header", HttpStatus.FORBIDDEN);
+            }
 
             String subject = tokenProvider.getMemberId(token);
 
@@ -56,7 +63,6 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     }
 
     private Mono<Void> onError(ServerWebExchange exchange, String errorMsg, HttpStatus httpStatus) {
-        log.error(errorMsg);
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);
 
