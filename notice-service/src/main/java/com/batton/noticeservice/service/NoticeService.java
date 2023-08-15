@@ -10,12 +10,10 @@ import com.batton.noticeservice.enums.NoticeType;
 import com.batton.noticeservice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 
 import static com.batton.noticeservice.common.BaseResponseStatus.NOTICE_INVALID_USER_ID;
 import static com.batton.noticeservice.enums.NoticeType.*;

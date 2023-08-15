@@ -1,7 +1,6 @@
 package com.batton.projectservice.controller;
 
 import com.batton.projectservice.common.BaseResponse;
-import com.batton.projectservice.dto.issue.GetMyIssueResDTO;
 import com.batton.projectservice.dto.release.*;
 import com.batton.projectservice.enums.IssueStatus;
 import com.batton.projectservice.service.ReleasesService;
@@ -27,7 +26,8 @@ public class ReleasesController {
      */
     @PostMapping
     @Operation(summary = "릴리즈노트 생성 요청")
-    private BaseResponse<Long> postReleases(@RequestHeader Long memberId, @RequestBody PostReleasesReqDTO postReleasesReqDTO) {
+    private BaseResponse<Long> postReleases(@RequestHeader Long memberId,
+                                            @RequestBody PostReleasesReqDTO postReleasesReqDTO) {
         Long postReleasesRes = releasesService.postReleases(memberId, postReleasesReqDTO);
 
         return new BaseResponse<>(postReleasesRes);
@@ -45,7 +45,8 @@ public class ReleasesController {
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "708", description = "릴리즈 노트 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<String> patchPublish(@RequestHeader Long memberId, @PathVariable("releaseId") Long releaseId) {
+    private BaseResponse<String> patchPublish(@RequestHeader Long memberId,
+                                              @PathVariable("releaseId") Long releaseId) {
         String publishReleasesRes = releasesService.patchPublish(memberId, releaseId);
 
         return new BaseResponse<>(publishReleasesRes);
@@ -65,7 +66,9 @@ public class ReleasesController {
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "708", description = "릴리즈 노트 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<String> patchReleases(@RequestHeader Long memberId, @PathVariable Long releaseId, @RequestBody PatchReleasesReqDTO patchReleasesReqDTO) {
+    private BaseResponse<String> patchReleases(@RequestHeader Long memberId,
+                                               @PathVariable Long releaseId,
+                                               @RequestBody PatchReleasesReqDTO patchReleasesReqDTO) {
         String patchReleasesRes = releasesService.patchReleases(memberId, releaseId, patchReleasesReqDTO);
 
         return new BaseResponse<>(patchReleasesRes);
@@ -83,7 +86,8 @@ public class ReleasesController {
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "708", description = "릴리즈 노트 아이디 값을 확인해주세요.")
     })
-    private BaseResponse<String> deleteReleases(@RequestHeader Long memberId, @PathVariable("releaseId") Long releaseId) {
+    private BaseResponse<String> deleteReleases(@RequestHeader Long memberId,
+                                                @PathVariable("releaseId") Long releaseId) {
         String deleteReleasesRes = releasesService.deleteReleases(memberId, releaseId);
 
         return new BaseResponse<>(deleteReleasesRes);
@@ -154,14 +158,14 @@ public class ReleasesController {
 
     /**
      * 게시판 조회 API
-     * @param memberId 조회하는 유저 아이디
      * @param projectId 조회할 프로젝트 아이디
      * @param keyword 조회할 내용
      * @return List<GetMyIssueResDTO>
      * */
     @GetMapping
     @Operation(summary = "게시판 조회")
-    private BaseResponse<List<GetReleasesBoardResDTO>> getReleases(@RequestHeader Long memberId, @RequestParam(value = "projectId", required = false) Long projectId, @RequestParam(value = "keyword", required = false) String keyword) {
+    private BaseResponse<List<GetReleasesBoardResDTO>> getReleases(@RequestParam(value = "projectId", required = false) Long projectId,
+                                                                   @RequestParam(value = "keyword", required = false) String keyword) {
         List<GetReleasesBoardResDTO> getReleasesBoardResDTOList = releasesService.getRelease(projectId, keyword);
 
         return new BaseResponse<>(getReleasesBoardResDTOList);

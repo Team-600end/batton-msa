@@ -38,6 +38,7 @@ public class BelongService {
 
         // 소속 확인
         if (myBelong.isPresent() && myBelong.get().getStatus().equals(Status.ENABLED)) {
+
             // 변경 권한 확인
             if (myBelong.get().getGrade() == GradeType.MEMBER) {
                 throw new BaseException(MEMBER_NO_AUTHORITY);
@@ -96,6 +97,7 @@ public class BelongService {
 
         // 소속 확인
         if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+
             // 삭제 권한 확인
             if (myBelong.get().getGrade() == GradeType.MEMBER  && myBelong.get().getStatus().equals(Status.ENABLED)) {
                 throw new BaseException(MEMBER_NO_AUTHORITY);

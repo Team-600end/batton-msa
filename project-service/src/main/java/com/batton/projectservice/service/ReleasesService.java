@@ -4,12 +4,9 @@ import com.batton.projectservice.client.MemberServiceFeignClient;
 import com.batton.projectservice.common.BaseException;
 import com.batton.projectservice.domain.*;
 import com.batton.projectservice.dto.client.GetMemberResDTO;
-import com.batton.projectservice.dto.issue.GetMyIssueResDTO;
 import com.batton.projectservice.dto.release.*;
 import com.batton.projectservice.enums.GradeType;
-import com.batton.projectservice.enums.IssueStatus;
 import com.batton.projectservice.enums.PublishState;
-import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.repository.*;
 import com.batton.projectservice.mq.RabbitProducer;
 import com.batton.projectservice.mq.dto.NoticeMessage;
@@ -21,12 +18,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import javax.transaction.Transactional;
-
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +37,6 @@ public class ReleasesService {
     private final RegisteredIssueRepository registeredIssueRepository;
     private final RabbitProducer rabbitProducer;
     private final MemberServiceFeignClient memberServiceFeignClient;
-
 
     /**
      * 릴리즈 생성 API
@@ -66,9 +58,11 @@ public class ReleasesService {
                     for (PostRegisteredIssueReqDTO postRegisteredIssueReqDTO : postReleasesReqDTO.getIssueList()) {
                         Optional<Issue> issue = issueRepository.findById(postRegisteredIssueReqDTO.getIssueId());
                         RegisteredIssue registeredIssue = postRegisteredIssueReqDTO.toDTO(postRegisteredIssueReqDTO, releases, issue.get());
+
                         registeredIssueRepository.save(registeredIssue);
                     }
                 }
+
                 return releaseId;
             } else {
                 throw new BaseException(BELONG_INVALID_ID);
@@ -140,13 +134,13 @@ public class ReleasesService {
                     for (PostRegisteredIssueReqDTO postRegisteredIssueReqDTO : patchReleasesReqDTO.getIssueList()) {
                         Optional<Issue> issue = issueRepository.findById(postRegisteredIssueReqDTO.getIssueId());
                         RegisteredIssue registeredIssue = postRegisteredIssueReqDTO.toDTO(postRegisteredIssueReqDTO, releases.get(), issue.get());
+
                         registeredIssueRepository.save(registeredIssue);
                     }
                 }
             } else {
                 throw new BaseException(RELEASE_NOTE_INVALID_ID);
             }
-
         } else {
             throw new BaseException(BELONG_INVALID_ID);
         }
@@ -241,7 +235,6 @@ public class ReleasesService {
         if (releases.isPresent()) {
             String publishedDate = releases.get().getUpdatedAt().getYear() + ". " + releases.get().getUpdatedAt().getMonthValue() + ". " + releases.get().getUpdatedAt().getDayOfMonth();
             List<GetReleasesIssueResDTO> issueList = getReleasesIssues(releaseId);
-
             GetReleasesResDTO getReleasesResDTO = GetReleasesResDTO.toDTO(releases.get(), publishedDate, issueList);
 
             return getReleasesResDTO;
@@ -260,7 +253,6 @@ public class ReleasesService {
         if (releases.isPresent()) {
             String publishedDate = releases.get().getUpdatedAt().getYear() + ". " + releases.get().getUpdatedAt().getMonthValue() + ". " + releases.get().getUpdatedAt().getDayOfMonth();
             List<GetReleasesIssueEditResDTO> issueList = getReleasesIssuesEdit(releaseId);
-
             GetReleasesEditResDTO getReleasesEditResDTO = GetReleasesEditResDTO.toDTO(releases.get(), publishedDate, issueList);
 
             return getReleasesEditResDTO;
@@ -279,12 +271,14 @@ public class ReleasesService {
         List<GetProjectReleasesListResDTO> getProjectReleasesListResDTOList = new ArrayList<>();
         String versionChanged;
         String createdDate;
+        PublishState publishState;
 
         // 프로젝트 존재 여부 검증
         if (project.isPresent()) {
             // 릴리즈 노트 존재 여부 검증
             if (releases.isPresent()) {
                 List<Releases> releasesList = releases.get();
+
                 for (int i = 0; i < releasesList.size(); i++) {
                     Releases release = releasesList.get(i);
 
@@ -301,16 +295,15 @@ public class ReleasesService {
                             versionChanged = "Patch";
                         }
                     }
-
                     // 이슈 태그 리스트
                     List<GetReleasesIssueResDTO> issueList = getReleasesIssues(release.getId());
-
                     createdDate = release.getCreatedAt().getYear() + ". " + release.getCreatedAt().getMonthValue() + ". " + release.getCreatedAt().getDayOfMonth();
-                    GetProjectReleasesListResDTO getProjectReleasesListResDTO = GetProjectReleasesListResDTO.toDTO(release.getId(), versionChanged, release.getVersionMajor(), release.getVersionMinor(), release.getVersionPatch(), createdDate, issueList);
+                    publishState = release.getPublishState();
+                    GetProjectReleasesListResDTO getProjectReleasesListResDTO = GetProjectReleasesListResDTO.toDTO(release.getId(), versionChanged, release.getVersionMajor(), release.getVersionMinor(), release.getVersionPatch(), createdDate, publishState, issueList);
                     getProjectReleasesListResDTOList.add(getProjectReleasesListResDTO);
                 }
-                return getProjectReleasesListResDTOList;
 
+                return getProjectReleasesListResDTOList;
             } else {
                 throw new BaseException(RELEASE_NOTE_INVALID_ID);
             }
@@ -345,8 +338,8 @@ public class ReleasesService {
             String updatedDate = releases.getUpdatedAt().getYear() + ". " + releases.getUpdatedAt().getMonthValue() + ". " + releases.getUpdatedAt().getDayOfMonth();
             String version = "v."+releases.getVersionMajor() + "." + releases.getVersionMinor() + "." + releases.getVersionPatch();
             Optional<List<RegisteredIssue>> registeredIssueList = registeredIssueRepository.findByReleasesId(releases.getId());
-
             List<GetReleasesIssueResDTO> issueList = new ArrayList<>();
+
             if (registeredIssueList.isPresent()) {
                 for (RegisteredIssue registeredIssue : registeredIssueList.get()) {
                     GetReleasesIssueResDTO getReleasesIssueResDTO = GetReleasesIssueResDTO.toDTO(registeredIssue.getIssue());
@@ -354,6 +347,7 @@ public class ReleasesService {
                 }
             }
             GetReleasesBoardResDTO getReleasesBoardResDTO = GetReleasesBoardResDTO.toDTO(releases, version, updatedDate, issueList);
+
             getReleasesBoardResDTOList.add(getReleasesBoardResDTO);
         }
 

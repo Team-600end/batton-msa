@@ -16,7 +16,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Random;
 
 import static com.batton.memberservice.common.BaseResponseStatus.*;
@@ -41,13 +40,14 @@ public class AuthService {
         if (!isRegexEmail(postMemberReqDTO.getEmail())) {
             throw new BaseException(POST_MEMBERS_INVALID_EMAIL);
         }
+
         // 비밀번호 일치 확인
         if (!postMemberReqDTO.getPassword().equals(postMemberReqDTO.getCheckPassword())) {
             throw new BaseException(MEMBER_PASSWORD_CONFLICT);
         }
         Member member = postMemberReqDTO.toEntity(postMemberReqDTO, passwordEncoder.encode(postMemberReqDTO.getPassword()), Authority.ROLE_USER, Status.ENABLED);
-
         memberRepository.save(member);
+
         // 유저 Queue 생성
         queueService.createQueueForMember(member.getId());
 
@@ -62,21 +62,20 @@ public class AuthService {
         if (memberRepository.existsByEmail(postEmailReqDTO.getEmail())) {
             throw new BaseException(EXIST_EMAIL_ERROR);
         }
-
         SimpleMailMessage message = new SimpleMailMessage();
         String authCode = getAuthCode();
-
         message.setTo(postEmailReqDTO.getEmail());
         message.setSubject("batton 서비스 이메일 인증코드");
         message.setText("인증번호: " + authCode);
-
         javaMailSender.send(message);
         redisUtil.setDataExpire(postEmailReqDTO.getEmail(), authCode, 60 * 5);
 
         return "인증 메일이 발송되었습니다.";
     }
 
-    //인증코드 난수 발생
+    /**
+     * 인증코드 난수 발생 함수
+     */
     private String getAuthCode() {
         Random random = new Random();
         StringBuffer buffer = new StringBuffer();
