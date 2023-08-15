@@ -26,20 +26,20 @@ public class Releases extends BaseEntity {
     private Project project;
     @Column(name = "release_content", columnDefinition = "TEXT")
     private String releaseContent;
-    @ElementCollection
-    private List<Long> issueList = new ArrayList< >();
     @Enumerated(EnumType.STRING)
     private PublishState publishState;
+    @OneToMany(mappedBy = "releases", cascade = CascadeType.REMOVE)
+    private List<RegisteredIssue> registeredIssueList = new ArrayList<>();
 
     @Builder
-    public Releases(Long id, int versionMajor, int versionMinor, int versionPatch, Project project, String releaseContent, List<Long> issueList, PublishState publishState) {
+    public Releases(Long id, int versionMajor, int versionMinor, int versionPatch, Project project, String releaseContent, List<RegisteredIssue> registeredIssueList, PublishState publishState) {
         this.id = id;
         this.versionMajor = versionMajor;
         this.versionMinor = versionMinor;
         this.versionPatch = versionPatch;
         this.project = project;
         this.releaseContent = releaseContent;
-        this.issueList = issueList;
+        this.registeredIssueList = registeredIssueList;
         this.publishState = publishState;
     }
 
@@ -47,12 +47,11 @@ public class Releases extends BaseEntity {
         this.publishState = publishState;
     }
 
-    public void update(int versionMajor, int versionMinor, int versionPatch, String releaseContent, List<Long> issueList, PublishState publishState) {
+    public void update(int versionMajor, int versionMinor, int versionPatch, String releaseContent, PublishState publishState) {
         this.versionMajor = versionMajor;
         this.versionMinor = versionMinor;
         this.versionPatch = versionPatch;
         this.releaseContent = releaseContent;
-        this.issueList = issueList;
         this.publishState = publishState;
     }
 }

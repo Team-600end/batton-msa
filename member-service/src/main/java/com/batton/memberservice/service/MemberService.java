@@ -4,7 +4,6 @@ import com.batton.memberservice.common.BaseException;
 import com.batton.memberservice.domain.Member;
 import com.batton.memberservice.dto.GetMemberInfoResDTO;
 import com.batton.memberservice.dto.PatchMemberPasswordReqDTO;
-import com.batton.memberservice.dto.PatchMemberReqDTO;
 import com.batton.memberservice.dto.client.GetMemberResDTO;
 import com.batton.memberservice.enums.Status;
 import com.batton.memberservice.repository.MemberRepository;
@@ -13,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -27,6 +25,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final ObjectStorageService objectStorageService;
+
     /**
      * 유저 정보 조회 API(Feign Client)
      * */
@@ -38,7 +37,6 @@ public class MemberService {
         if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
             getMemberResDTO = GetMemberResDTO.toDTO(member.get());
         } else {
-            log.info("getMember 예외: " + MEMBER_INVALID_USER_ID.getMessage());
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
 
@@ -56,7 +54,6 @@ public class MemberService {
         if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
             getMemberInfoResDTO = GetMemberInfoResDTO.toDTO(member.get());
         } else {
-            log.info("getMemberInfo 예외: " + MEMBER_INVALID_USER_ID.getMessage());
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
 
@@ -74,7 +71,6 @@ public class MemberService {
         if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
             getMemberInfoResDTO = GetMemberInfoResDTO.toDTO(member.get());
         } else {
-            log.info("getCheckMember 예외: " + MEMBER_INVALID_USER_ID.getMessage());
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
 
@@ -87,12 +83,17 @@ public class MemberService {
     public String patchMember(Long memberId, MultipartFile profileImage, String nickname) {
         Optional<Member> member = memberRepository.findById(memberId);
         String url;
+
         // 유저 존재 여부 확인
         if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
-            url = objectStorageService.uploadFile(profileImage);
-            member.get().update(nickname, url);
+            if (profileImage.isEmpty()) {
+                url = "닉네임 수정 되었습니다.";
+                member.get().updateNickname(nickname);
+            } else {
+                url = objectStorageService.uploadFile(profileImage);
+                member.get().update(nickname, url);
+            }
         } else {
-            log.info("patchMember 예외: " + MEMBER_INVALID_USER_ID.getMessage());
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
 
@@ -109,17 +110,15 @@ public class MemberService {
         if (member.isPresent() && member.get().getStatus().equals(Status.ENABLED)) {
             // 비밀번호 일치 여부 확인
             if (!passwordEncoder.matches(patchMemberPasswordReqDTO.getCurrentPassword(), member.get().getPassword())) {
-                log.info("patchMemberPassword 예외: " + MEMBER_PASSWORD_DISCORD.getMessage());
                 throw new BaseException(MEMBER_PASSWORD_DISCORD);
             }
+
             // 비밀번호 2차 확인
             if (!patchMemberPasswordReqDTO.getChangedPassword().equals(patchMemberPasswordReqDTO.getCheckChangedPassword())) {
-                log.info("patchMemberPassword 예외: " + MEMBER_PASSWORD_CONFLICT.getMessage());
                 throw new BaseException(MEMBER_PASSWORD_CONFLICT);
             }
             member.get().updatePassword(passwordEncoder.encode(patchMemberPasswordReqDTO.getChangedPassword()));
         } else {
-            log.info("patchMemberPassword 예외: " + MEMBER_INVALID_USER_ID.getMessage());
             throw new BaseException(MEMBER_INVALID_USER_ID);
         }
 

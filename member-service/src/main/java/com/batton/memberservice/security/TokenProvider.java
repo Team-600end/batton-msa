@@ -4,7 +4,6 @@ import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +20,7 @@ public class TokenProvider {
 
     public String createAccessToken(String memberId, String uri, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(memberId);
-        claims.put("roles", roles);
+//        claims.put("roles", roles);
 
         return Jwts.builder()
                 .addClaims(claims)
@@ -30,7 +29,7 @@ public class TokenProvider {
                 )
                 .setIssuedAt(new Date())
                 .signWith(SignatureAlgorithm.HS512, key)
-                .setIssuer(uri)
+//                .setIssuer(uri)
                 .compact();
     }
 
@@ -51,6 +50,7 @@ public class TokenProvider {
     public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(key).parseClaimsJws(token);
+
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
@@ -91,6 +91,7 @@ public class TokenProvider {
 
     public boolean equalRefreshTokenId(String refreshTokenId, String refreshToken) {
         String compareToken = this.getRefreshTokenId(refreshTokenId);
+
         return refreshTokenId.equals(compareToken);
     }
 }

@@ -10,12 +10,10 @@ import com.batton.noticeservice.enums.NoticeType;
 import com.batton.noticeservice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 
 import static com.batton.noticeservice.common.BaseResponseStatus.NOTICE_INVALID_USER_ID;
 import static com.batton.noticeservice.enums.NoticeType.*;
@@ -62,7 +60,7 @@ public class NoticeService {
      * 사용자 프로젝트 알림 목록 조회
      * */
     public List<GetNoticeResDTO> getProjectNoticeList(Long receiverId, int option) {
-        List<NoticeType> typeList = Arrays.asList(INVITE, EXCLUDE, NEW);
+        List<NoticeType> typeList = Arrays.asList(INVITE, EXCLUDE, NEW, GRADE);
         List<Notice> noticeList;
 
         if (option == 0) {

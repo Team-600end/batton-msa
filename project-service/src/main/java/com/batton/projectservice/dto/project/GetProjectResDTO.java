@@ -4,6 +4,8 @@ import com.batton.projectservice.domain.Project;
 import com.batton.projectservice.enums.GradeType;
 import lombok.Builder;
 import lombok.Getter;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 @Getter
 public class GetProjectResDTO {
@@ -11,6 +13,7 @@ public class GetProjectResDTO {
     private String projectTitle;
     private String projectLogo;
     private String projectKey;
+    @Enumerated(EnumType.STRING)
     private GradeType memberGrade;
 
     @Builder

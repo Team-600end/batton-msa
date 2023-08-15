@@ -1,6 +1,8 @@
 package com.batton.memberservice.controller;
 
 import com.batton.memberservice.common.BaseResponse;
+import com.batton.memberservice.dto.PostEmailCheckReqDTO;
+import com.batton.memberservice.dto.PostEmailReqDTO;
 import com.batton.memberservice.dto.PostMemberReqDTO;
 import com.batton.memberservice.security.TokenProvider;
 import com.batton.memberservice.service.AuthService;
@@ -20,6 +22,7 @@ public class AuthController {
 
     /**
      * 회원가입 API
+     *
      * @param postMemberReqDTO 회원 정보 DTO
      * @return String
      */
@@ -28,13 +31,14 @@ public class AuthController {
     public BaseResponse<String> signupMember(@RequestBody PostMemberReqDTO postMemberReqDTO) {
         String signupMemberRes = authService.signupMember(postMemberReqDTO);
         log.info("signupMember 요청: " + signupMemberRes);
+
         return new BaseResponse<>(signupMemberRes);
     }
 
 //    /**
-//     * 카카오 로그인 및 가입 여부 확인(미가입 시 회원가입 자동 진행 후 로그인도 자동 진행됨)
+//     * 카카오 회원가입 및 가입 여부 확인
 //     * @param token 접근 토큰
-//     * @return BaseResponse<TokenProvider>
+//     * @return BaseResponse<String>
 //     */
 //    @ResponseBody
 //    @PostMapping("/kakao/{access-token}")
@@ -42,9 +46,35 @@ public class AuthController {
 //    @ApiResponses({
 //            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다.")
 //    })
-//    private BaseResponse<TokenProvider> kakaoLogin(@PathVariable("access-token") String token) {
-//        TokenProvider tokenProvider = authService.kakaoLogin(token);
+//    private BaseResponse<String> kakaoSignup(@PathVariable("access-token") String token) {
+//        String signup = authService.kakaoSignup(token);
 //
-//        return new BaseResponse<>(tokenProvider);
+//        return new BaseResponse<>(signup);
 //    }
+
+    /**
+     * 메일 발송 API
+     * @param postEmailReqDTO
+     * @return String
+     */
+    @PostMapping("/email")
+    @Operation(summary = "이메일 검증")
+    private BaseResponse<String> emailCheck(@RequestBody PostEmailReqDTO postEmailReqDTO) {
+        String result = authService.emailCheck(postEmailReqDTO);
+
+        return new BaseResponse<>(result);
+    }
+
+    /**
+     * 인증 번호 확인 API
+     * @param postEmailCheckReqDTO
+     * @return String
+     */
+    @PostMapping("/email/check")
+    @Operation(summary = "인증번호 검증")
+    private BaseResponse<String> authCodeCheck(@RequestBody PostEmailCheckReqDTO postEmailCheckReqDTO) {
+        String result = authService.authCodeCheck(postEmailCheckReqDTO);
+
+        return new BaseResponse<>(result);
+    }
 }

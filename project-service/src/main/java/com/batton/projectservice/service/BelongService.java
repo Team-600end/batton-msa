@@ -7,8 +7,11 @@ import com.batton.projectservice.dto.belong.GetBelongResDTO;
 import com.batton.projectservice.dto.client.GetMemberResDTO;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.Status;
+import com.batton.projectservice.mq.RabbitProducer;
+import com.batton.projectservice.mq.dto.NoticeMessage;
 import com.batton.projectservice.repository.BelongRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -16,12 +19,15 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.batton.projectservice.common.BaseResponseStatus.*;
+import static com.batton.projectservice.enums.NoticeType.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class BelongService {
     private final BelongRepository belongRepository;
     private final MemberServiceFeignClient memberServiceFeignClient;
+    private final RabbitProducer rabbitProducer;
 
     /**
      * 프로젝트 팀원 권한 변경 API
@@ -32,6 +38,7 @@ public class BelongService {
 
         // 소속 확인
         if (myBelong.isPresent() && myBelong.get().getStatus().equals(Status.ENABLED)) {
+
             // 변경 권한 확인
             if (myBelong.get().getGrade() == GradeType.MEMBER) {
                 throw new BaseException(MEMBER_NO_AUTHORITY);
@@ -41,6 +48,16 @@ public class BelongService {
                 // 소속 확인
                 if (memberBelong.isPresent() && memberBelong.get().getStatus().equals(Status.ENABLED)) {
                     memberBelong.get().update(grade);
+                    rabbitProducer.sendNoticeMessage(
+                            NoticeMessage.builder()
+                                    .projectId(projectId)
+                                    .noticeType(GRADE)
+                                    .contentId(projectId)
+                                    .senderId(memberId)
+                                    .receiverId(memberBelong.get().getMemberId())
+                                    .noticeContent("[" + memberBelong.get().getProject().getProjectTitle() + "] " + memberBelong.get().getNickname() + "님의 등급이 " + grade + " 등급으로 변경되었습니다.")
+                                    .build());
+                    log.info("프로젝트 팀원 권한 변경 : 유저 " + memberId + " 님이 프로젝트 " + projectId + " 의 유저 " + memberBelong.get().getMemberId() + " 님의 등급을 " + grade + " 등급으로 변경했습니다.");
                 } else {
                     throw new BaseException(BELONG_INVALID_ID);
                 }
@@ -57,7 +74,7 @@ public class BelongService {
      * */
     @Transactional
     public List<GetBelongResDTO> getBelongList(Long memberId, Long projectId) {
-        List<Belong> belongList = belongRepository.findBelongsByProjectId(projectId, memberId);
+        List<Belong> belongList = belongRepository.findBelongByProjectId(projectId);
         List<GetBelongResDTO> getBelongResDTOList = new ArrayList<>();
 
         for (Belong belong : belongList) {
@@ -80,11 +97,22 @@ public class BelongService {
 
         // 소속 확인
         if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
+
             // 삭제 권한 확인
             if (myBelong.get().getGrade() == GradeType.MEMBER  && myBelong.get().getStatus().equals(Status.ENABLED)) {
                 throw new BaseException(MEMBER_NO_AUTHORITY);
             }
             belong.get().updateStatus(Status.DISABLED);
+            rabbitProducer.sendNoticeMessage(
+                    NoticeMessage.builder()
+                            .projectId(belong.get().getProject().getId())
+                            .noticeType(EXCLUDE)
+                            .contentId(belong.get().getProject().getId())
+                            .senderId(memberId)
+                            .receiverId(belongId)
+                            .noticeContent("[" + belong.get().getProject().getProjectTitle() + "] " + belong.get().getNickname() + "님이 프로젝트에서 제외되었습니다.")
+                            .build());
+            log.info("프로젝트 팀원 삭제 : 유저 " + memberId + " 님이 프로젝트 " + belong.get().getProject().getId() + " 의 유저 " + belong.get().getMemberId() + " 님을 프로젝트에서 제외시켰습니다.");
         } else {
             throw new BaseException(BELONG_INVALID_ID);
         }

@@ -2,6 +2,8 @@ package com.batton.memberservice.service;
 
 import com.batton.memberservice.common.BaseException;
 import com.batton.memberservice.domain.Member;
+import com.batton.memberservice.dto.PostEmailCheckReqDTO;
+import com.batton.memberservice.dto.PostEmailReqDTO;
 import com.batton.memberservice.dto.PostMemberReqDTO;
 import com.batton.memberservice.enums.Authority;
 import com.batton.memberservice.enums.Status;
@@ -13,9 +15,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Random;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,6 +39,8 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final QueueService queueService;
+    private final JavaMailSender javaMailSender;
+    private final RedisUtil redisUtil;
 
     /**
      * 회원가입 API
@@ -41,41 +48,36 @@ public class AuthService {
     @Transactional
     public String signupMember(PostMemberReqDTO postMemberReqDTO) {
         //이메일 정규 표현 검증
-        if (!isRegexEmail(postMemberReqDTO.getEmail()))
+        if (!isRegexEmail(postMemberReqDTO.getEmail())) {
             throw new BaseException(POST_MEMBERS_INVALID_EMAIL);
-
-        // 이메일 존재 여부 확인
-        if (memberRepository.existsByEmail(postMemberReqDTO.getEmail())) {
-            log.info("signupMember 예외: " + EXIST_EMAIL_ERROR.getMessage());
-            throw new BaseException(EXIST_EMAIL_ERROR);
         }
+
         // 비밀번호 일치 확인
         if (!postMemberReqDTO.getPassword().equals(postMemberReqDTO.getCheckPassword())) {
-            log.info("signupMember 예외: " + MEMBER_PASSWORD_CONFLICT.getMessage());
             throw new BaseException(MEMBER_PASSWORD_CONFLICT);
         }
         Member member = postMemberReqDTO.toEntity(postMemberReqDTO, passwordEncoder.encode(postMemberReqDTO.getPassword()), Authority.ROLE_USER, Status.ENABLED);
-
         memberRepository.save(member);
-        queueService.createQueueForMember(member.getId()); // 유저 Queue 생성
+
+        // 유저 Queue 생성
+        queueService.createQueueForMember(member.getId());
 
         return "회원가입 성공하였습니다.";
     }
 
 //    /**
-//     * 카카오 로그인 및 jwt 생성
+//     * 카카오 회원가입
 //     */
-//    public TokenProvider kakaoLogin(String token) {
+//    public String kakaoSignup(String token) {
 //        // token으로 사용자 정보 가져오기
 //        PostMemberReqDTO info = getKakaoInfo(token);
 //
 //        // 존재하지 않는 이메일(신규 회원)이면 회원가입 자동진행 후 로그인
 //        if (memberRepository.findByEmail(info.getEmail()).isEmpty()) {
 //
-//            Member member = PostMemberReqDTO.toEntity(info,"s",Authority.ROLE_USER, Status.ENABLED);
-//            memberRepository.save(member);
+//            Member member = PostMemberReqDTO.toEntity(info,null, Authority.ROLE_USER, Status.ENABLED);
+//            Long memberId = memberRepository.save(member).getId();
 //
-//            String memberId = user.getUsername();
 //            String accessToken = tokenProvider.createAccessToken(memberId, request.getRequestURI(), roles);
 //            Date expiredTime = tokenProvider.getExpiredTime(accessToken);
 //            String refreshToken = tokenProvider.createRefreshToken();
@@ -89,6 +91,7 @@ public class AuthService {
 //            // jwt 생성 후 반환
 //            String jwt = jwtService.createJwt(member.getId());
 //            String ref = jwtService.createRef(member.getId());
+//
 //
 //            return new PostLoginRes(member.getId(), jwt, System.currentTimeMillis()+1*(1000*60*30), ref);
 //        } else {
@@ -156,5 +159,55 @@ public class AuthService {
         PostMemberReqDTO info = new PostMemberReqDTO(email, nickName);
 
         return info;
+    }
+
+    /**
+     * 검증을 위한 이메일 발송 API
+     */
+    public String emailCheck(PostEmailReqDTO postEmailReqDTO) {
+        // 이메일 존재 여부 확인
+        if (memberRepository.existsByEmail(postEmailReqDTO.getEmail())) {
+            throw new BaseException(EXIST_EMAIL_ERROR);
+        }
+        SimpleMailMessage message = new SimpleMailMessage();
+        String authCode = getAuthCode();
+        message.setTo(postEmailReqDTO.getEmail());
+        message.setSubject("batton 서비스 이메일 인증코드");
+        message.setText("인증번호: " + authCode);
+        javaMailSender.send(message);
+        redisUtil.setDataExpire(postEmailReqDTO.getEmail(), authCode, 60 * 5);
+
+        return "인증 메일이 발송되었습니다.";
+    }
+
+    /**
+     * 인증코드 난수 발생 함수
+     */
+    private String getAuthCode() {
+        Random random = new Random();
+        StringBuffer buffer = new StringBuffer();
+        int num = 0;
+
+        while (buffer.length() < 6) {
+            num = random.nextInt(10);
+            buffer.append(num);
+        }
+
+        return buffer.toString();
+    }
+
+    /**
+     * 이메일 인증 코드 확인
+     */
+    public String authCodeCheck(PostEmailCheckReqDTO postEmailCheckReqDTO) {
+        if (redisUtil.existData(postEmailCheckReqDTO.getEmail())) {
+            if (!redisUtil.getData(postEmailCheckReqDTO.getEmail()).equals(postEmailCheckReqDTO.getAuthCode())) {
+                throw new BaseException(INVALID_AUTH_CODE);
+            } else {
+                return redisUtil.getData(postEmailCheckReqDTO.getEmail());
+            }
+        } else {
+            throw new BaseException(EXPIRE_AUTH_CODE);
+        }
     }
 }

@@ -2,7 +2,6 @@ package com.batton.memberservice.security;
 
 import lombok.Builder;
 import lombok.Getter;
-
 import java.util.Date;
 
 @Getter

@@ -1,0 +1,7 @@
+[2023-08-11 17:43:10:4147] INFO  9924 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-11 17:43:23:17202] INFO  9924 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 16.768 seconds (JVM running for 18.821)
+[2023-08-13 05:57:48:4129] INFO  21836 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-13 05:58:00:15683] INFO  21836 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 15.399 seconds (JVM running for 16.926)
+[2023-08-13 06:04:59:434902] INFO  21836 --- [nio-8081-exec-5] c.b.m.controller.AuthController          : signupMember 요청: 회원가입 성공하였습니다.
+[2023-08-13 06:28:01:6348] INFO  26776 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-13 06:28:11:16086] INFO  26776 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 15.833 seconds (JVM running for 16.946)

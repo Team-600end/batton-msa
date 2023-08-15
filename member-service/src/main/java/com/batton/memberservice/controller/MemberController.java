@@ -1,9 +1,9 @@
 package com.batton.memberservice.controller;
 
 import com.batton.memberservice.common.BaseResponse;
+import com.batton.memberservice.dto.GetMemberIdResDTO;
 import com.batton.memberservice.dto.GetMemberInfoResDTO;
 import com.batton.memberservice.dto.PatchMemberPasswordReqDTO;
-import com.batton.memberservice.dto.PatchMemberReqDTO;
 import com.batton.memberservice.dto.client.GetMemberResDTO;
 import com.batton.memberservice.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +33,6 @@ public class MemberController {
     })
     private GetMemberResDTO getMember(@PathVariable("memberId") Long memberId) {
         GetMemberResDTO getMemberResDTO = memberService.getMember(memberId);
-        log.info("getMember 요청: " + getMemberResDTO.toString());
 
         return getMemberResDTO;
     }
@@ -50,7 +49,6 @@ public class MemberController {
     })
     private BaseResponse<GetMemberInfoResDTO> getMemberInfo(@RequestHeader Long memberId) {
         GetMemberInfoResDTO getMemberInfoResDTO = memberService.getMemberInfo(memberId);
-        log.info("getMember 요청: " + getMemberInfoResDTO.toString());
 
         return new BaseResponse<>(getMemberInfoResDTO);
     }
@@ -67,7 +65,6 @@ public class MemberController {
     })
     private BaseResponse<GetMemberInfoResDTO> getCheckMember(@PathVariable("email") String email) {
         GetMemberInfoResDTO getMemberInfoResDTO = memberService.getCheckMember(email);
-        log.info("getCheckMember 요청: " + getMemberInfoResDTO.toString());
 
         return new BaseResponse<>(getMemberInfoResDTO);
     }
@@ -87,7 +84,6 @@ public class MemberController {
     private BaseResponse<String> patchMember(@RequestHeader Long memberId, @RequestPart(value = "profileImg", required = false) MultipartFile profileImage,
                                              @RequestPart(value = "nickname", required = false) String nickname) {
         String patchMemberRes = memberService.patchMember(memberId, profileImage, nickname);
-        log.info("patchMember 요청: " + patchMemberRes);
 
         return new BaseResponse<>(patchMemberRes);
     }
@@ -108,8 +104,20 @@ public class MemberController {
     })
     private BaseResponse<String> patchMemberPassword(@RequestHeader Long memberId, @RequestBody PatchMemberPasswordReqDTO patchMemberPasswordReqDTO) {
         String patchMemberPasswordRes = memberService.patchMemberPassword(memberId, patchMemberPasswordReqDTO);
-        log.info("patchMemberPassword 요청: " + patchMemberPasswordRes);
 
         return new BaseResponse<>(patchMemberPasswordRes);
+    }
+
+    /**
+     * 멤버 아이디 조회 API
+     * @param memberId
+     * @return memberId
+     */
+    @GetMapping("/id")
+    @Operation(summary = "멤버 아이디(memberId) 요청")
+    private BaseResponse<GetMemberIdResDTO> getMemberId(@RequestHeader Long memberId) {
+        GetMemberIdResDTO getMemberIdResDTO = new GetMemberIdResDTO(memberId);
+
+        return new BaseResponse<>(getMemberIdResDTO);
     }
 }

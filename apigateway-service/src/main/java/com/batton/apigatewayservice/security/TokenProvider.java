@@ -4,7 +4,6 @@ import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -51,6 +50,7 @@ public class TokenProvider {
     public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(key).parseClaimsJws(token);
+
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
@@ -61,6 +61,7 @@ public class TokenProvider {
         } catch (IllegalArgumentException e) {
             log.info("JWT 토큰이 잘못되었습니다.");
         }
+
         return false;
     }
 

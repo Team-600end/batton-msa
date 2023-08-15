@@ -5,7 +5,6 @@ import com.batton.projectservice.domain.Releases;
 import com.batton.projectservice.enums.PublishState;
 import lombok.Builder;
 import lombok.Getter;
-
 import java.util.List;
 
 @Getter
@@ -15,10 +14,10 @@ public class PostReleasesReqDTO {
     private int versionMinor;
     private int versionPatch;
     private String releaseContent;
-    private List<Long> issueList;
+    private List<PostRegisteredIssueReqDTO> issueList;
 
     @Builder
-    public PostReleasesReqDTO(Long projectId, int versionMajor, int versionMinor, int versionPatch, String releaseContent, List<Long> issueList) {
+    public PostReleasesReqDTO(Long projectId, int versionMajor, int versionMinor, int versionPatch, String releaseContent, List<PostRegisteredIssueReqDTO> issueList) {
         this.projectId = projectId;
         this.versionMajor = versionMajor;
         this.versionMinor = versionMinor;
@@ -34,7 +33,6 @@ public class PostReleasesReqDTO {
                 .versionPatch(dto.getVersionPatch())
                 .project(project)
                 .releaseContent(dto.getReleaseContent())
-                .issueList(dto.getIssueList())
                 .publishState(publishState)
                 .build();
     }
