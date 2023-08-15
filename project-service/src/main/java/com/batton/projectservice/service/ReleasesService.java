@@ -271,6 +271,7 @@ public class ReleasesService {
         List<GetProjectReleasesListResDTO> getProjectReleasesListResDTOList = new ArrayList<>();
         String versionChanged;
         String createdDate;
+        PublishState publishState;
 
         // 프로젝트 존재 여부 검증
         if (project.isPresent()) {
@@ -297,7 +298,8 @@ public class ReleasesService {
                     // 이슈 태그 리스트
                     List<GetReleasesIssueResDTO> issueList = getReleasesIssues(release.getId());
                     createdDate = release.getCreatedAt().getYear() + ". " + release.getCreatedAt().getMonthValue() + ". " + release.getCreatedAt().getDayOfMonth();
-                    GetProjectReleasesListResDTO getProjectReleasesListResDTO = GetProjectReleasesListResDTO.toDTO(release.getId(), versionChanged, release.getVersionMajor(), release.getVersionMinor(), release.getVersionPatch(), createdDate, issueList);
+                    publishState = release.getPublishState();
+                    GetProjectReleasesListResDTO getProjectReleasesListResDTO = GetProjectReleasesListResDTO.toDTO(release.getId(), versionChanged, release.getVersionMajor(), release.getVersionMinor(), release.getVersionPatch(), createdDate, publishState, issueList);
                     getProjectReleasesListResDTOList.add(getProjectReleasesListResDTO);
                 }
 
