@@ -45,7 +45,7 @@ public class ProjectService {
      * */
     @Transactional
     public PostProjectResDTO postProject(Long memberId, PostProjectReqDTO postProjectReqDTO) {
-        Project project = postProjectReqDTO.toEntity(postProjectReqDTO);
+        Project project = PostProjectReqDTO.toEntity(postProjectReqDTO);
         Long newProjectId = projectRepository.save(project).getId();
 
         // 프로젝트 생성한 사람일 경우 LEADER 권한 부여

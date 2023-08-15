@@ -1,0 +1,22 @@
+[2023-08-16 00:00:39:13647881] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:05:39:13947939] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:10:39:14247947] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:15:39:14547955] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:20:39:14847964] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:28:57:15346250] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:33:57:15646239] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:38:57:15946238] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:43:57:16246239] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:48:57:16546241] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:53:57:16846243] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:02:07:17336442] INFO  32980 --- [ionShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PROJECT-SERVICE with eureka with status DOWN
+[2023-08-16 01:02:07:17336443] INFO  32980 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Saw local status change event StatusChangeEvent [timestamp=1692115327599, current=DOWN, previous=UP]
+[2023-08-16 01:02:07:17336444] INFO  32980 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:0367a1c3525b3eaa27c901ad301240d8: registering service...
+[2023-08-16 01:02:07:17336467] INFO  32980 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:0367a1c3525b3eaa27c901ad301240d8 - registration status: 204
+[2023-08-16 01:02:07:17336507] INFO  32980 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+[2023-08-16 01:02:07:17336512] INFO  32980 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+[2023-08-16 01:02:07:17336514] INFO  32980 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+[2023-08-16 01:02:07:17336514] INFO  32980 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Shutting down DiscoveryClient ...
+[2023-08-16 01:02:10:17339521] INFO  32980 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Unregistering ...
+[2023-08-16 01:02:10:17339528] INFO  32980 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:0367a1c3525b3eaa27c901ad301240d8 - deregister  status: 200
+[2023-08-16 01:02:10:17339534] INFO  32980 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Completed shut down of DiscoveryClient

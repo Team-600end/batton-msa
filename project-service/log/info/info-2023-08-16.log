@@ -1,0 +1,45 @@
+[2023-08-16 01:03:01:492] INFO  43073 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[2023-08-16 01:03:01:725] INFO  43073 --- [  restartedMain] c.c.c.ConfigServicePropertySourceLocator : Fetching config from server at : http://localhost:8888
+[2023-08-16 01:03:02:1139] INFO  43073 --- [  restartedMain] c.b.p.ProjectServiceApplication          : No active profile set, falling back to 1 default profile: "default"
+[2023-08-16 01:03:02:1616] INFO  43073 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2023-08-16 01:03:02:1662] INFO  43073 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 42 ms. Found 7 JPA repository interfaces.
+[2023-08-16 01:03:02:1816] INFO  43073 --- [  restartedMain] o.s.cloud.context.scope.GenericScope     : BeanFactory id=2457870a-26df-36f7-b13a-ff135ce1c765
+[2023-08-16 01:03:03:2280] INFO  43073 --- [  restartedMain] o.s.b.w.e.tomcat.TomcatWebServer         : Tomcat initialized with port(s): 8082 (http)
+[2023-08-16 01:03:03:2286] INFO  43073 --- [  restartedMain] o.a.catalina.core.StandardService        : Starting service [Tomcat]
+[2023-08-16 01:03:03:2286] INFO  43073 --- [  restartedMain] o.a.catalina.core.StandardEngine         : Starting Servlet engine: [Apache Tomcat/9.0.76]
+[2023-08-16 01:03:03:2354] INFO  43073 --- [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+[2023-08-16 01:03:03:2354] INFO  43073 --- [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1205 ms
+[2023-08-16 01:03:03:2448] INFO  43073 --- [  restartedMain] o.h.jpa.internal.util.LogHelper          : HHH000204: Processing PersistenceUnitInfo [name: default]
+[2023-08-16 01:03:03:2474] INFO  43073 --- [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+[2023-08-16 01:03:03:2550] INFO  43073 --- [  restartedMain] o.h.annotations.common.Version           : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2023-08-16 01:03:03:2596] INFO  43073 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+[2023-08-16 01:03:03:2686] INFO  43073 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+[2023-08-16 01:03:03:2693] INFO  43073 --- [  restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+[2023-08-16 01:03:04:3230] INFO  43073 --- [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2023-08-16 01:03:04:3235] INFO  43073 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2023-08-16 01:03:05:4381] INFO  43073 --- [  restartedMain] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+[2023-08-16 01:03:05:4481] INFO  43073 --- [  restartedMain] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+[2023-08-16 01:03:05:4498] INFO  43073 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Initializing Eureka in region us-east-1
+[2023-08-16 01:03:05:4500] INFO  43073 --- [  restartedMain] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:03:05:4510] INFO  43073 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Disable delta property : false
+[2023-08-16 01:03:05:4510] INFO  43073 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Single vip registry refresh property : null
+[2023-08-16 01:03:05:4510] INFO  43073 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Force full registry fetch : false
+[2023-08-16 01:03:05:4510] INFO  43073 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Application is null : false
+[2023-08-16 01:03:05:4510] INFO  43073 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Registered Applications size is zero : true
+[2023-08-16 01:03:05:4510] INFO  43073 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Application version is -1: true
+[2023-08-16 01:03:05:4510] INFO  43073 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Getting all instance registry info from the eureka server
+[2023-08-16 01:03:05:4631] INFO  43073 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : The response status is 200
+[2023-08-16 01:03:05:4633] INFO  43073 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Starting heartbeat executor: renew interval is: 30
+[2023-08-16 01:03:05:4634] INFO  43073 --- [  restartedMain] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+[2023-08-16 01:03:05:4636] INFO  43073 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Discovery Client initialized at timestamp 1692115385764 with initial instances count: 3
+[2023-08-16 01:03:05:4637] INFO  43073 --- [  restartedMain] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PROJECT-SERVICE with eureka with status UP
+[2023-08-16 01:03:05:4638] INFO  43073 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Saw local status change event StatusChangeEvent [timestamp=1692115385767, current=UP, previous=STARTING]
+[2023-08-16 01:03:05:4638] INFO  43073 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:5ed3355f8c115b7810a4b429b8fa9e01: registering service...
+[2023-08-16 01:03:05:4654] INFO  43073 --- [  restartedMain] o.s.b.w.e.tomcat.TomcatWebServer         : Tomcat started on port(s): 8082 (http) with context path ''
+[2023-08-16 01:03:05:4654] INFO  43073 --- [  restartedMain] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8082
+[2023-08-16 01:03:05:4662] INFO  43073 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:5ed3355f8c115b7810a4b429b8fa9e01 - registration status: 204
+[2023-08-16 01:03:05:4667] INFO  43073 --- [  restartedMain] c.b.p.ProjectServiceApplication          : Started ProjectServiceApplication in 4.487 seconds (JVM running for 5.118)
+[2023-08-16 01:03:43:42103] INFO  43073 --- [nio-8082-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2023-08-16 01:03:43:42103] INFO  43073 --- [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+[2023-08-16 01:03:43:42107] INFO  43073 --- [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
+[2023-08-16 01:03:43:42750] INFO  43073 --- [nio-8082-exec-3] o.s.api.AbstractOpenApiResource          : Init duration for springdoc-openapi is: 384 ms

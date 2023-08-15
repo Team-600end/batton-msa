@@ -1,0 +1,188 @@
+[2023-08-15 19:03:01:821] INFO  30821 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[2023-08-15 19:03:02:1176] INFO  30821 --- [  restartedMain] c.c.c.ConfigServicePropertySourceLocator : Fetching config from server at : http://localhost:8888
+[2023-08-15 19:03:02:1530] INFO  30821 --- [  restartedMain] c.b.p.ProjectServiceApplication          : No active profile set, falling back to 1 default profile: "default"
+[2023-08-15 19:03:03:2159] INFO  30821 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2023-08-15 19:03:03:2240] INFO  30821 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 74 ms. Found 7 JPA repository interfaces.
+[2023-08-15 19:03:03:2434] INFO  30821 --- [  restartedMain] o.s.cloud.context.scope.GenericScope     : BeanFactory id=2457870a-26df-36f7-b13a-ff135ce1c765
+[2023-08-15 19:03:03:2833] INFO  30821 --- [  restartedMain] o.s.b.w.e.tomcat.TomcatWebServer         : Tomcat initialized with port(s): 8082 (http)
+[2023-08-15 19:03:03:2838] INFO  30821 --- [  restartedMain] o.a.catalina.core.StandardService        : Starting service [Tomcat]
+[2023-08-15 19:03:03:2839] INFO  30821 --- [  restartedMain] o.a.catalina.core.StandardEngine         : Starting Servlet engine: [Apache Tomcat/9.0.76]
+[2023-08-15 19:03:03:2898] INFO  30821 --- [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+[2023-08-15 19:03:03:2898] INFO  30821 --- [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1357 ms
+[2023-08-15 19:03:03:2981] INFO  30821 --- [  restartedMain] o.h.jpa.internal.util.LogHelper          : HHH000204: Processing PersistenceUnitInfo [name: default]
+[2023-08-15 19:03:03:3004] INFO  30821 --- [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+[2023-08-15 19:03:04:3076] INFO  30821 --- [  restartedMain] o.h.annotations.common.Version           : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2023-08-15 19:03:04:3121] INFO  30821 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+[2023-08-15 19:03:04:3203] INFO  30821 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+[2023-08-15 19:03:04:3211] INFO  30821 --- [  restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+[2023-08-15 19:03:04:3801] INFO  30821 --- [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2023-08-15 19:03:04:3809] INFO  30821 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2023-08-15 19:03:05:4963] INFO  30821 --- [  restartedMain] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+[2023-08-15 19:03:06:5063] INFO  30821 --- [  restartedMain] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+[2023-08-15 19:03:06:5079] INFO  30821 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Initializing Eureka in region us-east-1
+[2023-08-15 19:03:06:5081] INFO  30821 --- [  restartedMain] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 19:03:06:5089] INFO  30821 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Disable delta property : false
+[2023-08-15 19:03:06:5090] INFO  30821 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Single vip registry refresh property : null
+[2023-08-15 19:03:06:5090] INFO  30821 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Force full registry fetch : false
+[2023-08-15 19:03:06:5090] INFO  30821 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Application is null : false
+[2023-08-15 19:03:06:5090] INFO  30821 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Registered Applications size is zero : true
+[2023-08-15 19:03:06:5090] INFO  30821 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Application version is -1: true
+[2023-08-15 19:03:06:5090] INFO  30821 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Getting all instance registry info from the eureka server
+[2023-08-15 19:03:06:5209] INFO  30821 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : The response status is 200
+[2023-08-15 19:03:06:5210] INFO  30821 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Starting heartbeat executor: renew interval is: 30
+[2023-08-15 19:03:06:5211] INFO  30821 --- [  restartedMain] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+[2023-08-15 19:03:06:5214] INFO  30821 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Discovery Client initialized at timestamp 1692093786176 with initial instances count: 2
+[2023-08-15 19:03:06:5216] INFO  30821 --- [  restartedMain] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PROJECT-SERVICE with eureka with status UP
+[2023-08-15 19:03:06:5216] INFO  30821 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Saw local status change event StatusChangeEvent [timestamp=1692093786179, current=UP, previous=STARTING]
+[2023-08-15 19:03:06:5217] INFO  30821 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:807a5c777b41782f29117e7ab2611651: registering service...
+[2023-08-15 19:03:06:5232] INFO  30821 --- [  restartedMain] o.s.b.w.e.tomcat.TomcatWebServer         : Tomcat started on port(s): 8082 (http) with context path ''
+[2023-08-15 19:03:06:5232] INFO  30821 --- [  restartedMain] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8082
+[2023-08-15 19:03:06:5240] INFO  30821 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:807a5c777b41782f29117e7ab2611651 - registration status: 204
+[2023-08-15 19:03:06:5244] INFO  30821 --- [  restartedMain] c.b.p.ProjectServiceApplication          : Started ProjectServiceApplication in 4.956 seconds (JVM running for 6.043)
+[2023-08-15 19:03:45:44405] INFO  30821 --- [nio-8082-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2023-08-15 19:03:45:44405] INFO  30821 --- [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+[2023-08-15 19:03:45:44409] INFO  30821 --- [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
+[2023-08-15 19:03:46:45177] INFO  30821 --- [nio-8082-exec-8] o.s.api.AbstractOpenApiResource          : Init duration for springdoc-openapi is: 552 ms
+[2023-08-15 19:05:14:133039] INFO  30821 --- [ionShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PROJECT-SERVICE with eureka with status DOWN
+[2023-08-15 19:05:14:133040] INFO  30821 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Saw local status change event StatusChangeEvent [timestamp=1692093914003, current=DOWN, previous=UP]
+[2023-08-15 19:05:14:133040] INFO  30821 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:807a5c777b41782f29117e7ab2611651: registering service...
+[2023-08-15 19:05:14:133056] INFO  30821 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:807a5c777b41782f29117e7ab2611651 - registration status: 204
+[2023-08-15 19:05:14:133079] INFO  30821 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+[2023-08-15 19:05:14:133082] INFO  30821 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+[2023-08-15 19:05:14:133089] INFO  30821 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+[2023-08-15 19:05:14:133089] INFO  30821 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Shutting down DiscoveryClient ...
+[2023-08-15 19:05:17:136098] INFO  30821 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Unregistering ...
+[2023-08-15 19:05:17:136136] INFO  30821 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:807a5c777b41782f29117e7ab2611651 - deregister  status: 200
+[2023-08-15 19:05:17:136142] INFO  30821 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Completed shut down of DiscoveryClient
+[2023-08-15 19:05:20:439] INFO  31208 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[2023-08-15 19:05:21:669] INFO  31208 --- [  restartedMain] c.c.c.ConfigServicePropertySourceLocator : Fetching config from server at : http://localhost:8888
+[2023-08-15 19:05:21:1006] INFO  31208 --- [  restartedMain] c.b.p.ProjectServiceApplication          : No active profile set, falling back to 1 default profile: "default"
+[2023-08-15 19:05:21:1463] INFO  31208 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2023-08-15 19:05:22:1554] INFO  31208 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 87 ms. Found 7 JPA repository interfaces.
+[2023-08-15 19:05:22:1737] INFO  31208 --- [  restartedMain] o.s.cloud.context.scope.GenericScope     : BeanFactory id=2457870a-26df-36f7-b13a-ff135ce1c765
+[2023-08-15 19:05:22:2186] INFO  31208 --- [  restartedMain] o.s.b.w.e.tomcat.TomcatWebServer         : Tomcat initialized with port(s): 8082 (http)
+[2023-08-15 19:05:22:2198] INFO  31208 --- [  restartedMain] o.a.catalina.core.StandardService        : Starting service [Tomcat]
+[2023-08-15 19:05:22:2199] INFO  31208 --- [  restartedMain] o.a.catalina.core.StandardEngine         : Starting Servlet engine: [Apache Tomcat/9.0.76]
+[2023-08-15 19:05:22:2309] INFO  31208 --- [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+[2023-08-15 19:05:22:2309] INFO  31208 --- [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1292 ms
+[2023-08-15 19:05:22:2492] INFO  31208 --- [  restartedMain] o.h.jpa.internal.util.LogHelper          : HHH000204: Processing PersistenceUnitInfo [name: default]
+[2023-08-15 19:05:22:2519] INFO  31208 --- [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+[2023-08-15 19:05:23:2594] INFO  31208 --- [  restartedMain] o.h.annotations.common.Version           : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2023-08-15 19:05:23:2639] INFO  31208 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+[2023-08-15 19:05:23:2765] INFO  31208 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+[2023-08-15 19:05:23:2774] INFO  31208 --- [  restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+[2023-08-15 19:05:23:3331] INFO  31208 --- [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2023-08-15 19:05:23:3339] INFO  31208 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2023-08-15 19:05:25:4538] INFO  31208 --- [  restartedMain] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+[2023-08-15 19:05:25:4642] INFO  31208 --- [  restartedMain] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+[2023-08-15 19:05:25:4660] INFO  31208 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Initializing Eureka in region us-east-1
+[2023-08-15 19:05:25:4662] INFO  31208 --- [  restartedMain] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 19:05:25:4674] INFO  31208 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Disable delta property : false
+[2023-08-15 19:05:25:4674] INFO  31208 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Single vip registry refresh property : null
+[2023-08-15 19:05:25:4674] INFO  31208 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Force full registry fetch : false
+[2023-08-15 19:05:25:4674] INFO  31208 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Application is null : false
+[2023-08-15 19:05:25:4674] INFO  31208 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Registered Applications size is zero : true
+[2023-08-15 19:05:25:4674] INFO  31208 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Application version is -1: true
+[2023-08-15 19:05:25:4674] INFO  31208 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Getting all instance registry info from the eureka server
+[2023-08-15 19:05:25:4806] INFO  31208 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : The response status is 200
+[2023-08-15 19:05:25:4808] INFO  31208 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Starting heartbeat executor: renew interval is: 30
+[2023-08-15 19:05:25:4809] INFO  31208 --- [  restartedMain] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+[2023-08-15 19:05:25:4813] INFO  31208 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Discovery Client initialized at timestamp 1692093925283 with initial instances count: 4
+[2023-08-15 19:05:25:4814] INFO  31208 --- [  restartedMain] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PROJECT-SERVICE with eureka with status UP
+[2023-08-15 19:05:25:4815] INFO  31208 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Saw local status change event StatusChangeEvent [timestamp=1692093925286, current=UP, previous=STARTING]
+[2023-08-15 19:05:25:4815] INFO  31208 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:439373d60ac8ac4c9a18bb7a683637b2: registering service...
+[2023-08-15 19:05:25:4835] INFO  31208 --- [  restartedMain] o.s.b.w.e.tomcat.TomcatWebServer         : Tomcat started on port(s): 8082 (http) with context path ''
+[2023-08-15 19:05:25:4836] INFO  31208 --- [  restartedMain] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8082
+[2023-08-15 19:05:25:4845] INFO  31208 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:439373d60ac8ac4c9a18bb7a683637b2 - registration status: 204
+[2023-08-15 19:05:25:4849] INFO  31208 --- [  restartedMain] c.b.p.ProjectServiceApplication          : Started ProjectServiceApplication in 4.691 seconds (JVM running for 5.366)
+[2023-08-15 19:05:33:13375] INFO  31208 --- [nio-8082-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2023-08-15 19:05:33:13378] INFO  31208 --- [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+[2023-08-15 19:05:33:13384] INFO  31208 --- [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 6 ms
+[2023-08-15 19:05:34:13968] INFO  31208 --- [nio-8082-exec-3] o.s.api.AbstractOpenApiResource          : Init duration for springdoc-openapi is: 411 ms
+[2023-08-15 19:10:25:304686] INFO  31208 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 19:15:25:604835] INFO  31208 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 19:58:08:3168156] INFO  31208 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:03:08:3468168] INFO  31208 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:08:08:3768176] INFO  31208 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:12:45:4045354] INFO  31208 --- [ionShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PROJECT-SERVICE with eureka with status DOWN
+[2023-08-15 20:12:45:4045355] INFO  31208 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Saw local status change event StatusChangeEvent [timestamp=1692097965826, current=DOWN, previous=UP]
+[2023-08-15 20:12:45:4045355] INFO  31208 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:439373d60ac8ac4c9a18bb7a683637b2: registering service...
+[2023-08-15 20:12:45:4045366] INFO  31208 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:439373d60ac8ac4c9a18bb7a683637b2 - registration status: 204
+[2023-08-15 20:12:45:4045384] INFO  31208 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+[2023-08-15 20:12:45:4045387] INFO  31208 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+[2023-08-15 20:12:45:4045389] INFO  31208 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+[2023-08-15 20:12:45:4045390] INFO  31208 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Shutting down DiscoveryClient ...
+[2023-08-15 20:12:48:4048400] INFO  31208 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Unregistering ...
+[2023-08-15 20:12:48:4048411] INFO  31208 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:439373d60ac8ac4c9a18bb7a683637b2 - deregister  status: 200
+[2023-08-15 20:12:48:4048416] INFO  31208 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Completed shut down of DiscoveryClient
+[2023-08-15 20:13:11:518] INFO  32980 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[2023-08-15 20:13:11:751] INFO  32980 --- [  restartedMain] c.c.c.ConfigServicePropertySourceLocator : Fetching config from server at : http://localhost:8888
+[2023-08-15 20:13:12:1100] INFO  32980 --- [  restartedMain] c.b.p.ProjectServiceApplication          : No active profile set, falling back to 1 default profile: "default"
+[2023-08-15 20:13:12:1619] INFO  32980 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2023-08-15 20:13:12:1669] INFO  32980 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 45 ms. Found 7 JPA repository interfaces.
+[2023-08-15 20:13:12:1820] INFO  32980 --- [  restartedMain] o.s.cloud.context.scope.GenericScope     : BeanFactory id=2457870a-26df-36f7-b13a-ff135ce1c765
+[2023-08-15 20:13:13:2257] INFO  32980 --- [  restartedMain] o.s.b.w.e.tomcat.TomcatWebServer         : Tomcat initialized with port(s): 8082 (http)
+[2023-08-15 20:13:13:2264] INFO  32980 --- [  restartedMain] o.a.catalina.core.StandardService        : Starting service [Tomcat]
+[2023-08-15 20:13:13:2264] INFO  32980 --- [  restartedMain] o.a.catalina.core.StandardEngine         : Starting Servlet engine: [Apache Tomcat/9.0.76]
+[2023-08-15 20:13:13:2330] INFO  32980 --- [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+[2023-08-15 20:13:13:2330] INFO  32980 --- [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1219 ms
+[2023-08-15 20:13:13:2420] INFO  32980 --- [  restartedMain] o.h.jpa.internal.util.LogHelper          : HHH000204: Processing PersistenceUnitInfo [name: default]
+[2023-08-15 20:13:13:2447] INFO  32980 --- [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+[2023-08-15 20:13:13:2534] INFO  32980 --- [  restartedMain] o.h.annotations.common.Version           : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2023-08-15 20:13:13:2581] INFO  32980 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+[2023-08-15 20:13:13:2665] INFO  32980 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+[2023-08-15 20:13:13:2672] INFO  32980 --- [  restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+[2023-08-15 20:13:14:3202] INFO  32980 --- [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2023-08-15 20:13:14:3208] INFO  32980 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2023-08-15 20:13:15:4400] INFO  32980 --- [  restartedMain] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+[2023-08-15 20:13:15:4500] INFO  32980 --- [  restartedMain] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+[2023-08-15 20:13:15:4518] INFO  32980 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Initializing Eureka in region us-east-1
+[2023-08-15 20:13:15:4520] INFO  32980 --- [  restartedMain] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:13:15:4532] INFO  32980 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Disable delta property : false
+[2023-08-15 20:13:15:4532] INFO  32980 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Single vip registry refresh property : null
+[2023-08-15 20:13:15:4532] INFO  32980 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Force full registry fetch : false
+[2023-08-15 20:13:15:4532] INFO  32980 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Application is null : false
+[2023-08-15 20:13:15:4532] INFO  32980 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Registered Applications size is zero : true
+[2023-08-15 20:13:15:4532] INFO  32980 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Application version is -1: true
+[2023-08-15 20:13:15:4532] INFO  32980 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Getting all instance registry info from the eureka server
+[2023-08-15 20:13:15:4651] INFO  32980 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : The response status is 200
+[2023-08-15 20:13:15:4653] INFO  32980 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Starting heartbeat executor: renew interval is: 30
+[2023-08-15 20:13:15:4654] INFO  32980 --- [  restartedMain] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+[2023-08-15 20:13:15:4656] INFO  32980 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Discovery Client initialized at timestamp 1692097995812 with initial instances count: 3
+[2023-08-15 20:13:15:4658] INFO  32980 --- [  restartedMain] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PROJECT-SERVICE with eureka with status UP
+[2023-08-15 20:13:15:4658] INFO  32980 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Saw local status change event StatusChangeEvent [timestamp=1692097995814, current=UP, previous=STARTING]
+[2023-08-15 20:13:15:4659] INFO  32980 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:0367a1c3525b3eaa27c901ad301240d8: registering service...
+[2023-08-15 20:13:15:4674] INFO  32980 --- [  restartedMain] o.s.b.w.e.tomcat.TomcatWebServer         : Tomcat started on port(s): 8082 (http) with context path ''
+[2023-08-15 20:13:15:4674] INFO  32980 --- [  restartedMain] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8082
+[2023-08-15 20:13:15:4681] INFO  32980 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:0367a1c3525b3eaa27c901ad301240d8 - registration status: 204
+[2023-08-15 20:13:15:4686] INFO  32980 --- [  restartedMain] c.b.p.ProjectServiceApplication          : Started ProjectServiceApplication in 4.478 seconds (JVM running for 5.076)
+[2023-08-15 20:13:18:7598] INFO  32980 --- [nio-8082-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2023-08-15 20:13:18:7598] INFO  32980 --- [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+[2023-08-15 20:13:18:7600] INFO  32980 --- [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+[2023-08-15 20:18:15:304544] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:19:13:362181] INFO  32980 --- [nio-8082-exec-7] c.b.p.service.ProjectService             : 프로젝트 팀원 등록 : 1님이 프로젝트 9에 2님을 추가했습니다.
+[2023-08-15 20:19:13:362198] INFO  32980 --- [nio-8082-exec-7] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: localhost:5672
+[2023-08-15 20:19:13:362250] INFO  32980 --- [nio-8082-exec-7] o.s.a.r.c.CachingConnectionFactory       : Created new connection: connectionFactory#5eff72c0:0/SimpleConnection@215692d3 [delegate=amqp://guest@127.0.0.1:5672/, localPort= 56953]
+[2023-08-15 20:22:24:553048] INFO  32980 --- [io-8082-exec-10] c.b.p.service.ProjectService             : 프로젝트 팀원 등록 : 1님이 프로젝트 9에 4님을 추가했습니다.
+[2023-08-15 20:23:08:596977] INFO  32980 --- [nio-8082-exec-2] c.b.p.service.ProjectService             : 프로젝트 팀원 등록 : 1님이 프로젝트 10에 2님을 추가했습니다.
+[2023-08-15 20:23:15:604533] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:28:15:904541] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:33:15:1204553] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:38:15:1504564] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:43:15:1804485] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:48:15:2104483] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:53:15:2404485] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:58:15:2704489] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 21:03:15:3004492] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 21:08:15:3304497] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 21:13:15:3604495] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 22:05:10:6719793] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 22:25:10:7919267] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 22:30:10:8219277] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 22:35:10:8519288] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 23:28:10:11699653] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 23:33:10:11999661] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 23:38:10:12299660] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 23:45:38:12747834] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 23:50:39:13047845] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 23:55:39:13347858] INFO  32980 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration

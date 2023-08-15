@@ -71,3 +71,101 @@
 [2023-08-15 22:57:59:1212479] INFO  9296 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
 [2023-08-15 23:02:59:1512495] INFO  9296 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
 [2023-08-15 23:07:59:1812502] INFO  9296 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 19:02:44:475] INFO  30792 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[2023-08-15 19:02:44:707] INFO  30792 --- [  restartedMain] c.c.c.ConfigServicePropertySourceLocator : Fetching config from server at : http://localhost:8888
+[2023-08-15 19:02:45:1359] INFO  30792 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-15 19:02:45:1741] INFO  30792 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+[2023-08-15 19:02:45:1741] INFO  30792 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[2023-08-15 19:02:45:1753] INFO  30792 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 3 ms. Found 0 Redis repository interfaces.
+[2023-08-15 19:02:45:1915] INFO  30792 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+[2023-08-15 19:02:45:1915] INFO  30792 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2023-08-15 19:02:45:1942] INFO  30792 --- [  restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JPA - Could not safely identify store assignment for repository candidate interface com.batton.memberservice.repository.RefreshTokenRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: javax.persistence.Entity, javax.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+[2023-08-15 19:02:45:1949] INFO  30792 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 33 ms. Found 1 JPA repository interfaces.
+[2023-08-15 19:02:45:1953] INFO  30792 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+[2023-08-15 19:02:45:1953] INFO  30792 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[2023-08-15 19:02:45:1957] INFO  30792 --- [  restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.batton.memberservice.repository.MemberRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+[2023-08-15 19:02:45:1959] INFO  30792 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 6 ms. Found 1 Redis repository interfaces.
+[2023-08-15 19:02:45:2199] INFO  30792 --- [  restartedMain] o.s.cloud.context.scope.GenericScope     : BeanFactory id=0dcf47fe-3b5a-3535-b7e0-4bba85838cc5
+[2023-08-15 19:02:46:2610] INFO  30792 --- [  restartedMain] o.s.b.w.e.tomcat.TomcatWebServer         : Tomcat initialized with port(s): 8081 (http)
+[2023-08-15 19:02:46:2615] INFO  30792 --- [  restartedMain] o.a.catalina.core.StandardService        : Starting service [Tomcat]
+[2023-08-15 19:02:46:2615] INFO  30792 --- [  restartedMain] o.a.catalina.core.StandardEngine         : Starting Servlet engine: [Apache Tomcat/9.0.76]
+[2023-08-15 19:02:46:2680] INFO  30792 --- [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+[2023-08-15 19:02:46:2680] INFO  30792 --- [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1311 ms
+[2023-08-15 19:02:46:2769] INFO  30792 --- [  restartedMain] o.h.jpa.internal.util.LogHelper          : HHH000204: Processing PersistenceUnitInfo [name: default]
+[2023-08-15 19:02:46:2795] INFO  30792 --- [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+[2023-08-15 19:02:46:2873] INFO  30792 --- [  restartedMain] o.h.annotations.common.Version           : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2023-08-15 19:02:46:2919] INFO  30792 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+[2023-08-15 19:02:46:3009] INFO  30792 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+[2023-08-15 19:02:46:3016] INFO  30792 --- [  restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+[2023-08-15 19:02:47:3370] INFO  30792 --- [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2023-08-15 19:02:47:3375] INFO  30792 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2023-08-15 19:02:47:4032] INFO  30792 --- [  restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@62450959, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7bc5e813, org.springframework.security.web.context.SecurityContextPersistenceFilter@6fde1101, org.springframework.security.web.header.HeaderWriterFilter@430335f5, org.springframework.security.web.authentication.logout.LogoutFilter@3ed8b8e1, com.batton.memberservice.security.AuthenticationFilter@11f5ebd6, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@37579547, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@54924eea, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3afec2b3, org.springframework.security.web.session.SessionManagementFilter@434e9602, org.springframework.security.web.access.ExceptionTranslationFilter@5c95cac, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@3a847332]
+[2023-08-15 19:02:48:4589] INFO  30792 --- [  restartedMain] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+[2023-08-15 19:02:48:4702] INFO  30792 --- [  restartedMain] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+[2023-08-15 19:02:48:4720] INFO  30792 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Initializing Eureka in region us-east-1
+[2023-08-15 19:02:48:4722] INFO  30792 --- [  restartedMain] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 19:02:48:4733] INFO  30792 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Disable delta property : false
+[2023-08-15 19:02:48:4733] INFO  30792 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Single vip registry refresh property : null
+[2023-08-15 19:02:48:4733] INFO  30792 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Force full registry fetch : false
+[2023-08-15 19:02:48:4733] INFO  30792 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Application is null : false
+[2023-08-15 19:02:48:4733] INFO  30792 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Registered Applications size is zero : true
+[2023-08-15 19:02:48:4733] INFO  30792 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Application version is -1: true
+[2023-08-15 19:02:48:4733] INFO  30792 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Getting all instance registry info from the eureka server
+[2023-08-15 19:02:48:4935] INFO  30792 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : The response status is 200
+[2023-08-15 19:02:48:4937] INFO  30792 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Starting heartbeat executor: renew interval is: 30
+[2023-08-15 19:02:48:4938] INFO  30792 --- [  restartedMain] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+[2023-08-15 19:02:48:4941] INFO  30792 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Discovery Client initialized at timestamp 1692093768719 with initial instances count: 0
+[2023-08-15 19:02:48:4942] INFO  30792 --- [  restartedMain] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application MEMBER-SERVICE with eureka with status UP
+[2023-08-15 19:02:48:4943] INFO  30792 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Saw local status change event StatusChangeEvent [timestamp=1692093768722, current=UP, previous=STARTING]
+[2023-08-15 19:02:48:4943] INFO  30792 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:84a4f53b740c74c0d07e8c7e6aaf1998: registering service...
+[2023-08-15 19:02:48:4959] INFO  30792 --- [  restartedMain] o.s.b.w.e.tomcat.TomcatWebServer         : Tomcat started on port(s): 8081 (http) with context path ''
+[2023-08-15 19:02:48:4960] INFO  30792 --- [  restartedMain] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8081
+[2023-08-15 19:02:48:4973] INFO  30792 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 4.803 seconds (JVM running for 5.427)
+[2023-08-15 19:02:48:4999] INFO  30792 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:84a4f53b740c74c0d07e8c7e6aaf1998 - registration status: 204
+[2023-08-15 19:03:18:34950] INFO  30792 --- [freshExecutor-0] c.netflix.discovery.DiscoveryClient      : Disable delta property : false
+[2023-08-15 19:03:18:34954] INFO  30792 --- [freshExecutor-0] c.netflix.discovery.DiscoveryClient      : Single vip registry refresh property : null
+[2023-08-15 19:03:18:34954] INFO  30792 --- [freshExecutor-0] c.netflix.discovery.DiscoveryClient      : Force full registry fetch : false
+[2023-08-15 19:03:18:34954] INFO  30792 --- [freshExecutor-0] c.netflix.discovery.DiscoveryClient      : Application is null : false
+[2023-08-15 19:03:18:34954] INFO  30792 --- [freshExecutor-0] c.netflix.discovery.DiscoveryClient      : Registered Applications size is zero : true
+[2023-08-15 19:03:18:34954] INFO  30792 --- [freshExecutor-0] c.netflix.discovery.DiscoveryClient      : Application version is -1: false
+[2023-08-15 19:03:18:34954] INFO  30792 --- [freshExecutor-0] c.netflix.discovery.DiscoveryClient      : Getting all instance registry info from the eureka server
+[2023-08-15 19:03:18:34988] INFO  30792 --- [freshExecutor-0] c.netflix.discovery.DiscoveryClient      : The response status is 200
+[2023-08-15 19:04:00:77143] INFO  30792 --- [nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2023-08-15 19:04:00:77143] INFO  30792 --- [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+[2023-08-15 19:04:00:77152] INFO  30792 --- [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 9 ms
+[2023-08-15 19:04:01:77549] INFO  30792 --- [nio-8081-exec-8] o.s.api.AbstractOpenApiResource          : Init duration for springdoc-openapi is: 187 ms
+[2023-08-15 19:07:48:304747] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 19:12:48:604772] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 19:55:31:3168218] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:00:32:3468228] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:05:32:3768234] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:10:32:4068243] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:15:32:4368254] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:20:32:4668264] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:25:32:4968249] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:30:32:5268256] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:35:32:5568265] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:40:32:5868272] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:45:31:6168191] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:50:31:6468191] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 20:55:31:6768193] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 21:00:31:7068196] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 21:05:31:7368197] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 21:10:31:7668200] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 21:15:32:7968278] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 21:31:35:8931991] INFO  30792 --- [tbeatExecutor-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:84a4f53b740c74c0d07e8c7e6aaf1998 - Re-registering apps/MEMBER-SERVICE
+[2023-08-15 21:31:35:8931991] INFO  30792 --- [tbeatExecutor-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:84a4f53b740c74c0d07e8c7e6aaf1998: registering service...
+[2023-08-15 21:31:35:8931996] INFO  30792 --- [tbeatExecutor-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:84a4f53b740c74c0d07e8c7e6aaf1998 - registration status: 204
+[2023-08-15 21:48:06:9922236] INFO  30792 --- [tbeatExecutor-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:84a4f53b740c74c0d07e8c7e6aaf1998 - Re-registering apps/MEMBER-SERVICE
+[2023-08-15 21:48:06:9922237] INFO  30792 --- [tbeatExecutor-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:84a4f53b740c74c0d07e8c7e6aaf1998: registering service...
+[2023-08-15 21:48:06:9922243] INFO  30792 --- [tbeatExecutor-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:84a4f53b740c74c0d07e8c7e6aaf1998 - registration status: 204
+[2023-08-15 22:22:26:11982963] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 22:27:26:12282977] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 22:32:26:12582991] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 23:10:07:14843607] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 23:30:27:16063360] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 23:35:27:16363360] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 23:40:27:16663363] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 23:47:55:17111537] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 23:52:55:17411548] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 23:57:55:17711562] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration

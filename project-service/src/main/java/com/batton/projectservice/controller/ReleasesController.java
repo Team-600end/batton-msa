@@ -151,10 +151,10 @@ public class ReleasesController {
             @ApiResponse(responseCode = "703", description = "소속 아이디 값을 확인해주세요."),
             @ApiResponse(responseCode = "709", description = "프로젝트 아이디 값을 확인해주세요.")
     })
-    public BaseResponse<List<GetProjectReleasesListResDTO>> getProjectReleaseList(@PathVariable Long projectId) {
-        List<GetProjectReleasesListResDTO> getProjectReleaseListRes = releasesService.getProjectReleasesList(projectId);
+    public BaseResponse<GetReleasesAllResDTO> getProjectReleaseList(@PathVariable Long projectId) {
+        GetReleasesAllResDTO getReleasesAllResDTO = releasesService.getProjectReleasesList(projectId);
 
-        return new BaseResponse<>(getProjectReleaseListRes);
+        return new BaseResponse<>(getReleasesAllResDTO);
     }
 
     /**
