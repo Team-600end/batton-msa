@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -169,5 +170,19 @@ public class ReleasesController {
         List<GetReleasesBoardResDTO> getReleasesBoardResDTOList = releasesService.getRelease(projectId, keyword);
 
         return new BaseResponse<>(getReleasesBoardResDTOList);
+    }
+
+    /**
+     * 이미지 업로드 API
+     * @param memberId 정보를 수정할 유저 아이디
+     * @param profileImage 변경할 이미지
+     * @return String
+     * */
+    @PostMapping("/images/upload")
+    @Operation(summary = "이미지 업로드")
+    private BaseResponse<String> postImage(@RequestHeader Long memberId, @RequestPart(value = "profileImg", required = false) MultipartFile profileImage) {
+        String url = releasesService.postImage(memberId, profileImage);
+
+        return new BaseResponse<>(url);
     }
 }
