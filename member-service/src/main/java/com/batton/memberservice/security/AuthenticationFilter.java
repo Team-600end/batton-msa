@@ -72,5 +72,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType(APPLICATION_JSON_VALUE);
 
         new ObjectMapper().writeValue(response.getOutputStream(), tokenDTO);
+        log.info("로그인 : 유저 " + memberId + " 님이 로그인했습니다.");
     }
 }

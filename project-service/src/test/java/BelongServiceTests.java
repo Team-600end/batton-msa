@@ -77,13 +77,14 @@ public class BelongServiceTests {
         Project project = new Project(1L,"project","test project", "image", "kea");
         Belong belong = new Belong(1L, GradeType.LEADER,1L,"harry", Status.ENABLED,project);
         Belong memberBelong = new Belong(2L, GradeType.MEMBER,2L,"nika", Status.ENABLED,project);
-        GetMemberResDTO memberResDTO = new GetMemberResDTO();
         List<Belong> belongList = new ArrayList<>();
 
         belongList.add(belong);
         belongList.add(memberBelong);
 
-        when(belongRepository.findBelongsByProjectId(project.getId(), belong.getMemberId())).thenReturn(belongList);
+        GetMemberResDTO memberResDTO = new GetMemberResDTO();
+
+        when(belongRepository.findBelongByProjectId(project.getId())).thenReturn(belongList);
         when(memberServiceFeignClient.getMember(anyLong())).thenReturn(memberResDTO);
 
         // when

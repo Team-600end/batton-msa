@@ -15,6 +15,7 @@ import com.batton.projectservice.repository.IssueRepository;
 import com.batton.projectservice.repository.ProjectRepository;
 import com.batton.projectservice.repository.ReleasesRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import javax.transaction.Transactional;
@@ -25,6 +26,7 @@ import java.util.Optional;
 import static com.batton.projectservice.common.BaseResponseStatus.*;
 import static com.batton.projectservice.enums.NoticeType.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReleasesService {
@@ -106,6 +108,7 @@ public class ReleasesService {
         } else {
             throw new BaseException(RELEASE_NOTE_INVALID_ID);
         }
+        log.info("릴리즈 발행 : 유저 " + memberId + " 님이 새 릴리즈 " + releaseId + " 을 발행했습니다.");
 
         return "릴리즈노트가 발행되었습니다.";
     }
@@ -166,6 +169,7 @@ public class ReleasesService {
         } else {
             throw new BaseException(RELEASE_NOTE_INVALID_ID);
         }
+        log.info("릴리즈 삭제 : 유저 " + memberId + " 님이 저장된 릴리즈 " + releaseId + " 을 삭제했습니다.");
 
         return "릴리즈노트가 삭제되었습니다.";
     }

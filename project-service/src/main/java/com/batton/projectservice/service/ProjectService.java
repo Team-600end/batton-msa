@@ -18,6 +18,7 @@ import com.batton.projectservice.repository.IssueRepository;
 import com.batton.projectservice.repository.ProjectRepository;
 import com.batton.projectservice.repository.ReleasesRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import javax.transaction.Transactional;
@@ -30,6 +31,7 @@ import static com.batton.projectservice.enums.NoticeType.*;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final BelongRepository belongRepository;
@@ -96,6 +98,7 @@ public class ProjectService {
                     Belong belong = ProjectTeamReqDTO.toEntity(project.get(), projectTeamReqDTO, Status.ENABLED);
 
                     belongRepository.save(belong);
+                    log.info("프로젝트 팀원 등록 : " + memberId + "님이 프로젝트 " + projectId + "에 " + projectTeamReqDTO.getMemberId() + "님을 추가했습니다.");
 
                     rabbitProducer.sendNoticeMessage(
                             NoticeMessage.builder()
@@ -163,6 +166,7 @@ public class ProjectService {
         } else {
             throw new BaseException(PROJECT_INVALID_ID);
         }
+        log.info("프로젝트 삭제 : " + memberId + "님이 프로젝트 " + projectId + "을 삭제했습니다.");
 
         return "프로젝트 삭제 성공";
     }
