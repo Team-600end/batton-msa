@@ -145,7 +145,7 @@ public class IssueController {
     @GetMapping("/reports/{issueId}")
     @Operation(summary = "이슈 조회 페이지 조회")
     @ApiResponse(responseCode = "704", description = "이슈 아이디 값을 확인해주세요.")
-    private BaseResponse<GetIssueReportResDTO> getIssueReport(@RequestHeader("memberId") Long memberId, @PathVariable("issueId") Long issueId) {
+    private BaseResponse<GetIssueReportResDTO> getIssueReport(@RequestHeader Long memberId, @PathVariable("issueId") Long issueId) {
         GetIssueReportResDTO getIssueReportResDTO = issueService.getIssueReport(memberId, issueId);
 
         return new BaseResponse<>(getIssueReportResDTO);
@@ -257,7 +257,7 @@ public class IssueController {
      */
     @GetMapping("/{projectId}/done-list")
     @Operation(summary = "완료된 이슈 목록 조회")
-    private BaseResponse<List<GetIssueResDTO>> getDoneIssue(@RequestHeader("memberId") Long memberId, @PathVariable("projectId") Long projectId) {
+    private BaseResponse<List<GetIssueResDTO>> getDoneIssue(@RequestHeader Long memberId, @PathVariable("projectId") Long projectId) {
         List<GetIssueResDTO> getIssueResDTOList = issueService.getDoneIssue(memberId, projectId);
 
         return new BaseResponse<>(getIssueResDTOList);

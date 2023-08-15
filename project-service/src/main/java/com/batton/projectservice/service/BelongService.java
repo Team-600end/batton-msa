@@ -74,10 +74,10 @@ public class BelongService {
     @Transactional
     public List<GetBelongResDTO> getBelongList(Long memberId, Long projectId) {
         List<Belong> belongList = belongRepository.findBelongByProjectId(projectId);
-        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
+        Optional<Belong> myBelong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
         List<GetBelongResDTO> getBelongResDTOList = new ArrayList<>();
 
-        if(belong.isEmpty()&& belong.get().getStatus().equals(Status.DISABLED)) {
+        if(myBelong.isEmpty() || myBelong.get().getStatus().equals(Status.DISABLED)) {
             throw new BaseException(BELONG_INVALID_ID);
         }
         for (Belong belong : belongList) {

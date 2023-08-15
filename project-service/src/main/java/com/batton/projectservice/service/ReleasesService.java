@@ -7,6 +7,7 @@ import com.batton.projectservice.dto.client.GetMemberResDTO;
 import com.batton.projectservice.dto.release.*;
 import com.batton.projectservice.enums.GradeType;
 import com.batton.projectservice.enums.PublishState;
+import com.batton.projectservice.enums.Status;
 import com.batton.projectservice.repository.*;
 import com.batton.projectservice.mq.RabbitProducer;
 import com.batton.projectservice.mq.dto.NoticeMessage;
@@ -19,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,7 @@ public class ReleasesService {
         // 프로젝트 존재 여부 검증
         if (project.isPresent()) {
             // 프로젝트에 소속된 리더인지 검증
-            if (belong.get().getGrade() == GradeType.LEADER) {
+            if (belong.isPresent() && belong.get().getGrade() == GradeType.LEADER) {
                 Releases releases = postReleasesReqDTO.toEntity(project.get(), postReleasesReqDTO, PublishState.UNPUBLISH);
                 Long releaseId = releasesRepository.save(releases).getId();
 
@@ -232,10 +232,15 @@ public class ReleasesService {
      * 릴리즈노트 상세 조회 API
      */
     @Transactional
-    public GetReleasesResDTO getReleases(Long releaseId) {
+    public GetReleasesResDTO getReleases(Long memberId, Long releaseId) {
         Optional<Releases> releases = releasesRepository.findById(releaseId);
 
         if (releases.isPresent()) {
+            Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(releases.get().getProject().getId(), memberId);
+
+            if(belong.isEmpty() || belong.get().getStatus().equals(Status.DISABLED)){
+                throw new BaseException(BELONG_INVALID_ID);
+            }
             String publishedDate = releases.get().getUpdatedAt().getYear() + ". " + releases.get().getUpdatedAt().getMonthValue() + ". " + releases.get().getUpdatedAt().getDayOfMonth();
             List<GetReleasesIssueResDTO> issueList = getReleasesIssues(releaseId);
             GetReleasesResDTO getReleasesResDTO = GetReleasesResDTO.toDTO(releases.get(), publishedDate, issueList);
@@ -250,10 +255,15 @@ public class ReleasesService {
      * 릴리즈노트 수정용 상세 조회 API
      */
     @Transactional
-    public GetReleasesEditResDTO getReleasesEdit(Long releaseId) {
+    public GetReleasesEditResDTO getReleasesEdit(Long memberId, Long releaseId) {
         Optional<Releases> releases = releasesRepository.findById(releaseId);
 
         if (releases.isPresent()) {
+            Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(releases.get().getProject().getId(), memberId);
+
+            if(belong.isEmpty() || belong.get().getStatus().equals(Status.DISABLED)){
+                throw new BaseException(BELONG_INVALID_ID);
+            }
             String publishedDate = releases.get().getUpdatedAt().getYear() + ". " + releases.get().getUpdatedAt().getMonthValue() + ". " + releases.get().getUpdatedAt().getDayOfMonth();
             List<GetReleasesIssueEditResDTO> issueList = getReleasesIssuesEdit(releaseId);
             GetReleasesEditResDTO getReleasesEditResDTO = GetReleasesEditResDTO.toDTO(releases.get(), publishedDate, issueList);
@@ -268,7 +278,7 @@ public class ReleasesService {
      * 프로젝트 릴리즈 노트 조회 API (+ 릴리즈 블록)
      */
     @Transactional
-    public GetReleasesAllResDTO getProjectReleasesList(Long projectId) {
+    public GetReleasesAllResDTO getProjectReleasesList(Long memberId, Long projectId) {
         Optional<Project> project = projectRepository.findById(projectId);
         Optional<List<Releases>> releases = releasesRepository.findByProjectIdOrderByCreatedAtAsc(projectId);
         List<GetProjectReleasesListResDTO> getProjectReleasesListResDTOList = new ArrayList<>();
@@ -278,6 +288,11 @@ public class ReleasesService {
 
         // 프로젝트 존재 여부 검증
         if (project.isPresent()) {
+            Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
+
+            if(belong.isEmpty() || belong.get().getStatus().equals(Status.DISABLED)){
+                throw new BaseException(BELONG_INVALID_ID);
+            }
             // 릴리즈 노트 존재 여부 검증
             if (releases.isPresent()) {
                 List<Releases> releasesList = releases.get();
