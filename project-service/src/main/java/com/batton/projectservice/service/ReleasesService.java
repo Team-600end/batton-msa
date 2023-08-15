@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,7 @@ public class ReleasesService {
     private final RegisteredIssueRepository registeredIssueRepository;
     private final RabbitProducer rabbitProducer;
     private final MemberServiceFeignClient memberServiceFeignClient;
+    private final ObjectStorageService objectStorageService;
 
     /**
      * 릴리즈 생성 API
@@ -360,5 +363,12 @@ public class ReleasesService {
         }
 
         return getReleasesBoardResDTOList;
+    }
+
+    /**
+     * 이미지 업로드 API
+     */
+    public String postImage(Long memberId, MultipartFile profileImage) {
+        return objectStorageService.uploadFile(profileImage);
     }
 }
