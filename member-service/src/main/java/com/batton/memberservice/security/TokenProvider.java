@@ -33,6 +33,19 @@ public class TokenProvider {
                 .compact();
     }
 
+    public String createKakaoAccessToken(String memberId) {
+        Claims claims = Jwts.claims().setSubject(memberId);
+
+        return Jwts.builder()
+                .addClaims(claims)
+                .setExpiration(
+                        new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME)
+                )
+                .setIssuedAt(new Date())
+                .signWith(SignatureAlgorithm.HS512, key)
+                .compact();
+    }
+
     public String createRefreshToken() {
         Claims claims = Jwts.claims();
         claims.put("value", UUID.randomUUID());

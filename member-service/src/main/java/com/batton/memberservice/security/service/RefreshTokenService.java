@@ -72,11 +72,18 @@ public class RefreshTokenService {
         String newAccessToken = tokenProvider.createAccessToken(String.valueOf(currentMemberId), "/reissu", roles);
         Date expiredTime = tokenProvider.getExpiredTime(newAccessToken);
 
-        return TokenDTO.builder()
-                .accessToken(newAccessToken)
+        TokenDTO.TokenData tokenData = TokenDTO.TokenData.builder().accessToken(accessToken)
                 .accessTokenExpiredDate(expiredTime)
                 .refreshToken(refreshToken)
                 .build();
+        TokenDTO tokenDTO = TokenDTO.builder()
+                .isSuccess(true)
+                .code(200)
+                .message("로그인 성공하셨습니다.")
+                .result(tokenData)
+                .build();
+
+        return tokenDTO;
     }
 
     public void logoutToken(String accessToken) {
