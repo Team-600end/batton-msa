@@ -38,7 +38,6 @@ public class BelongService {
 
         // 소속 확인
         if (myBelong.isPresent() && myBelong.get().getStatus().equals(Status.ENABLED)) {
-
             // 변경 권한 확인
             if (myBelong.get().getGrade() == GradeType.MEMBER) {
                 throw new BaseException(MEMBER_NO_AUTHORITY);
@@ -75,8 +74,12 @@ public class BelongService {
     @Transactional
     public List<GetBelongResDTO> getBelongList(Long memberId, Long projectId) {
         List<Belong> belongList = belongRepository.findBelongByProjectId(projectId);
+        Optional<Belong> belong = belongRepository.findByProjectIdAndMemberId(projectId, memberId);
         List<GetBelongResDTO> getBelongResDTOList = new ArrayList<>();
 
+        if(belong.isEmpty()&& belong.get().getStatus().equals(Status.DISABLED)) {
+            throw new BaseException(BELONG_INVALID_ID);
+        }
         for (Belong belong : belongList) {
             if (belong.getStatus().equals(Status.ENABLED)) {
                 GetMemberResDTO getMemberResDTO = memberServiceFeignClient.getMember(belong.getMemberId());
@@ -97,7 +100,6 @@ public class BelongService {
 
         // 소속 확인
         if (belong.isPresent() && belong.get().getStatus().equals(Status.ENABLED)) {
-
             // 삭제 권한 확인
             if (myBelong.get().getGrade() == GradeType.MEMBER  && myBelong.get().getStatus().equals(Status.ENABLED)) {
                 throw new BaseException(MEMBER_NO_AUTHORITY);

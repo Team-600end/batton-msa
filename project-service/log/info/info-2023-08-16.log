@@ -43,3 +43,25 @@
 [2023-08-16 01:03:43:42103] INFO  43073 --- [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 [2023-08-16 01:03:43:42107] INFO  43073 --- [nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
 [2023-08-16 01:03:43:42750] INFO  43073 --- [nio-8082-exec-3] o.s.api.AbstractOpenApiResource          : Init duration for springdoc-openapi is: 384 ms
+[2023-08-16 01:13:02:601105] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:18:02:901109] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:23:02:1201115] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:28:02:1501120] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:33:02:1801124] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:38:02:2101129] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:43:02:2401133] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:55:21:3139987] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 02:00:21:3439995] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 02:58:21:6920458] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:04:32:7291003] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:09:40:7599376] INFO  43073 --- [tbeatExecutor-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:5ed3355f8c115b7810a4b429b8fa9e01 - Re-registering apps/PROJECT-SERVICE
+[2023-08-16 03:09:40:7599377] INFO  43073 --- [tbeatExecutor-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:5ed3355f8c115b7810a4b429b8fa9e01: registering service...
+[2023-08-16 03:09:40:7599391] INFO  43073 --- [tbeatExecutor-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_PROJECT-SERVICE/project-service:5ed3355f8c115b7810a4b429b8fa9e01 - registration status: 204
+[2023-08-16 03:13:08:7807133] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:18:08:8107133] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:24:18:8477737] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:29:18:8777739] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:34:18:9077740] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:43:26:9625137] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:48:26:9925143] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:53:26:10225148] INFO  43073 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
