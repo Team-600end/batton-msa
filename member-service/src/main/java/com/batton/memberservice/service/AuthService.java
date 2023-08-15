@@ -9,6 +9,7 @@ import com.batton.memberservice.enums.Authority;
 import com.batton.memberservice.enums.Status;
 import com.batton.memberservice.mq.QueueService;
 import com.batton.memberservice.repository.MemberRepository;
+import com.batton.memberservice.security.service.RefreshTokenService;
 import com.batton.memberservice.security.TokenDTO;
 import com.batton.memberservice.security.TokenProvider;
 import com.google.gson.JsonElement;
@@ -41,6 +42,8 @@ public class AuthService {
     private final QueueService queueService;
     private final JavaMailSender javaMailSender;
     private final RedisUtil redisUtil;
+    private final TokenProvider tokenProvider;
+    private final RefreshTokenService refreshTokenService;
 
     /**
      * 회원가입 API
@@ -65,46 +68,50 @@ public class AuthService {
         return "회원가입 성공하였습니다.";
     }
 
-//    /**
-//     * 카카오 회원가입
-//     */
-//    public String kakaoSignup(String token) {
-//        // token으로 사용자 정보 가져오기
-//        PostMemberReqDTO info = getKakaoInfo(token);
-//
-//        // 존재하지 않는 이메일(신규 회원)이면 회원가입 자동진행 후 로그인
-//        if (memberRepository.findByEmail(info.getEmail()).isEmpty()) {
-//
-//            Member member = PostMemberReqDTO.toEntity(info,null, Authority.ROLE_USER, Status.ENABLED);
-//            Long memberId = memberRepository.save(member).getId();
-//
-//            String accessToken = tokenProvider.createAccessToken(memberId, request.getRequestURI(), roles);
-//            Date expiredTime = tokenProvider.getExpiredTime(accessToken);
-//            String refreshToken = tokenProvider.createRefreshToken();
-//
-//            refreshTokenService.updateRefreshToken(Long.valueOf(memberId), tokenProvider.getRefreshTokenId(refreshToken));
-//            TokenDTO tokenDTO = TokenDTO.builder()
-//                    .accessToken(accessToken)
-//                    .accessTokenExpiredDate(expiredTime)
-//                    .refreshToken(refreshToken)
-//                    .build();
-//            // jwt 생성 후 반환
-//            String jwt = jwtService.createJwt(member.getId());
-//            String ref = jwtService.createRef(member.getId());
-//
-//
-//            return new PostLoginRes(member.getId(), jwt, System.currentTimeMillis()+1*(1000*60*30), ref);
-//        } else {
-//            // 존재하는 이메일이면 로그인 진행
-//            // jwt 생성 후 반환
-//            Member member = memberRepository.findByEmail(info.getEmail()).get();
-//
-//            String jwt = jwtService.createJwt(member.getId());
-//            String ref = jwtService.createRef(member.getId());
-//
-//            return new PostLoginResDTO(member.getId(), jwt, System.currentTimeMillis()+1*(1000*60*30), ref);
-//        }
-//    }
+    /**
+     * 카카오 회원가입
+     */
+    public TokenDTO kakaoSignup(String token) {
+        // token으로 사용자 정보 가져오기
+        PostMemberReqDTO info = getKakaoInfo(token);
+
+        // 존재하지 않는 이메일(신규 회원)이면 회원가입 자동진행 후 로그인
+        if (memberRepository.findByEmail(info.getEmail()).isEmpty()) {
+
+            Member member = PostMemberReqDTO.toEntity(info,null, Authority.ROLE_USER, Status.ENABLED);
+            Long memberId = memberRepository.save(member).getId();
+
+            String accessToken = tokenProvider.createKakaoAccessToken(memberId.toString());
+            Date expiredTime = tokenProvider.getExpiredTime(accessToken);
+            String refreshToken = tokenProvider.createRefreshToken();
+
+            refreshTokenService.updateRefreshToken(Long.valueOf(memberId), tokenProvider.getRefreshTokenId(refreshToken));
+            TokenDTO tokenDTO = TokenDTO.builder()
+                    .accessToken(accessToken)
+                    .accessTokenExpiredDate(expiredTime)
+                    .refreshToken(refreshToken)
+                    .build();
+
+            return tokenDTO;
+        } else {
+            // 존재하는 이메일이면 로그인 진행
+            // jwt 생성 후 반환
+            Member member = memberRepository.findByEmail(info.getEmail()).get();
+
+            String accessToken = tokenProvider.createKakaoAccessToken(member.getId().toString());
+            Date expiredTime = tokenProvider.getExpiredTime(accessToken);
+            String refreshToken = tokenProvider.createRefreshToken();
+
+            refreshTokenService.updateRefreshToken(Long.valueOf(member.getId()), tokenProvider.getRefreshTokenId(refreshToken));
+            TokenDTO tokenDTO = TokenDTO.builder()
+                    .accessToken(accessToken)
+                    .accessTokenExpiredDate(expiredTime)
+                    .refreshToken(refreshToken)
+                    .build();
+
+            return tokenDTO;
+        }
+    }
 
     /**
      * 카카오 서버에서 회원가입에 필요한 사용자 정보 가져오기

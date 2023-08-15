@@ -1,0 +1,73 @@
+[2023-08-15 22:37:49:2135] INFO  9296 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[2023-08-15 22:37:51:3838] INFO  9296 --- [  restartedMain] c.c.c.ConfigServicePropertySourceLocator : Fetching config from server at : http://localhost:8888
+[2023-08-15 22:37:51:3925] INFO  9296 --- [  restartedMain] c.c.c.ConfigServicePropertySourceLocator : Connect Timeout Exception on Url - http://localhost:8888. Will be trying the next url if available
+[2023-08-15 22:37:51:3927] INFO  9296 --- [  restartedMain] c.b.m.MemberServiceApplication           : No active profile set, falling back to 1 default profile: "default"
+[2023-08-15 22:37:51:4547] INFO  9296 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+[2023-08-15 22:37:51:4547] INFO  9296 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[2023-08-15 22:37:51:4579] INFO  9296 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 8 ms. Found 0 Redis repository interfaces.
+[2023-08-15 22:37:52:4863] INFO  9296 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+[2023-08-15 22:37:52:4863] INFO  9296 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2023-08-15 22:37:52:4911] INFO  9296 --- [  restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JPA - Could not safely identify store assignment for repository candidate interface com.batton.memberservice.repository.RefreshTokenRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: javax.persistence.Entity, javax.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+[2023-08-15 22:37:52:4937] INFO  9296 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 67 ms. Found 1 JPA repository interfaces.
+[2023-08-15 22:37:52:4942] INFO  9296 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+[2023-08-15 22:37:52:4942] INFO  9296 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[2023-08-15 22:37:52:4942] INFO  9296 --- [  restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.batton.memberservice.repository.MemberRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+[2023-08-15 22:37:52:4942] INFO  9296 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 13 ms. Found 1 Redis repository interfaces.
+[2023-08-15 22:37:52:5211] INFO  9296 --- [  restartedMain] o.s.cloud.context.scope.GenericScope     : BeanFactory id=0dcf47fe-3b5a-3535-b7e0-4bba85838cc5
+[2023-08-15 22:37:53:5763] INFO  9296 --- [  restartedMain] o.s.b.w.e.tomcat.TomcatWebServer         : Tomcat initialized with port(s): 8081 (http)
+[2023-08-15 22:37:53:5779] INFO  9296 --- [  restartedMain] o.a.catalina.core.StandardService        : Starting service [Tomcat]
+[2023-08-15 22:37:53:5779] INFO  9296 --- [  restartedMain] o.a.catalina.core.StandardEngine         : Starting Servlet engine: [Apache Tomcat/9.0.76]
+[2023-08-15 22:37:53:5950] INFO  9296 --- [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+[2023-08-15 22:37:53:5950] INFO  9296 --- [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2017 ms
+[2023-08-15 22:37:53:6096] INFO  9296 --- [  restartedMain] o.h.jpa.internal.util.LogHelper          : HHH000204: Processing PersistenceUnitInfo [name: default]
+[2023-08-15 22:37:53:6162] INFO  9296 --- [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+[2023-08-15 22:37:53:6314] INFO  9296 --- [  restartedMain] o.h.annotations.common.Version           : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2023-08-15 22:37:53:6502] INFO  9296 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+[2023-08-15 22:37:53:6687] INFO  9296 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+[2023-08-15 22:37:53:6703] INFO  9296 --- [  restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+[2023-08-15 22:37:54:7436] INFO  9296 --- [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2023-08-15 22:37:54:7447] INFO  9296 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2023-08-15 22:37:55:8638] INFO  9296 --- [  restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@1b5ada5d, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6bc81e39, org.springframework.security.web.context.SecurityContextPersistenceFilter@ff1dfba, org.springframework.security.web.header.HeaderWriterFilter@6b985be7, org.springframework.security.web.authentication.logout.LogoutFilter@23af3fdc, com.batton.memberservice.security.AuthenticationFilter@6c6940a9, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@6c7184ce, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@73ee8e8e, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1de27968, org.springframework.security.web.session.SessionManagementFilter@7f440d46, org.springframework.security.web.access.ExceptionTranslationFilter@69885023, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@1e2d7c54]
+[2023-08-15 22:37:58:10908] INFO  9296 --- [  restartedMain] o.s.cloud.commons.util.InetUtils         : Cannot determine local hostname
+[2023-08-15 22:37:58:10934] INFO  9296 --- [  restartedMain] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+[2023-08-15 22:37:59:12181] INFO  9296 --- [  restartedMain] o.s.cloud.commons.util.InetUtils         : Cannot determine local hostname
+[2023-08-15 22:37:59:12360] INFO  9296 --- [  restartedMain] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+[2023-08-15 22:37:59:12394] INFO  9296 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Initializing Eureka in region us-east-1
+[2023-08-15 22:37:59:12400] INFO  9296 --- [  restartedMain] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 22:37:59:12420] INFO  9296 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Disable delta property : false
+[2023-08-15 22:37:59:12421] INFO  9296 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Single vip registry refresh property : null
+[2023-08-15 22:37:59:12421] INFO  9296 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Force full registry fetch : false
+[2023-08-15 22:37:59:12421] INFO  9296 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Application is null : false
+[2023-08-15 22:37:59:12421] INFO  9296 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Registered Applications size is zero : true
+[2023-08-15 22:37:59:12421] INFO  9296 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Application version is -1: true
+[2023-08-15 22:37:59:12421] INFO  9296 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Getting all instance registry info from the eureka server
+[2023-08-15 22:37:59:12612] INFO  9296 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : The response status is 200
+[2023-08-15 22:37:59:12614] INFO  9296 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Starting heartbeat executor: renew interval is: 30
+[2023-08-15 22:37:59:12616] INFO  9296 --- [  restartedMain] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+[2023-08-15 22:37:59:12620] INFO  9296 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Discovery Client initialized at timestamp 1692106679892 with initial instances count: 0
+[2023-08-15 22:37:59:12621] INFO  9296 --- [  restartedMain] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application MEMBER-SERVICE with eureka with status UP
+[2023-08-15 22:37:59:12622] INFO  9296 --- [  restartedMain] c.netflix.discovery.DiscoveryClient      : Saw local status change event StatusChangeEvent [timestamp=1692106679896, current=UP, previous=STARTING]
+[2023-08-15 22:37:59:12624] INFO  9296 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:c8dc471701e71c6e86c317fc0cf7d93b: registering service...
+[2023-08-15 22:37:59:12653] INFO  9296 --- [  restartedMain] o.s.b.w.e.tomcat.TomcatWebServer         : Tomcat started on port(s): 8081 (http) with context path ''
+[2023-08-15 22:37:59:12654] INFO  9296 --- [  restartedMain] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8081
+[2023-08-15 22:37:59:12678] INFO  9296 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:c8dc471701e71c6e86c317fc0cf7d93b - registration status: 204
+[2023-08-15 22:38:01:13910] INFO  9296 --- [  restartedMain] o.s.cloud.commons.util.InetUtils         : Cannot determine local hostname
+[2023-08-15 22:38:01:13927] INFO  9296 --- [  restartedMain] c.b.m.MemberServiceApplication           : Started MemberServiceApplication in 13.648 seconds (JVM running for 14.85)
+[2023-08-15 22:38:07:20567] INFO  9296 --- [io-8081-exec-10] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2023-08-15 22:38:07:20567] INFO  9296 --- [io-8081-exec-10] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+[2023-08-15 22:38:07:20569] INFO  9296 --- [io-8081-exec-10] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+[2023-08-15 22:38:08:21364] INFO  9296 --- [nio-8081-exec-3] o.s.api.AbstractOpenApiResource          : Init duration for springdoc-openapi is: 488 ms
+[2023-08-15 22:38:29:42628] INFO  9296 --- [freshExecutor-0] c.netflix.discovery.DiscoveryClient      : Disable delta property : false
+[2023-08-15 22:38:29:42632] INFO  9296 --- [freshExecutor-0] c.netflix.discovery.DiscoveryClient      : Single vip registry refresh property : null
+[2023-08-15 22:38:29:42632] INFO  9296 --- [freshExecutor-0] c.netflix.discovery.DiscoveryClient      : Force full registry fetch : false
+[2023-08-15 22:38:29:42632] INFO  9296 --- [freshExecutor-0] c.netflix.discovery.DiscoveryClient      : Application is null : false
+[2023-08-15 22:38:29:42632] INFO  9296 --- [freshExecutor-0] c.netflix.discovery.DiscoveryClient      : Registered Applications size is zero : true
+[2023-08-15 22:38:29:42637] INFO  9296 --- [freshExecutor-0] c.netflix.discovery.DiscoveryClient      : Application version is -1: false
+[2023-08-15 22:38:29:42638] INFO  9296 --- [freshExecutor-0] c.netflix.discovery.DiscoveryClient      : Getting all instance registry info from the eureka server
+[2023-08-15 22:38:29:42661] INFO  9296 --- [freshExecutor-0] c.netflix.discovery.DiscoveryClient      : The response status is 200
+[2023-08-15 22:42:59:312433] INFO  9296 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 22:47:59:612449] INFO  9296 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 22:52:59:912459] INFO  9296 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 22:57:59:1212479] INFO  9296 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 23:02:59:1512495] INFO  9296 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-15 23:07:59:1812502] INFO  9296 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration

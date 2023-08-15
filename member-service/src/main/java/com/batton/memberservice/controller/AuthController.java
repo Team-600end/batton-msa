@@ -4,6 +4,7 @@ import com.batton.memberservice.common.BaseResponse;
 import com.batton.memberservice.dto.PostEmailCheckReqDTO;
 import com.batton.memberservice.dto.PostEmailReqDTO;
 import com.batton.memberservice.dto.PostMemberReqDTO;
+import com.batton.memberservice.security.TokenDTO;
 import com.batton.memberservice.security.TokenProvider;
 import com.batton.memberservice.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,22 +36,22 @@ public class AuthController {
         return new BaseResponse<>(signupMemberRes);
     }
 
-//    /**
-//     * 카카오 회원가입 및 가입 여부 확인
-//     * @param token 접근 토큰
-//     * @return BaseResponse<String>
-//     */
-//    @ResponseBody
-//    @PostMapping("/kakao/{access-token}")
-//    @Operation(summary = "카카오 소셜 로그인")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다.")
-//    })
-//    private BaseResponse<String> kakaoSignup(@PathVariable("access-token") String token) {
-//        String signup = authService.kakaoSignup(token);
-//
-//        return new BaseResponse<>(signup);
-//    }
+    /**
+     * 카카오 회원가입 및 가입 여부 확인
+     * @param token 접근 토큰
+     * @return BaseResponse<String>
+     */
+    @ResponseBody
+    @PostMapping("/kakao/{access-token}")
+    @Operation(summary = "카카오 소셜 로그인")
+    @ApiResponses({
+            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다.")
+    })
+    private BaseResponse<TokenDTO> kakaoSignup(@PathVariable("access-token") String token) {
+        TokenDTO tokenDTO = authService.kakaoSignup(token);
+
+        return new BaseResponse<>(tokenDTO);
+    }
 
     /**
      * 메일 발송 API

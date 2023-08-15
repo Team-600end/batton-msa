@@ -20,7 +20,7 @@ public class TokenProvider {
 
     public String createAccessToken(String memberId, String uri, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(memberId);
-//        claims.put("roles", roles);
+        claims.put("roles", roles);
 
         return Jwts.builder()
                 .addClaims(claims)
@@ -29,7 +29,20 @@ public class TokenProvider {
                 )
                 .setIssuedAt(new Date())
                 .signWith(SignatureAlgorithm.HS512, key)
-//                .setIssuer(uri)
+                .setIssuer(uri)
+                .compact();
+    }
+
+    public String createKakaoAccessToken(String memberId) {
+        Claims claims = Jwts.claims().setSubject(memberId);
+
+        return Jwts.builder()
+                .addClaims(claims)
+                .setExpiration(
+                        new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME)
+                )
+                .setIssuedAt(new Date())
+                .signWith(SignatureAlgorithm.HS512, key)
                 .compact();
     }
 
