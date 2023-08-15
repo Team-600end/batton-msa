@@ -59,6 +59,7 @@ public class AuthService {
         if (!postMemberReqDTO.getPassword().equals(postMemberReqDTO.getCheckPassword())) {
             throw new BaseException(MEMBER_PASSWORD_CONFLICT);
         }
+
         Member member = postMemberReqDTO.toEntity(postMemberReqDTO, passwordEncoder.encode(postMemberReqDTO.getPassword()), Authority.ROLE_USER, Status.ENABLED);
         memberRepository.save(member);
 
@@ -86,10 +87,16 @@ public class AuthService {
             String refreshToken = tokenProvider.createRefreshToken();
 
             refreshTokenService.updateRefreshToken(Long.valueOf(memberId), tokenProvider.getRefreshTokenId(refreshToken));
-            TokenDTO tokenDTO = TokenDTO.builder()
-                    .accessToken(accessToken)
+
+            TokenDTO.TokenData tokenData = TokenDTO.TokenData.builder().accessToken(accessToken)
                     .accessTokenExpiredDate(expiredTime)
                     .refreshToken(refreshToken)
+                    .build();
+            TokenDTO tokenDTO = TokenDTO.builder()
+                    .isSuccess(true)
+                    .code(200)
+                    .message("로그인 성공하셨습니다.")
+                    .result(tokenData)
                     .build();
 
             return tokenDTO;
@@ -103,10 +110,15 @@ public class AuthService {
             String refreshToken = tokenProvider.createRefreshToken();
 
             refreshTokenService.updateRefreshToken(Long.valueOf(member.getId()), tokenProvider.getRefreshTokenId(refreshToken));
-            TokenDTO tokenDTO = TokenDTO.builder()
-                    .accessToken(accessToken)
+            TokenDTO.TokenData tokenData = TokenDTO.TokenData.builder().accessToken(accessToken)
                     .accessTokenExpiredDate(expiredTime)
                     .refreshToken(refreshToken)
+                    .build();
+            TokenDTO tokenDTO = TokenDTO.builder()
+                    .isSuccess(true)
+                    .code(200)
+                    .message("로그인 성공하셨습니다.")
+                    .result(tokenData)
                     .build();
 
             return tokenDTO;

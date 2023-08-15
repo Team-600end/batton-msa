@@ -5,8 +5,10 @@ import com.batton.memberservice.enums.Authority;
 import com.batton.memberservice.enums.Status;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class PostMemberReqDTO {
     private String email;
     private String authCode;

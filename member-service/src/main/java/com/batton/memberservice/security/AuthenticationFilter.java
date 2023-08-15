@@ -66,11 +66,18 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String refreshToken = tokenProvider.createRefreshToken();
 
         refreshTokenService.updateRefreshToken(Long.valueOf(memberId), tokenProvider.getRefreshTokenId(refreshToken));
+
+        TokenDTO.TokenData tokenData = TokenDTO.TokenData.builder().accessToken(accessToken)
+                .accessTokenExpiredDate(expiredTime)
+                .refreshToken(refreshToken)
+                .build();
         TokenDTO tokenDTO = TokenDTO.builder()
-                        .accessToken(accessToken)
-                                .accessTokenExpiredDate(expiredTime)
-                                        .refreshToken(refreshToken)
-                                                .build();
+                .isSuccess(true)
+                .code(200)
+                .message("로그인 성공하셨습니다.")
+                .result(tokenData)
+                        .build();
+
         response.setContentType(APPLICATION_JSON_VALUE);
 
         new ObjectMapper().writeValue(response.getOutputStream(), tokenDTO);
