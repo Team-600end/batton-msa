@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,6 +98,9 @@ public class ProjectService {
             if (leaderBelong.isPresent() && leaderBelong.get().getGrade() == GradeType.LEADER) {
                 // 팀원 추가
                 for (ProjectTeamReqDTO projectTeamReqDTO : teamMemberList) {
+                    Optional<Belong> memberBelong = belongRepository.findByProjectIdAndMemberId(projectId, projectTeamReqDTO.getMemberId());
+                    if (memberBelong.isPresent()) continue;
+
                     Belong belong = ProjectTeamReqDTO.toEntity(project.get(), projectTeamReqDTO, Status.ENABLED);
 
                     belongRepository.save(belong);
