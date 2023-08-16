@@ -85,9 +85,9 @@ public class AuthController {
      * */
     @GetMapping("/kakao/key")
     @Operation(summary = "카카오 키 조회")
-    private GetKakaoKeyResDTO getKakaoKey() {
+    private BaseResponse<GetKakaoKeyResDTO> getKakaoKey() {
         GetKakaoKeyResDTO getKakaoKeyResDTO = authService.getKakaoKey();
 
-        return getKakaoKeyResDTO;
+        return new BaseResponse<>(getKakaoKeyResDTO);
     }
 }
