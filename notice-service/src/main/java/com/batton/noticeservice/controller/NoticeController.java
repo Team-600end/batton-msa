@@ -21,7 +21,7 @@ public class NoticeController {
      * @param memberId 알림 목록을 조회할 유저 아이디
      * @return List<GetNoticeResDTO>
      * */
-    @GetMapping("/all/{option}")
+    @GetMapping("/{option}")
     @Operation(summary = "사용자 전체 알림 목록 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "1300", description = "유저 아이디 값을 확인해주세요.")
