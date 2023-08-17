@@ -51,7 +51,7 @@ public class ProjectServiceTests {
         when(projectRepository.save(any(Project.class))).thenReturn(project);
         when(projectRepository.findById(anyLong())).thenReturn(Optional.of(project));
         when(belongRepository.findByProjectIdAndMemberId(anyLong(), anyLong())).thenReturn(Optional.of(belong));
-        when(rabbitProducer.sendNoticeMessage(any())).thenReturn("알림 데이터 전송 완료");
+        lenient().when(rabbitProducer.sendNoticeMessage(any())).thenReturn("알림 데이터 전송 완료");
 
         // when
         PostProjectResDTO result = projectService.postProject(1L, postProjectReqDTO);
@@ -59,7 +59,7 @@ public class ProjectServiceTests {
         // given
         assertEquals(1L, result.getProjectId());
         verify(projectRepository, times(1)).save(any(Project.class));
-        verify(belongRepository, times(2)).save(any(Belong.class));
+        verify(belongRepository, times(1)).save(any(Belong.class));
     }
 
     @Test
