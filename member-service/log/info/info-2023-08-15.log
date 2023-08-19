@@ -1,0 +1,45 @@
+[2023-08-16 00:03:00:5113501] INFO  9296 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:04:24:5196998] INFO  9296 --- [ionShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application MEMBER-SERVICE with eureka with status DOWN
+[2023-08-16 00:04:24:5196999] INFO  9296 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Saw local status change event StatusChangeEvent [timestamp=1692111864273, current=DOWN, previous=UP]
+[2023-08-16 00:04:24:5196999] INFO  9296 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:c8dc471701e71c6e86c317fc0cf7d93b: registering service...
+[2023-08-16 00:04:24:5197013] INFO  9296 --- [nfoReplicator-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:c8dc471701e71c6e86c317fc0cf7d93b - registration status: 204
+[2023-08-16 00:04:24:5197398] INFO  9296 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+[2023-08-16 00:04:24:5197416] INFO  9296 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+[2023-08-16 00:04:24:5197424] INFO  9296 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+[2023-08-16 00:04:24:5197425] INFO  9296 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Shutting down DiscoveryClient ...
+[2023-08-16 00:04:27:5200433] INFO  9296 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Unregistering ...
+[2023-08-16 00:04:27:5200471] INFO  9296 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:c8dc471701e71c6e86c317fc0cf7d93b - deregister  status: 200
+[2023-08-16 00:04:27:5200475] INFO  9296 --- [ionShutdownHook] c.netflix.discovery.DiscoveryClient      : Completed shut down of DiscoveryClient
+[2023-08-16 00:02:55:18011577] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:07:55:18311644] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:12:55:18611654] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:17:55:18911664] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:22:55:19211650] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:31:13:19709949] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:36:13:20009949] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:41:13:20309948] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:46:13:20609951] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:51:13:20909950] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 00:56:13:21209953] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:06:32:21828661] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:16:29:22425255] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:21:29:22725262] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:26:29:23025266] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:31:29:23325272] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:36:29:23625277] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:41:29:23925285] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:53:47:24664141] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 01:58:47:24964148] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 02:56:48:28444637] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 02:56:55:28451507] INFO  30792 --- [tbeatExecutor-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:84a4f53b740c74c0d07e8c7e6aaf1998 - Re-registering apps/MEMBER-SERVICE
+[2023-08-16 02:56:55:28451508] INFO  30792 --- [tbeatExecutor-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:84a4f53b740c74c0d07e8c7e6aaf1998: registering service...
+[2023-08-16 02:56:55:28451517] INFO  30792 --- [tbeatExecutor-0] c.netflix.discovery.DiscoveryClient      : DiscoveryClient_MEMBER-SERVICE/member-service:84a4f53b740c74c0d07e8c7e6aaf1998 - registration status: 204
+[2023-08-16 03:02:58:28815158] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:11:35:29331290] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:16:35:29631289] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:22:45:30001897] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:27:45:30301891] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:32:45:30601895] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:41:53:31149288] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:46:53:31449300] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+[2023-08-16 03:51:53:31749315] INFO  30792 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration

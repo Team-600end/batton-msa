@@ -41,9 +41,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
 
     // Lombok
-    implementation 'org.projectlombok:lombok'
-    compileOnly 'org.projectlombok:lombok:1.18.16'
-    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
     // Development Convenience
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -58,6 +57,11 @@ dependencies {
     // JPA, Hibernate
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.hibernate:hibernate-validator-test-utils:5.4.3.Final'
+
+    // Config Server
+    // Spring Cloud Config Client
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
 }
 
 dependencyManagement {

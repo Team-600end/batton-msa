@@ -1,39 +1,37 @@
 package com.batton.projectservice.domain;
 
+import com.batton.projectservice.enums.CommentType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "comment")
-public class Comment {
+public class Comment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
     private Long id;
-
     private String commentContent;
-
-    private LocalDateTime sendDate;
-
-    private String commentState;
-
-    @ManyToOne
-    @JoinColumn(name = "issue_id")
-    private Issue issue;
+    @Enumerated(EnumType.STRING)
+    private CommentType commentType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "report_id")
+    private Report report;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "belong_id")
+    private Belong belong;
 
     @Builder
-    public Comment(Long id, String commentContent, LocalDateTime sendDate, String commentState, Issue issue) {
+    public Comment(Long id, String commentContent, CommentType commentType, Report report, Belong belong) {
         this.id = id;
         this.commentContent = commentContent;
-        this.sendDate = sendDate;
-        this.commentState = commentState;
-        this.issue = issue;
+        this.commentType = commentType;
+        this.report = report;
+        this.belong = belong;
     }
 }

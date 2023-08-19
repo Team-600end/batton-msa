@@ -7,16 +7,13 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
-
-
 @EnableRedisRepositories
 @Configuration
 public class RedisConfig {
     private final String redisHost;
     private final int redisPort;
 
-    public RedisConfig(@Value("${spring.redis.host}") final String redisHost,
-                       @Value("${spring.redis.port}") final int redisPort) {
+    public RedisConfig(@Value("${spring.redis.host}") final String redisHost, @Value("${spring.redis.port}") final int redisPort) {
         this.redisHost = redisHost;
         this.redisPort = redisPort;
     }

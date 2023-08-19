@@ -18,6 +18,7 @@ public class RefreshToken {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.memberId = memberId;
         refreshToken.refreshTokenId = refreshTokenId;
+
         return refreshToken;
     }
 }

@@ -12,7 +12,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,19 +33,15 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
-
         Authentication authentication;
 
         try {
-
             MemberLoginReqDTO credential = new ObjectMapper().readValue(request.getInputStream(), MemberLoginReqDTO.class);
-
             authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             credential.getEmail(),
                             credential.getPassword())
             );
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -59,35 +54,33 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
-
         User user = (User)authResult.getPrincipal();
-
         List<String> roles = user.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
         String memberId = user.getUsername();
-
         String accessToken = tokenProvider.createAccessToken(memberId, request.getRequestURI(), roles);
         Date expiredTime = tokenProvider.getExpiredTime(accessToken);
         String refreshToken = tokenProvider.createRefreshToken();
 
         refreshTokenService.updateRefreshToken(Long.valueOf(memberId), tokenProvider.getRefreshTokenId(refreshToken));
 
+        TokenDTO.TokenData tokenData = TokenDTO.TokenData.builder().accessToken(accessToken)
+                .accessTokenExpiredDate(expiredTime)
+                .refreshToken(refreshToken)
+                .build();
         TokenDTO tokenDTO = TokenDTO.builder()
-                        .accessToken(accessToken)
-                                .accessTokenExpiredDate(expiredTime)
-                                        .refreshToken(refreshToken)
-                                                .build();
+                .isSuccess(true)
+                .code(200)
+                .message("로그인 성공하셨습니다.")
+                .result(tokenData)
+                        .build();
 
         response.setContentType(APPLICATION_JSON_VALUE);
 
-        //TODO: Result 패턴 정해지면 다시 작성필요
-//        new ObjectMapper().writeValue(response.getOutputStream(), Result.builder()
-//                .isSuccess(true)
-//                .message("인증 성공")
-//                .result(tokenDTO)
-//                .build());
+        new ObjectMapper().writeValue(response.getOutputStream(), tokenDTO);
+        log.info("로그인 : 유저 " + memberId + " 님이 로그인했습니다.");
     }
 }

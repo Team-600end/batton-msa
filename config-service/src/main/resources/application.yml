@@ -8,6 +8,16 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/Team-600end/batton-msa
+          uri: https://github.com/Team-600end/batton-msa-config.git
+          default-label: master
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      enabled: true
 
 
